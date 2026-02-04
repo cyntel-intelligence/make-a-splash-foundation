@@ -1,0 +1,173 @@
+<!-- ========================================
+     PHOTO GALLERY SECTION
+     Add this to index.html after the Impact section (around line 230)
+     ======================================== -->
+
+<!-- Photo Gallery Section -->
+<section class="photo-gallery" id="gallery">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">See Our Impact in Action</h2>
+            <div class="title-underline"></div>
+            <p class="section-subtitle">Real children, real families, real results</p>
+        </div>
+
+        <div class="gallery-grid">
+            <!-- Photo 1: Baby Underwater -->
+            <div class="gallery-item gallery-featured">
+                <img src="assets/images/baby-underwater.jpg" alt="Young child practicing survival swim techniques underwater">
+                <div class="gallery-overlay">
+                    <h3>Survival Skills in Action</h3>
+                    <p>Children as young as 6 months learn life-saving water safety skills</p>
+                </div>
+            </div>
+
+            <!-- Photo 2: Classroom Outreach -->
+            <div class="gallery-item">
+                <img src="assets/images/classroom-outreach.jpg" alt="Children learning water safety in community classroom">
+                <div class="gallery-overlay">
+                    <h3>Community Education</h3>
+                    <p>Reaching children through schools and community partnerships</p>
+                </div>
+            </div>
+
+            <!-- Photo 3: Instructor & Child -->
+            <div class="gallery-item">
+                <img src="assets/images/instructor-child-1.jpg" alt="Certified instructor teaching child to swim">
+                <div class="gallery-overlay">
+                    <h3>Expert Instruction</h3>
+                    <p>Certified instructors providing patient, professional guidance</p>
+                </div>
+            </div>
+
+            <!-- Photo 4: Instructor & Child -->
+            <div class="gallery-item">
+                <img src="assets/images/instructor-child-2.jpg" alt="Swim instructor with happy student in pool">
+                <div class="gallery-overlay">
+                    <h3>Building Confidence</h3>
+                    <p>Every lesson builds skills, confidence, and water safety</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--spacing-lg);">
+            <a href="apply.html" class="btn btn-primary btn-large">Help a Child Learn to Swim</a>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================
+     ADD THIS CSS TO assets/css/styles.css
+     (Add at the end of the file, before the responsive section)
+     ======================================== -->
+
+<style>
+/* ========================================
+   PHOTO GALLERY SECTION
+   ======================================== */
+.photo-gallery {
+    background: var(--white);
+    padding: var(--spacing-xxl) 0;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.gallery-featured {
+    grid-column: 1 / -1;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    aspect-ratio: 16/10;
+}
+
+.gallery-featured {
+    aspect-ratio: 21/9;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: var(--white);
+    padding: var(--spacing-lg);
+    transform: translateY(0);
+    transition: all var(--transition-normal);
+}
+
+.gallery-overlay h3 {
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.gallery-overlay p {
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-featured {
+        grid-column: 1;
+    }
+
+    .gallery-item {
+        aspect-ratio: 4/3;
+    }
+
+    .gallery-featured {
+        aspect-ratio: 16/10;
+    }
+}
+</style>
+
+<!-- ========================================
+     INSTRUCTIONS:
+
+     1. Save your 4 photos to assets/images/ with these names:
+        - baby-underwater.jpg
+        - classroom-outreach.jpg
+        - instructor-child-1.jpg
+        - instructor-child-2.jpg
+
+     2. Copy the HTML section above (lines 1-57)
+     3. Paste into index.html after the Impact section (around line 230)
+
+     4. Copy the CSS (the <style> section above)
+     5. Paste into assets/css/styles.css at the end
+
+     OR let me know and I can add it for you!
+     ======================================== -->

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Partner with Make A Splash Foundation. Corporate sponsorship opportunities to support childhood drowning prevention and enhance your company's community impact.">
+    <meta property="og:title" content="Corporate Partnerships | Make A Splash Foundation">
+    <meta property="og:description" content="Partner with us to support childhood drowning prevention. Corporate sponsorship opportunities for community impact.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makeasplashfoundation.co/corporate-partners.html">
+    <meta property="og:image" content="https://makeasplashfoundation.co/assets/images/logo.svg">
+    <meta property="og:site_name" content="Make A Splash Foundation">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Corporate Partnerships | Make A Splash Foundation">
+    <meta name="twitter:description" content="Partner with us to support childhood drowning prevention and enhance your community impact.">
+    <title>Corporate Partnerships | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="canonical" href="https://makeasplashfoundation.co/corporate-partners.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .corporate-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        .corporate-hero {
+            background: linear-gradient(135deg, var(--accent-navy), var(--primary-blue));
+            color: var(--white);
+            padding: var(--spacing-xxl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .corporate-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+
+        .corporate-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .corporate-hero h1 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .corporate-hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
+            opacity: 0.95;
+        }
+
+        .value-prop-section {
+            background: var(--white);
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .value-props-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .value-prop-card {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(90, 175, 229, 0.05));
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .value-prop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .value-prop-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: 50%;
+            color: white;
+        }
+
+        .value-prop-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .value-prop-card h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .value-prop-card p {
+            color: var(--dark-gray);
+            line-height: 1.7;
+        }
+
+        .sponsorship-levels {
+            background: var(--off-white);
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .level-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.5rem 1rem;
+            background: var(--primary-blue);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-bottom-left-radius: var(--radius-md);
+        }
+
+        .level-featured {
+            border: 3px solid var(--primary-blue);
+        }
+
+        .level-featured .level-badge {
+            background: var(--warning);
+            color: var(--charcoal);
+        }
+
+        .level-title {
+            color: var(--accent-navy);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .level-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .level-description {
+            color: var(--dark-gray);
+            margin-bottom: var(--spacing-md);
+            font-style: italic;
+        }
+
+        .level-benefits {
+            list-style: none;
+            padding-left: 0;
+            margin: var(--spacing-md) 0;
+        }
+
+        .level-benefits li {
+            padding-left: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            color: var(--dark-gray);
+        }
+
+        .level-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .impact-numbers {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .impact-numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .impact-number-item {
+            padding: var(--spacing-md);
+        }
+
+        .impact-number {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .impact-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .custom-partnership {
+            background: var(--white);
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .custom-partnership-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(90, 175, 229, 0.1));
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-lg);
+        }
+
+        .cta-box h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .contact-cta-section {
+            background: var(--accent-navy);
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .contact-cta-section h2 {
+            color: var(--white);
+            margin-bottom: var(--spacing-md);
+        }
+
+        @media (max-width: 768px) {
+            .corporate-hero h1 {
+                font-size: 2rem;
+            }
+
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .level-amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Corporate Partnerships Page -->
+    <div class="corporate-page">
+        <!-- Hero Section -->
+        <section class="corporate-hero">
+            <div class="container corporate-hero-content">
+                <h1>Corporate Partnerships</h1>
+                <p>
+                    Partner with Make A Splash Foundation to save lives, strengthen your community impact, and engage your team in meaningful philanthropy.
+                </p>
+                <div class="hero-buttons" style="margin-top: var(--spacing-lg);">
+                    <a href="#sponsorship-levels" class="btn btn-secondary btn-large">View Sponsorship Levels</a>
+                    <a href="#contact-us" class="btn btn-primary btn-large">Contact Us</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Partner With Us -->
+        <section class="value-prop-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Why Partner With Us?</h2>
+                    <div class="title-underline"></div>
+                    <p class="section-subtitle">
+                        Make a measurable impact while enhancing your brand and engaging your employees
+                    </p>
+                </div>
+
+                <div class="value-props-grid">
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </div>
+                        <h3>Save Lives</h3>
+                        <p>
+                            Your partnership directly prevents childhood drowning deaths by funding survival swim lessons for families who cannot afford them.
+                        </p>
+                    </div>
+
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                        </div>
+                        <h3>Community Leadership</h3>
+                        <p>
+                            Demonstrate your commitment to Volusia County families and position your company as a community champion.
+                        </p>
+                    </div>
+
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <h3>Employee Engagement</h3>
+                        <p>
+                            Boost morale and retention by giving employees opportunities to volunteer and support a cause that matters.
+                        </p>
+                    </div>
+
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </div>
+                        <h3>Brand Visibility</h3>
+                        <p>
+                            Gain recognition through our website, social media, events, and partnerships with local swim schools.
+                        </p>
+                    </div>
+
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        </div>
+                        <h3>Tax Benefits</h3>
+                        <p>
+                            All donations are tax-deductible. We're a 501(c)(3) nonprofit (Tax ID: 92-3713877).
+                        </p>
+                    </div>
+
+                    <div class="value-prop-card">
+                        <div class="value-prop-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </div>
+                        <h3>Measurable Impact</h3>
+                        <p>
+                            Receive regular updates showing exactly how your support is saving lives and helping local families.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsorship Levels -->
+        <section class="sponsorship-levels" id="sponsorship-levels">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Sponsorship Levels</h2>
+                    <div class="title-underline"></div>
+                    <p class="section-subtitle">
+                        Choose the partnership level that's right for your business
+                    </p>
+                </div>
+
+                <div class="levels-grid">
+                    <!-- Bronze Level -->
+                    <div class="level-card">
+                        <div class="level-badge">Bronze</div>
+                        <h3 class="level-title">Wave Maker</h3>
+                        <div class="level-amount">$1,000</div>
+                        <p class="level-description">
+                            Full scholarship package for 1 child (lessons, registration & equipment)
+                        </p>
+                        <ul class="level-benefits">
+                            <li>Logo on website sponsors page</li>
+                            <li>Social media recognition (2 posts)</li>
+                            <li>Thank you certificate</li>
+                            <li>Impact report showing children helped</li>
+                            <li>Tax receipt for full donation amount</li>
+                        </ul>
+                        <a href="#contact-us" class="btn btn-primary btn-block" style="margin-top: var(--spacing-md);">Become a Wave Maker</a>
+                    </div>
+
+                    <!-- Silver Level -->
+                    <div class="level-card">
+                        <div class="level-badge">Silver</div>
+                        <h3 class="level-title">Aquatic Angels</h3>
+                        <div class="level-amount">$2,500</div>
+                        <p class="level-description">
+                            Provide full scholarship packages for 2-3 children in need
+                        </p>
+                        <ul class="level-benefits">
+                            <li>All Bronze benefits, plus:</li>
+                            <li>Larger logo placement on website</li>
+                            <li>Logo in email newsletter to supporters</li>
+                            <li>Social media recognition (4 posts)</li>
+                            <li>Feature in annual impact report</li>
+                            <li>Company spotlight on website and social media</li>
+                            <li>Meet the families your support helped</li>
+                        </ul>
+                        <a href="#contact-us" class="btn btn-primary btn-block" style="margin-top: var(--spacing-md);">Become an Aquatic Angel</a>
+                    </div>
+
+                    <!-- Gold Level - Featured -->
+                    <div class="level-card level-featured">
+                        <div class="level-badge">⭐ Gold - Most Popular</div>
+                        <h3 class="level-title">Presenting Partner</h3>
+                        <div class="level-amount">$5,000</div>
+                        <p class="level-description">
+                            Fund full scholarship packages for 5 children
+                        </p>
+                        <ul class="level-benefits">
+                            <li>All Silver benefits, plus:</li>
+                            <li>Prominent logo on homepage</li>
+                            <li>Named scholarship program (e.g., "[Your Company] Scholarship Fund")</li>
+                            <li>Social media recognition (monthly throughout year)</li>
+                            <li>Thank you video from scholarship recipient families</li>
+                            <li>Recognition at all foundation events and activities</li>
+                            <li>Employee volunteer and engagement opportunities</li>
+                            <li>Quarterly impact briefings with detailed updates</li>
+                            <li>Personalized impact stories and photos</li>
+                        </ul>
+                        <a href="#contact-us" class="btn btn-primary btn-block" style="margin-top: var(--spacing-md);">Become a Presenting Partner</a>
+                    </div>
+
+                    <!-- Platinum Level -->
+                    <div class="level-card">
+                        <div class="level-badge">Platinum</div>
+                        <h3 class="level-title">Champion Sponsor</h3>
+                        <div class="level-amount">$10,000+</div>
+                        <p class="level-description">
+                            Fund 10+ children - title sponsor making the biggest community impact
+                        </p>
+                        <ul class="level-benefits">
+                            <li>All Gold benefits, plus:</li>
+                            <li>Title sponsor recognition on website and materials</li>
+                            <li>Custom partnership package tailored to your goals</li>
+                            <li>Direct involvement in scholarship selection process</li>
+                            <li>Quarterly impact meetings with foundation leadership</li>
+                            <li>Recognition at all foundation events</li>
+                            <li>Priority access to volunteer opportunities</li>
+                            <li>Detailed quarterly impact reports</li>
+                            <li>Multi-year partnership options with exclusive benefits</li>
+                        </ul>
+                        <a href="#contact-us" class="btn btn-primary btn-block" style="margin-top: var(--spacing-md);">Become a Champion Sponsor</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Numbers -->
+        <section class="impact-numbers">
+            <div class="container">
+                <h2 style="color: var(--white); margin-bottom: var(--spacing-md);">
+                    Your Partnership Creates Real Impact
+                </h2>
+                <p style="max-width: 700px; margin: 0 auto var(--spacing-lg); opacity: 0.95;">
+                    Here's what your corporate sponsorship can achieve in Volusia County
+                </p>
+                <div class="impact-numbers-grid">
+                    <div class="impact-number-item">
+                        <div class="impact-number">$1,000</div>
+                        <div class="impact-label">Full package for 1 child</div>
+                    </div>
+                    <div class="impact-number-item">
+                        <div class="impact-number">$2,500</div>
+                        <div class="impact-label">2-3 children learn to swim</div>
+                    </div>
+                    <div class="impact-number-item">
+                        <div class="impact-number">$5,000</div>
+                        <div class="impact-label">5 children protected</div>
+                    </div>
+                    <div class="impact-number-item">
+                        <div class="impact-number">$10,000</div>
+                        <div class="impact-label">10+ lives potentially saved</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Partnership Options -->
+        <section class="custom-partnership">
+            <div class="container">
+                <div class="custom-partnership-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Ready to Partner?</h2>
+                        <div class="title-underline"></div>
+                    </div>
+
+                    <p style="font-size: 1.125rem; line-height: 1.8; color: var(--dark-gray); margin-bottom: var(--spacing-lg);">
+                        We understand that every business is unique. We're happy to create a custom partnership package that aligns with your company's goals, budget, and values.
+                    </p>
+
+                    <div class="value-props-grid" style="text-align: left;">
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <h3>Event Sponsorship</h3>
+                            <p>
+                                Sponsor our annual fundraising events, swim-a-thons, or awareness campaigns for maximum brand visibility.
+                            </p>
+                        </div>
+
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            </div>
+                            <h3>Matching Gift Programs</h3>
+                            <p>
+                                Match your employees' donations to amplify their impact and demonstrate your company's commitment.
+                            </p>
+                        </div>
+
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                            </div>
+                            <h3>In-Kind Donations</h3>
+                            <p>
+                                Contribute products, services, or professional expertise that support our mission and operations.
+                            </p>
+                        </div>
+
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            </div>
+                            <h3>Cause Marketing</h3>
+                            <p>
+                                Partner on marketing campaigns where a portion of sales supports childhood drowning prevention.
+                            </p>
+                        </div>
+
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h6a2 2 0 0 1 2 2v8H2v-8a2 2 0 0 1 0-4V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H2"></path><path d="M22 12h-6a2 2 0 0 0-2 2v8h8v-8a2 2 0 0 0 0-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h6"></path></svg>
+                            </div>
+                            <h3>Swim School Partnerships</h3>
+                            <p>
+                                If you own or operate a swim school, partner with us to provide scholarship lessons and expand access.
+                            </p>
+                        </div>
+
+                        <div class="value-prop-card">
+                            <div class="value-prop-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <h3>Multi-Year Commitments</h3>
+                            <p>
+                                Secure exclusive partnership benefits with a multi-year commitment at a preferred rate.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cta-box">
+                        <h3>Ready to Create a Custom Partnership?</h3>
+                        <p style="margin-bottom: var(--spacing-md); color: var(--dark-gray);">
+                            Let's discuss how we can create a partnership that achieves your business goals while saving lives in our community.
+                        </p>
+                        <a href="#contact-us" class="btn btn-primary btn-large">Schedule a Meeting</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="contact-cta-section" id="contact-us">
+            <div class="container">
+                <h2>Let's Make a Splash Together</h2>
+                <p style="font-size: 1.125rem; margin-bottom: var(--spacing-lg); opacity: 0.95;">
+                    Contact us today to discuss how your business can become a Make A Splash Foundation partner
+                </p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="mailto:contact@makeasplashfoundation.co?subject=Corporate%20Partnership%20Inquiry" class="btn btn-secondary btn-large">
+                        Email Us
+                    </a>
+                    <a href="index.html#contact" class="btn btn-primary btn-large">
+                        Contact Form
+                    </a>
+                </div>
+                <p style="margin-top: var(--spacing-md); font-size: 0.9rem; opacity: 0.8;">
+                    Email: contact@makeasplashfoundation.co<br>
+                    We typically respond within 24 hours
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="value-prop-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Frequently Asked Questions</h2>
+                    <div class="title-underline"></div>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div style="background: var(--white); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-md); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-sm);">Are corporate donations tax-deductible?</h3>
+                        <p style="color: var(--dark-gray);">
+                            Yes! Make A Splash Foundation is a 501(c)(3) nonprofit organization (Tax ID: 92-3713877). All donations are tax-deductible to the fullest extent allowed by law. We provide detailed receipts for your accounting department.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--white); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-md); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-sm);">How will my donation be used?</h3>
+                        <p style="color: var(--dark-gray);">
+                            100% of your donation goes directly to funding survival swim lessons for families who cannot afford them. We provide detailed impact reports showing exactly how many children benefited from your support.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--white); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-md); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-sm);">Can we customize our partnership?</h3>
+                        <p style="color: var(--dark-gray);">
+                            Absolutely! We're flexible and happy to create a custom partnership package that meets your specific goals, whether that's employee engagement, brand visibility, or community impact.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--white); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-md); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-sm);">Do you offer multi-year partnerships?</h3>
+                        <p style="color: var(--dark-gray);">
+                            Yes! Multi-year commitments allow us to plan more effectively and often come with enhanced benefits and preferred rates. Contact us to discuss options.
+                        </p>
+                    </div>
+
+                    <div style="background: var(--white); border-radius: var(--radius-lg); padding: var(--spacing-lg); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-sm);">Can our employees get involved?</h3>
+                        <p style="color: var(--dark-gray);">
+                            Yes! We offer volunteer opportunities at events, donation matching programs, and ways for your team to engage directly with the families we serve. Employee engagement is a key benefit of corporate partnership.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#impact">Our Impact</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="donors.html">Our Donors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Stay Updated</h4>
+                    <p class="footer-tagline" style="margin-bottom: 0.75rem;">Get water safety tips, impact stories, and event updates.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="_honeypot" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="newsletter-input-group">
+                            <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary newsletter-btn" id="newsletterBtn">Subscribe</button>
+                        </div>
+                        <p class="newsletter-status" id="newsletterStatus" style="display: none;"></p>
+                    </form>
+                    <div class="footer-social" style="margin-top: 0.75rem; display: flex; gap: 1rem;">
+                        <a href="https://www.instagram.com/makeasplashfoundation" target="_blank" aria-label="Instagram" style="color: var(--white); opacity: 0.8; transition: opacity 0.2s;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/makeasplashfoundation" target="_blank" aria-label="Facebook" style="color: var(--white); opacity: 0.8; transition: opacity 0.2s;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script src="assets/js/script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAGk7w72nKfJDtMx535wxgK6tAq6UugrJ8",
+            authDomain: "make-a-splash-foundation.firebaseapp.com",
+            projectId: "make-a-splash-foundation",
+            storageBucket: "make-a-splash-foundation.firebasestorage.app",
+            messagingSenderId: "259150039543",
+            appId: "1:259150039543:web:9ac7d1c44befbbce65c6f2"
+        });
+        const functions = getFunctions(app);
+        const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('newsletterBtn');
+                const status = document.getElementById('newsletterStatus');
+                const emailInput = document.getElementById('newsletterEmail');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Subscribing...';
+                status.style.display = 'none';
+                try {
+                    const honeypot = newsletterForm.querySelector('input[name="_honeypot"]');
+                    await onNewsletterSubscribe({ email: emailInput.value, _honeypot: honeypot ? honeypot.value : '' });
+                    status.textContent = 'Subscribed! Check your email for a welcome message.';
+                    status.style.color = '#28a745';
+                    status.style.display = 'block';
+                    newsletterForm.reset();
+                } catch (error) {
+                    console.error('Newsletter error:', error);
+                    status.textContent = 'Something went wrong. Please try again.';
+                    status.style.color = '#dc3545';
+                    status.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

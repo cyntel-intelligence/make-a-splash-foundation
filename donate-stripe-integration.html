@@ -1,0 +1,242 @@
+<!-- ========================================
+     STRIPE PAYMENT INTEGRATION
+     Replace the donation form in donate.html with this code
+     ======================================== -->
+
+<!-- Add this in the <head> section of donate.html -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<!-- Replace the donation form section with this: -->
+<div class="donation-form-box">
+    <div class="tax-deductible">
+        ✓ Tax-Deductible Donation | 501(c)(3) Tax ID: 92-3713877
+    </div>
+
+    <h2>Make Your Donation</h2>
+
+    <!-- Donation Type Tabs -->
+    <div class="donation-type-tabs">
+        <button class="donation-type-tab active" data-type="one-time" onclick="setDonationType('one-time')">One-Time</button>
+        <button class="donation-type-tab" data-type="monthly" onclick="setDonationType('monthly')">Monthly</button>
+        <button class="donation-type-tab" data-type="annual" onclick="setDonationType('annual')">Annually</button>
+    </div>
+
+    <!-- Recurring Donation Info -->
+    <div class="recurring-info" id="recurringInfo" style="display: none;">
+        <p><strong>Recurring Donation:</strong></p>
+        <p>You'll be charged automatically each month/year. Cancel anytime from your donor dashboard.</p>
+    </div>
+
+    <form id="payment-form">
+        <!-- Preset Amounts -->
+        <div class="donation-amounts">
+            <button type="button" class="amount-btn" onclick="selectAmount(25)">$25</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(50)">$50</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(100)">$100</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(250)">$250</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(500)">$500</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(1000)">$1000</button>
+        </div>
+
+        <!-- Custom Amount -->
+        <div class="custom-amount-group">
+            <label for="donation-amount">Or enter custom amount:</label>
+            <input type="number" id="donation-amount" class="custom-amount-input" placeholder="$ Enter amount" min="1" step="0.01" required>
+        </div>
+
+        <!-- Donor Information -->
+        <div class="donor-info-section">
+            <h3>Your Information</h3>
+            <div class="form-group">
+                <label for="donor-name">Full Name *</label>
+                <input type="text" id="donor-name" required>
+            </div>
+            <div class="form-group">
+                <label for="donor-email">Email *</label>
+                <input type="email" id="donor-email" required>
+            </div>
+
+            <!-- Stripe Card Element -->
+            <div class="form-group">
+                <label>Card Information *</label>
+                <div id="card-element" style="padding: 12px; border: 2px solid var(--light-gray); border-radius: var(--radius-md); background: white;">
+                    <!-- Stripe will inject card input here -->
+                </div>
+                <div id="card-errors" style="color: var(--danger); margin-top: 0.5rem; font-size: 0.875rem;"></div>
+            </div>
+
+            <div class="checkbox-option">
+                <input type="checkbox" id="anonymous">
+                <label for="anonymous">Make this donation anonymous</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-large" id="submit-button">
+                <span id="button-text">Donate Now</span>
+                <span id="spinner" style="display: none;">Processing...</span>
+            </button>
+
+            <p style="text-align: center; font-size: 0.875rem; color: var(--gray); margin-top: var(--spacing-md);">
+                🔒 Secure payment processing by Stripe
+            </p>
+        </div>
+    </form>
+</div>
+
+<!-- Add this JavaScript at the end of the file, before closing </body> -->
+<script>
+    // ========================================
+    // STRIPE CONFIGURATION
+    // ========================================
+
+    // REPLACE THIS with your actual Stripe Publishable Key
+    const STRIPE_PUBLIC_KEY = 'pk_test_YOUR_KEY_HERE';
+
+    // Initialize Stripe
+    const stripe = Stripe(STRIPE_PUBLIC_KEY);
+    const elements = stripe.elements();
+
+    // Create card element
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                fontFamily: '"Open Sans", sans-serif',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+        },
+    });
+
+    cardElement.mount('#card-element');
+
+    // Handle card errors
+    cardElement.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // ========================================
+    // DONATION STATE
+    // ========================================
+    let donationType = 'one-time';
+    let selectedAmount = 0;
+
+    function setDonationType(type) {
+        donationType = type;
+        const tabs = document.querySelectorAll('.donation-type-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const recurringInfo = document.getElementById('recurringInfo');
+        recurringInfo.style.display = (type !== 'one-time') ? 'block' : 'none';
+
+        const buttonText = document.getElementById('button-text');
+        if (type === 'monthly') {
+            buttonText.textContent = 'Start Monthly Donation';
+        } else if (type === 'annual') {
+            buttonText.textContent = 'Start Annual Donation';
+        } else {
+            buttonText.textContent = 'Donate Now';
+        }
+    }
+
+    function selectAmount(amount) {
+        selectedAmount = amount;
+        document.getElementById('donation-amount').value = amount;
+
+        const buttons = document.querySelectorAll('.amount-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    // ========================================
+    // FORM SUBMISSION
+    // ========================================
+    const form = document.getElementById('payment-form');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const amount = parseFloat(document.getElementById('donation-amount').value);
+        const name = document.getElementById('donor-name').value;
+        const email = document.getElementById('donor-email').value;
+
+        if (!amount || amount < 1) {
+            alert('Please enter a donation amount');
+            return;
+        }
+
+        // Disable submit button
+        const submitButton = document.getElementById('submit-button');
+        submitButton.disabled = true;
+        document.getElementById('button-text').style.display = 'none';
+        document.getElementById('spinner').style.display = 'inline';
+
+        try {
+            // Create payment intent on your server
+            // NOTE: You'll need to set up a backend endpoint for this
+            const response = await fetch('/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: Math.round(amount * 100), // Convert to cents
+                    currency: 'usd',
+                    donationType: donationType,
+                    donorName: name,
+                    donorEmail: email,
+                }),
+            });
+
+            const { clientSecret } = await response.json();
+
+            // Confirm payment with Stripe
+            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        name: name,
+                        email: email,
+                    },
+                },
+            });
+
+            if (error) {
+                // Show error
+                alert('Payment failed: ' + error.message);
+                submitButton.disabled = false;
+                document.getElementById('button-text').style.display = 'inline';
+                document.getElementById('spinner').style.display = 'none';
+            } else {
+                // Payment succeeded!
+                alert('Thank you for your donation of $' + amount + '! You will receive a receipt via email.');
+                window.location.href = 'thank-you.html';
+            }
+        } catch (err) {
+            alert('Payment failed. Please try again.');
+            console.error(err);
+            submitButton.disabled = false;
+            document.getElementById('button-text').style.display = 'inline';
+            document.getElementById('spinner').style.display = 'none';
+        }
+    });
+</script>
+
+<!-- ========================================
+     SETUP INSTRUCTIONS:
+
+     1. Create Stripe account at https://stripe.com
+     2. Get your Publishable Key (pk_test_... or pk_live_...)
+     3. Replace STRIPE_PUBLIC_KEY above with your actual key
+     4. Set up a backend server to create payment intents
+        (Can use Netlify Functions, Vercel Functions, or simple Node.js server)
+     5. Update the fetch URL to your backend endpoint
+
+     NEED HELP? I can create the backend code for you!
+     Just say "create Stripe backend" and I'll build it.
+     ======================================== -->

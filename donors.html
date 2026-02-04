@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Thank you to our generous donors and sponsors who help Make A Splash Foundation provide swim scholarships to children in need.">
+    <meta property="og:title" content="Our Donors | Make A Splash Foundation">
+    <meta property="og:description" content="Thank you to our generous donors and sponsors who help provide life-saving swim lessons to children in need.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makeasplashfoundation.co/donors.html">
+    <meta property="og:image" content="https://makeasplashfoundation.co/assets/images/logo.svg">
+    <meta property="og:site_name" content="Make A Splash Foundation">
+    <title>Our Donors | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="canonical" href="https://makeasplashfoundation.co/donors.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .donors-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        .donors-hero {
+            background: linear-gradient(135deg, var(--accent-navy), var(--primary-blue));
+            color: var(--white);
+            padding: var(--spacing-xxl) 0;
+            text-align: center;
+        }
+
+        .donors-hero h1 {
+            color: var(--white);
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .donors-hero p {
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .donors-content {
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .donor-tier {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .tier-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        .tier-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .tier-platinum .tier-icon {
+            background: linear-gradient(135deg, #E5E4E2, #A8A9AD);
+        }
+
+        .tier-gold .tier-icon {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .tier-silver .tier-icon {
+            background: linear-gradient(135deg, #C0C0C0, #A8A9AD);
+        }
+
+        .tier-bronze .tier-icon {
+            background: linear-gradient(135deg, #CD7F32, #B87333);
+        }
+
+        .tier-header h2 {
+            color: var(--accent-navy);
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+        .tier-header .tier-range {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .donors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .donor-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+
+        .donor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .donor-name {
+            font-family: var(--font-primary);
+            font-weight: 600;
+            color: var(--accent-navy);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .donor-type {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .coming-soon {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            color: var(--dark-gray);
+            font-style: italic;
+        }
+
+        .thank-you-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            margin-top: var(--spacing-xl);
+        }
+
+        .thank-you-section h2 {
+            color: var(--white);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .thank-you-section p {
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+            opacity: 0.95;
+        }
+
+        .become-donor {
+            background: var(--white);
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .become-donor-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .become-donor h2 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .become-donor p {
+            color: var(--dark-gray);
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.1rem;
+        }
+
+        .donor-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+            text-align: left;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .benefit-icon {
+            color: var(--success);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .donors-hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .tier-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .donors-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Donors Page -->
+    <div class="donors-page">
+        <!-- Hero Section -->
+        <section class="donors-hero">
+            <div class="container">
+                <h1>Our Generous Donors</h1>
+                <p>
+                    We are deeply grateful to the individuals, families, and businesses who support our mission to prevent childhood drowning through swim scholarships.
+                </p>
+            </div>
+        </section>
+
+        <!-- Donors List -->
+        <section class="donors-content">
+            <div class="container">
+                <!-- Platinum Tier -->
+                <div class="donor-tier tier-platinum">
+                    <div class="tier-header">
+                        <div class="tier-icon">&#9830;</div>
+                        <div>
+                            <h2>Champion Sponsors</h2>
+                            <span class="tier-range">$10,000+</span>
+                        </div>
+                    </div>
+                    <div class="donors-grid">
+                        <div class="coming-soon">
+                            Be the first to join at this level
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Tier -->
+                <div class="donor-tier tier-gold">
+                    <div class="tier-header">
+                        <div class="tier-icon">&#9733;</div>
+                        <div>
+                            <h2>Presenting Partners</h2>
+                            <span class="tier-range">$5,000 - $9,999</span>
+                        </div>
+                    </div>
+                    <div class="donors-grid">
+                        <div class="coming-soon">
+                            Be the first to join at this level
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silver Tier -->
+                <div class="donor-tier tier-silver">
+                    <div class="tier-header">
+                        <div class="tier-icon">&#9734;</div>
+                        <div>
+                            <h2>Aquatic Angels</h2>
+                            <span class="tier-range">$2,500 - $4,999</span>
+                        </div>
+                    </div>
+                    <div class="donors-grid">
+                        <div class="coming-soon">
+                            Be the first to join at this level
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bronze Tier -->
+                <div class="donor-tier tier-bronze">
+                    <div class="tier-header">
+                        <div class="tier-icon">&#9679;</div>
+                        <div>
+                            <h2>Wave Makers</h2>
+                            <span class="tier-range">$1,000 - $2,499</span>
+                        </div>
+                    </div>
+                    <div class="donors-grid">
+                        <div class="coming-soon">
+                            Be the first to join at this level
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Thank You Section -->
+        <section class="thank-you-section">
+            <div class="container">
+                <h2>Every Gift Makes a Difference</h2>
+                <p>
+                    Whether you give $10 or $10,000, your support helps provide life-saving swim lessons to children who need them most. Thank you for being part of our mission.
+                </p>
+            </div>
+        </section>
+
+        <!-- Become a Donor CTA -->
+        <section class="become-donor">
+            <div class="container">
+                <div class="become-donor-content">
+                    <h2>Join Our Donor Family</h2>
+                    <p>
+                        Your tax-deductible donation directly funds swim scholarships for children in Volusia County who cannot afford lessons.
+                    </p>
+
+                    <div class="donor-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">&#10003;</span>
+                            <span>Recognition on this page (for donations $1,000+)</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">&#10003;</span>
+                            <span>Tax-deductible receipt</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">&#10003;</span>
+                            <span>Impact updates on children helped</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">&#10003;</span>
+                            <span>The joy of saving lives</span>
+                        </div>
+                    </div>
+
+                    <a href="donate.html" class="btn btn-primary btn-large">Make a Donation</a>
+                    <p style="margin-top: var(--spacing-md); font-size: 0.9rem; color: var(--dark-gray);">
+                        501(c)(3) Tax ID: 92-3713877
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#impact">Our Impact</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social" style="margin-top: 0.75rem; display: flex; gap: 1rem;">
+                        <a href="https://www.instagram.com/makeasplashfoundation" target="_blank" aria-label="Instagram" style="color: var(--white); opacity: 0.8; transition: opacity 0.2s;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/makeasplashfoundation" target="_blank" aria-label="Facebook" style="color: var(--white); opacity: 0.8; transition: opacity 0.2s;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

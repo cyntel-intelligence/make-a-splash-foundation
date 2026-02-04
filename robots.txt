@@ -1,0 +1,12 @@
+# Make A Splash Foundation
+# https://makeasplashfoundation.co
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://makeasplashfoundation.co/sitemap.xml
+
+# Disallow admin and internal pages
+Disallow: /admin.html
+Disallow: /404.html

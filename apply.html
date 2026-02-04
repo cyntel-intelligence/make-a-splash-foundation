@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Apply for a Make A Splash Foundation scholarship for survival swim lessons. Financial assistance for families in Volusia County.">
+    <meta property="og:title" content="Scholarship Application | Make A Splash Foundation">
+    <meta property="og:description" content="Apply for financial assistance for survival swim lessons. We provide scholarships for families who cannot afford swim instruction.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makeasplashfoundation.co/apply.html">
+    <meta property="og:image" content="https://makeasplashfoundation.co/assets/images/logo.svg">
+    <meta property="og:site_name" content="Make A Splash Foundation">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Apply for Swim Scholarship | Make A Splash Foundation">
+    <meta name="twitter:description" content="Apply for financial assistance for survival swim lessons for your child.">
+    <title>Scholarship Application | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="canonical" href="https://makeasplashfoundation.co/apply.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .file-upload-section {
+            background: var(--off-white);
+            border: 2px dashed var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .file-upload-section h4 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            margin-right: var(--spacing-sm);
+        }
+
+        .file-status {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .file-status.success {
+            color: var(--success);
+        }
+
+        .file-status.error {
+            color: var(--danger);
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--light-gray);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: var(--primary-blue);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .submit-button-wrapper {
+            position: relative;
+        }
+
+        .submit-button-wrapper .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-top: var(--spacing-sm);
+            text-align: center;
+            color: var(--primary-blue);
+        }
+
+        .application-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        .application-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .application-header h1 {
+            color: var(--white);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .application-intro {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .application-intro h2 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .application-intro p {
+            line-height: 1.8;
+            color: var(--dark-gray);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .requirements-box {
+            background: var(--off-white);
+            border-left: 4px solid var(--warning);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--radius-md);
+        }
+
+        .requirements-box h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .requirements-list li {
+            padding-left: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            position: relative;
+        }
+
+        .requirements-list li::before {
+            content: '📄';
+            position: absolute;
+            left: 0;
+        }
+
+        .important-note {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(90, 175, 229, 0.1));
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .important-note strong {
+            color: var(--primary-blue);
+            display: block;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .application-form-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section-title {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .required-indicator {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .helper-text {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .child-section {
+            background: var(--off-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .child-section h4 {
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .document-checklist {
+            background: var(--white);
+            border: 2px solid var(--danger);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .document-checklist h3 {
+            color: var(--danger);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: var(--off-white);
+            border-radius: var(--radius-sm);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: 20px;
+            height: 20px;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: var(--spacing-lg);
+        }
+
+        .submit-section .btn {
+            min-width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Application Page -->
+    <div class="application-page">
+        <!-- Header -->
+        <div class="application-header">
+            <div class="container">
+                <h1>Survival Swim Scholarships</h1>
+                <p>Helping Families Access Life-Saving Swim Lessons</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Introduction -->
+            <div class="application-intro">
+                <h2>Every Child Deserves to Be Safe Around Water</h2>
+                <p>
+                    At the Make A Splash Foundation, we believe every child deserves the chance to learn life-saving water skills, no matter their family's financial situation. Through our scholarship program, we help cover the cost of high-quality survival swim lessons, offered in partnership with local programs in Volusia County.
+                </p>
+                <p>
+                    These lessons are designed for children ages 6 months to 8 years, giving children the confidence and skills to stay safe in and around water. Scholarships are meant for families who truly cannot afford lessons on their own.
+                </p>
+                <p>
+                    <strong>We ask that you look over your budget before applying to see if there's anything you could temporarily set aside.</strong> If lessons are still out of reach, we encourage you to apply.
+                </p>
+
+                <!-- Requirements Box -->
+                <div class="requirements-box">
+                    <h3>What You'll Need to Apply</h3>
+                    <p>
+                        <strong>Applications can't be reviewed until we have all the required documents.</strong>
+                        Please be sure to remove or black out Social Security numbers for your safety.
+                    </p>
+                    <ul class="requirements-list">
+                        <li>Driver's license</li>
+                        <li>Two current pay stubs (plus two from spouse/partner, if applicable)</li>
+                        <li>Most recent tax return (full 1040, not W-2)</li>
+                    </ul>
+                    <p style="margin-top: var(--spacing-sm);"><strong>If applicable:</strong></p>
+                    <ul class="requirements-list">
+                        <li>"Did Not File" tax form</li>
+                        <li>Social Security benefits statement</li>
+                        <li>Disability or unemployment benefits statement</li>
+                        <li>Child support statement</li>
+                    </ul>
+                </div>
+
+                <div class="important-note">
+                    <strong>Important:</strong>
+                    <p>
+                        We review every application with care to make sure scholarships go to families who truly need them. Please include your total gross household income, including that of a spouse or live-in partner (even if you're not married). <strong>Incomplete or inaccurate applications may be declined.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Application Form -->
+            <div class="application-form-container">
+                <form id="scholarshipForm">
+                    <!-- Parent/Guardian Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Parent / Legal Guardian Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentFirstName">First Name <span class="required-indicator">*</span></label>
+                                <input type="text" id="parentFirstName" name="parentFirstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="parentLastName">Last Name <span class="required-indicator">*</span></label>
+                                <input type="text" id="parentLastName" name="parentLastName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentEmail">Email <span class="required-indicator">*</span></label>
+                                <input type="email" id="parentEmail" name="parentEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="parentDOB">Date of Birth <span class="required-indicator">*</span></label>
+                                <input type="date" id="parentDOB" name="parentDOB" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentPhone">Phone Number <span class="required-indicator">*</span></label>
+                                <input type="tel" id="parentPhone" name="parentPhone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group form-group-full">
+                                <label for="address">Address <span class="required-indicator">*</span></label>
+                                <input type="text" id="address" name="address" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group form-group-full">
+                                <label for="cityStateZip">City, State, Zip Code <span class="required-indicator">*</span></label>
+                                <input type="text" id="cityStateZip" name="cityStateZip" placeholder="e.g., Daytona Beach, FL 32114" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spouse/Partner Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Spouse / Partner Information (if applicable)</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spouseName">Spouse/Partner Full Name</label>
+                                <input type="text" id="spouseName" name="spouseName">
+                            </div>
+                            <div class="form-group">
+                                <label for="spouseDOB">Date of Birth</label>
+                                <input type="date" id="spouseDOB" name="spouseDOB">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spousePhone">Phone Number</label>
+                                <input type="tel" id="spousePhone" name="spousePhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="spouseEmail">Email</label>
+                                <input type="email" id="spouseEmail" name="spouseEmail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Child 1 Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Child Information</h2>
+
+                        <div class="child-section">
+                            <h4>Child 1 <span class="required-indicator">*</span></h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="child1Name">Full Name <span class="required-indicator">*</span></label>
+                                    <input type="text" id="child1Name" name="child1Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="child1DOB">Date of Birth <span class="required-indicator">*</span></label>
+                                    <input type="date" id="child1DOB" name="child1DOB" required>
+                                    <div class="helper-text">Ages 6 months to 8 years</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gender <span class="required-indicator">*</span></label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child1Female" name="child1Gender" value="female" required>
+                                            <label for="child1Female">Female</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child1Male" name="child1Gender" value="male" required>
+                                            <label for="child1Male">Male</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>New Student or Refresher <span class="required-indicator">*</span></label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child1New" name="child1Type" value="new" required>
+                                            <label for="child1New">New Student</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child1Refresher" name="child1Type" value="refresher" required>
+                                            <label for="child1Refresher">Refresher</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="child1History">Swimming History or Experience</label>
+                                <textarea id="child1History" name="child1History" rows="3" placeholder="Please describe any previous swim lessons or water experience"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Child 2 Information -->
+                        <div class="child-section">
+                            <h4>Child 2 (Optional)</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="child2Name">Full Name</label>
+                                    <input type="text" id="child2Name" name="child2Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="child2DOB">Date of Birth</label>
+                                    <input type="date" id="child2DOB" name="child2DOB">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child2Female" name="child2Gender" value="female">
+                                            <label for="child2Female">Female</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child2Male" name="child2Gender" value="male">
+                                            <label for="child2Male">Male</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>New Student or Refresher</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child2New" name="child2Type" value="new">
+                                            <label for="child2New">New Student</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child2Refresher" name="child2Type" value="refresher">
+                                            <label for="child2Refresher">Refresher</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Child 3 Information -->
+                        <div class="child-section">
+                            <h4>Child 3 (Optional)</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="child3Name">Full Name</label>
+                                    <input type="text" id="child3Name" name="child3Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="child3DOB">Date of Birth</label>
+                                    <input type="date" id="child3DOB" name="child3DOB">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child3Female" name="child3Gender" value="female">
+                                            <label for="child3Female">Female</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child3Male" name="child3Gender" value="male">
+                                            <label for="child3Male">Male</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>New Student or Refresher</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="child3New" name="child3Type" value="new">
+                                            <label for="child3New">New Student</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="child3Refresher" name="child3Type" value="refresher">
+                                            <label for="child3Refresher">Refresher</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Employment Information</h2>
+                        <h4>Primary Parent/Guardian</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employer">Employer <span class="required-indicator">*</span></label>
+                                <input type="text" id="employer" name="employer" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employerPhone">Employer Phone <span class="required-indicator">*</span></label>
+                                <input type="tel" id="employerPhone" name="employerPhone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="occupation">Occupation <span class="required-indicator">*</span></label>
+                                <input type="text" id="occupation" name="occupation" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employmentLength">Length of Employment <span class="required-indicator">*</span></label>
+                                <input type="text" id="employmentLength" name="employmentLength" placeholder="e.g., 2 years, 6 months" required>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top: var(--spacing-md);">Spouse/Partner (if applicable)</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spouseEmployer">Employer</label>
+                                <input type="text" id="spouseEmployer" name="spouseEmployer">
+                            </div>
+                            <div class="form-group">
+                                <label for="spouseEmployerPhone">Employer Phone</label>
+                                <input type="tel" id="spouseEmployerPhone" name="spouseEmployerPhone">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spouseOccupation">Occupation</label>
+                                <input type="text" id="spouseOccupation" name="spouseOccupation">
+                            </div>
+                            <div class="form-group">
+                                <label for="spouseEmploymentLength">Length of Employment</label>
+                                <input type="text" id="spouseEmploymentLength" name="spouseEmploymentLength" placeholder="e.g., 2 years, 6 months">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Financial Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="monthlyIncome">Monthly Household Income (before taxes) <span class="required-indicator">*</span></label>
+                                <input type="number" id="monthlyIncome" name="monthlyIncome" min="0" step="0.01" required>
+                                <div class="helper-text">Include all household income sources</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherIncome">Other Income (Child Support, Public Assistance, etc.)</label>
+                                <input type="number" id="otherIncome" name="otherIncome" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Filed Taxes Last Year? <span class="required-indicator">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="filedYes" name="filedTaxes" value="yes" required>
+                                        <label for="filedYes">Yes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="filedNo" name="filedTaxes" value="no" required>
+                                        <label for="filedNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxExplanation">If taxes not filed, explain</label>
+                            <textarea id="taxExplanation" name="taxExplanation" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Additional Questions -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Additional Questions</h2>
+                        <div class="form-group">
+                            <label for="lessonPreference">Lessons Time Preference <span class="required-indicator">*</span></label>
+                            <div class="checkbox-group" style="flex-direction: column;">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="morning" name="lessonPreference" value="morning">
+                                    <label for="morning">Morning</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="afternoon" name="lessonPreference" value="afternoon">
+                                    <label for="afternoon">Afternoon</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="evening" name="lessonPreference" value="evening">
+                                    <label for="evening">Evening</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Are you planning a vacation/trip in the next 6 months? <span class="required-indicator">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="vacationYes" name="vacation" value="yes" required>
+                                        <label for="vacationYes">Yes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="vacationNo" name="vacation" value="no" required>
+                                        <label for="vacationNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacationDetails">If yes, please explain</label>
+                            <textarea id="vacationDetails" name="vacationDetails" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Do you currently have annual passes to any theme park? <span class="required-indicator">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="passesYes" name="passes" value="yes" required>
+                                        <label for="passesYes">Yes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="passesNo" name="passes" value="no" required>
+                                        <label for="passesNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passesDetails">If yes, please explain</label>
+                            <textarea id="passesDetails" name="passesDetails" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Have you applied for a scholarship with another non-profit? <span class="required-indicator">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="otherScholarshipYes" name="otherScholarship" value="yes" required>
+                                        <label for="otherScholarshipYes">Yes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="otherScholarshipNo" name="otherScholarship" value="no" required>
+                                        <label for="otherScholarshipNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="hearAboutUs">How did you hear about us? <span class="required-indicator">*</span></label>
+                                <select id="hearAboutUs" name="hearAboutUs" required>
+                                    <option value="">Select one...</option>
+                                    <option value="social-media">Social Media</option>
+                                    <option value="friend">Friend/Family</option>
+                                    <option value="swim-school">Swim School</option>
+                                    <option value="web-search">Web Search</option>
+                                    <option value="community-event">Community Event</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="weeklyAfford">Weekly amount you can afford? <span class="required-indicator">*</span></label>
+                                <input type="number" id="weeklyAfford" name="weeklyAfford" min="0" step="0.01" required>
+                                <div class="helper-text">$0 if unable to contribute</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="needDescription">PLEASE DESCRIBE IN DETAIL WHY YOU NEED THIS SCHOLARSHIP <span class="required-indicator">*</span></label>
+                            <textarea id="needDescription" name="needDescription" rows="6" required placeholder="Please share your story and explain why your family needs this scholarship. Include any relevant financial circumstances, challenges, or reasons why swim lessons are important for your child."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Required Documents Upload Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">📋 Required Documents Upload</h2>
+                        <p style="margin-bottom: var(--spacing-md); color: var(--danger);">
+                            <strong>*** APPLICATIONS WILL NOT BE PROCESSED UNTIL ALL REQUIRED DOCUMENTS ARE UPLOADED ***</strong>
+                        </p>
+                        <p style="margin-bottom: var(--spacing-lg);">
+                            <em>(For security measures, please black out your SSN on all documents)</em><br>
+                            <em>Accepted formats: PDF, JPG, PNG (Max 10MB per file)</em>
+                        </p>
+
+                        <!-- Required Documents -->
+                        <h3 style="color: var(--accent-navy); margin-bottom: var(--spacing-md);">Required Documents:</h3>
+
+                        <div class="file-upload-section">
+                            <h4>Driver's License <span class="required-indicator">*</span></h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="driversLicense" name="driversLicense" accept="image/*,.pdf" required>
+                                <div class="upload-progress" id="progress-driversLicense">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-driversLicense"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Your Pay Stub 1 (most recent) <span class="required-indicator">*</span></h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="payStub1" name="payStub1" accept="image/*,.pdf" required>
+                                <div class="upload-progress" id="progress-payStub1">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-payStub1"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Your Pay Stub 2 (second most recent) <span class="required-indicator">*</span></h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="payStub2" name="payStub2" accept="image/*,.pdf" required>
+                                <div class="upload-progress" id="progress-payStub2">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-payStub2"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Spouse/Partner Pay Stubs (2 most recent, if applicable)</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="spousePayStubs" name="spousePayStubs" accept="image/*,.pdf" multiple>
+                                <div class="upload-progress" id="progress-spousePayStubs">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-spousePayStubs"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Most Recent Tax Return (complete 1040 form) <span class="required-indicator">*</span></h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="taxReturn" name="taxReturn" accept="image/*,.pdf" required>
+                                <div class="upload-progress" id="progress-taxReturn">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-taxReturn"></div>
+                            </div>
+                        </div>
+
+                        <!-- Optional Documents -->
+                        <h3 style="color: var(--accent-navy); margin: var(--spacing-lg) 0 var(--spacing-md);">If Applicable:</h3>
+
+                        <div class="file-upload-section">
+                            <h4>"Did Not File" Taxes Form</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="didNotFile" name="didNotFile" accept="image/*,.pdf">
+                                <div class="upload-progress" id="progress-didNotFile">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-didNotFile"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Social Security Benefits Statement</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="ssiBenefits" name="ssiBenefits" accept="image/*,.pdf">
+                                <div class="upload-progress" id="progress-ssiBenefits">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-ssiBenefits"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Disability Benefit Statement</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="disabilityBenefits" name="disabilityBenefits" accept="image/*,.pdf">
+                                <div class="upload-progress" id="progress-disabilityBenefits">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-disabilityBenefits"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Unemployment Benefit Statement</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="unemploymentBenefits" name="unemploymentBenefits" accept="image/*,.pdf">
+                                <div class="upload-progress" id="progress-unemploymentBenefits">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-unemploymentBenefits"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-upload-section">
+                            <h4>Child Support Statement</h4>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="childSupport" name="childSupport" accept="image/*,.pdf">
+                                <div class="upload-progress" id="progress-childSupport">
+                                    <div class="upload-progress-bar"></div>
+                                </div>
+                                <div class="file-status" id="status-childSupport"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Section -->
+                    <div class="submit-section">
+                        <p style="margin-bottom: var(--spacing-md); color: var(--dark-gray);">
+                            By submitting this application, I certify that all information provided is true and accurate to the best of my knowledge.
+                        </p>
+                        <div class="submit-button-wrapper">
+                            <button type="submit" class="btn btn-primary btn-large" id="submitBtn">Submit Application</button>
+                            <div class="loading-spinner" id="loadingSpinner">
+                                <p>⏳ Uploading documents and submitting application...</p>
+                                <p style="font-size: 0.875rem;">This may take a moment. Please do not close this page.</p>
+                            </div>
+                        </div>
+                        <p style="margin-top: var(--spacing-md); font-size: 0.875rem; color: var(--gray);">
+                            Your documents will be uploaded securely and reviewed by our team.
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Help Section -->
+            <div class="application-intro">
+                <h3>Need Help?</h3>
+                <p>
+                    If you have questions about the application process or need assistance, please contact us at
+                    <a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="donors.html">Our Donors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Stay Updated</h4>
+                    <p class="footer-tagline" style="margin-bottom: 0.75rem;">Get water safety tips, impact stories, and event updates.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="_honeypot" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="newsletter-input-group">
+                            <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary newsletter-btn" id="newsletterBtn">Subscribe</button>
+                        </div>
+                        <p class="newsletter-status" id="newsletterStatus" style="display: none;"></p>
+                    </form>
+                    <div class="footer-social" style="margin-top: 0.75rem;">
+                        <a href="https://www.instagram.com/makeasplashfoundation" target="_blank" aria-label="Instagram">Instagram</a>
+                        <a href="https://www.facebook.com/makeasplashfoundation" target="_blank" aria-label="Facebook">Facebook</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script src="assets/js/script.js"></script>
+    <script type="module">
+        import { storage, db, ref, uploadBytes, getDownloadURL, collection, addDoc, serverTimestamp } from './firebase-config.js';
+
+        const form = document.getElementById('scholarshipForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // Helper to detect content type from file extension when browser doesn't set it
+        function getContentType(file) {
+            if (file.type) return file.type;
+            const ext = file.name.split('.').pop().toLowerCase();
+            const mimeTypes = {
+                'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
+                'gif': 'image/gif', 'webp': 'image/webp', 'avif': 'image/avif',
+                'heic': 'image/heic', 'heif': 'image/heif', 'bmp': 'image/bmp',
+                'tiff': 'image/tiff', 'tif': 'image/tiff', 'svg': 'image/svg+xml',
+                'pdf': 'application/pdf'
+            };
+            return mimeTypes[ext] || 'application/octet-stream';
+        }
+
+        // File upload handlers
+        const fileInputs = [
+            'driversLicense',
+            'payStub1',
+            'payStub2',
+            'spousePayStubs',
+            'taxReturn',
+            'didNotFile',
+            'ssiBenefits',
+            'disabilityBenefits',
+            'unemploymentBenefits',
+            'childSupport'
+        ];
+
+        fileInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('change', function() {
+                    const status = document.getElementById(`status-${inputId}`);
+                    if (this.files.length > 0) {
+                        const fileNames = Array.from(this.files).map(f => f.name).join(', ');
+                        status.textContent = `Selected: ${fileNames}`;
+                        status.className = 'file-status';
+                    }
+                });
+            }
+        });
+
+        // Form submission handler
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = 'block';
+
+            try {
+                // Generate unique application ID
+                const applicationId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                // Collect form data
+                const formData = {
+                    applicationId: applicationId,
+                    submittedAt: serverTimestamp(),
+                    parentInfo: {
+                        firstName: document.getElementById('parentFirstName').value,
+                        lastName: document.getElementById('parentLastName').value,
+                        email: document.getElementById('parentEmail').value,
+                        dob: document.getElementById('parentDOB').value,
+                        phone: document.getElementById('parentPhone').value,
+                        address: document.getElementById('address').value,
+                        cityStateZip: document.getElementById('cityStateZip').value
+                    },
+                    spouseInfo: {
+                        name: document.getElementById('spouseName').value || null,
+                        dob: document.getElementById('spouseDOB').value || null,
+                        phone: document.getElementById('spousePhone').value || null,
+                        email: document.getElementById('spouseEmail').value || null
+                    },
+                    children: [],
+                    employment: {
+                        employer: document.getElementById('employer').value,
+                        employerPhone: document.getElementById('employerPhone').value,
+                        occupation: document.getElementById('occupation').value,
+                        employmentLength: document.getElementById('employmentLength').value,
+                        spouseEmployer: document.getElementById('spouseEmployer').value || null,
+                        spouseEmployerPhone: document.getElementById('spouseEmployerPhone').value || null,
+                        spouseOccupation: document.getElementById('spouseOccupation').value || null,
+                        spouseEmploymentLength: document.getElementById('spouseEmploymentLength').value || null
+                    },
+                    financial: {
+                        monthlyIncome: document.getElementById('monthlyIncome').value,
+                        otherIncome: document.getElementById('otherIncome').value || null,
+                        filedTaxes: document.querySelector('input[name="filedTaxes"]:checked').value,
+                        taxExplanation: document.getElementById('taxExplanation').value || null
+                    },
+                    additional: {
+                        lessonPreference: Array.from(document.querySelectorAll('input[name="lessonPreference"]:checked')).map(cb => cb.value),
+                        vacation: document.querySelector('input[name="vacation"]:checked').value,
+                        vacationDetails: document.getElementById('vacationDetails').value || null,
+                        passes: document.querySelector('input[name="passes"]:checked').value,
+                        passesDetails: document.getElementById('passesDetails').value || null,
+                        otherScholarship: document.querySelector('input[name="otherScholarship"]:checked').value,
+                        hearAboutUs: document.getElementById('hearAboutUs').value,
+                        weeklyAfford: document.getElementById('weeklyAfford').value,
+                        needDescription: document.getElementById('needDescription').value
+                    },
+                    documents: {}
+                };
+
+                // Add children data
+                for (let i = 1; i <= 3; i++) {
+                    const childName = document.getElementById(`child${i}Name`).value;
+                    if (childName) {
+                        formData.children.push({
+                            name: childName,
+                            dob: document.getElementById(`child${i}DOB`).value,
+                            gender: document.querySelector(`input[name="child${i}Gender"]:checked`)?.value || null,
+                            type: document.querySelector(`input[name="child${i}Type"]:checked`)?.value || null,
+                            history: document.getElementById(`child${i}History`)?.value || null
+                        });
+                    }
+                }
+
+                // Upload files
+                const fileUploads = [];
+                for (const inputId of fileInputs) {
+                    const input = document.getElementById(inputId);
+                    if (input && input.files.length > 0) {
+                        const progress = document.getElementById(`progress-${inputId}`);
+                        const progressBar = progress.querySelector('.upload-progress-bar');
+                        const status = document.getElementById(`status-${inputId}`);
+
+                        progress.style.display = 'block';
+
+                        for (let i = 0; i < input.files.length; i++) {
+                            const file = input.files[i];
+                            const fileName = `${inputId}_${i}_${file.name}`;
+                            const storageRef = ref(storage, `scholarship-applications/${applicationId}/${fileName}`);
+                            const metadata = { contentType: getContentType(file) };
+
+                            try {
+                                await uploadBytes(storageRef, file, metadata);
+                                const downloadURL = await getDownloadURL(storageRef);
+
+                                if (!formData.documents[inputId]) {
+                                    formData.documents[inputId] = [];
+                                }
+                                formData.documents[inputId].push({
+                                    fileName: file.name,
+                                    url: downloadURL
+                                });
+
+                                progressBar.style.width = '100%';
+                                status.textContent = '✓ Uploaded successfully';
+                                status.className = 'file-status success';
+                            } catch (error) {
+                                console.error(`Error uploading ${fileName}:`, error);
+                                status.textContent = '✗ Upload failed';
+                                status.className = 'file-status error';
+                                throw error;
+                            }
+                        }
+                    }
+                }
+
+                // Save application data to Firestore
+                const docRef = await addDoc(collection(db, 'scholarship-applications'), formData);
+                console.log('Application submitted with ID:', docRef.id);
+
+                // Show success message
+                alert('🎉 Application submitted successfully!\n\nThank you for applying. We will review your application and contact you soon.\n\nApplication ID: ' + applicationId);
+
+                // Reset form
+                form.reset();
+                fileInputs.forEach(inputId => {
+                    const status = document.getElementById(`status-${inputId}`);
+                    const progress = document.getElementById(`progress-${inputId}`);
+                    if (status) status.textContent = '';
+                    if (progress) progress.style.display = 'none';
+                });
+
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert('Error submitting application. Please try again or contact us at contact@makeasplashfoundation.co\n\nError: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAGk7w72nKfJDtMx535wxgK6tAq6UugrJ8",
+            authDomain: "make-a-splash-foundation.firebaseapp.com",
+            projectId: "make-a-splash-foundation",
+            storageBucket: "make-a-splash-foundation.firebasestorage.app",
+            messagingSenderId: "259150039543",
+            appId: "1:259150039543:web:9ac7d1c44befbbce65c6f2"
+        }, 'newsletter');
+        const functions = getFunctions(app);
+        const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('newsletterBtn');
+                const status = document.getElementById('newsletterStatus');
+                const emailInput = document.getElementById('newsletterEmail');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Subscribing...';
+                status.style.display = 'none';
+                try {
+                    const honeypot = newsletterForm.querySelector('input[name="_honeypot"]');
+                    await onNewsletterSubscribe({ email: emailInput.value, _honeypot: honeypot ? honeypot.value : '' });
+                    status.textContent = 'Subscribed! Check your email for a welcome message.';
+                    status.style.color = '#28a745';
+                    status.style.display = 'block';
+                    newsletterForm.reset();
+                } catch (error) {
+                    console.error('Newsletter error:', error);
+                    status.textContent = 'Something went wrong. Please try again.';
+                    status.style.color = '#dc3545';
+                    status.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

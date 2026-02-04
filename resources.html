@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Free water safety resources, drowning prevention tips, and educational materials from Make A Splash Foundation.">
+    <meta property="og:title" content="Water Safety Resources | Make A Splash Foundation">
+    <meta property="og:description" content="Free water safety resources, drowning prevention tips, and educational materials for families.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makeasplashfoundation.co/resources.html">
+    <meta property="og:image" content="https://makeasplashfoundation.co/assets/images/logo.svg">
+    <meta property="og:site_name" content="Make A Splash Foundation">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Water Safety Resources | Make A Splash Foundation">
+    <meta name="twitter:description" content="Free water safety resources, drowning prevention tips, and educational materials.">
+    <title>Water Safety Resources | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="canonical" href="https://makeasplashfoundation.co/resources.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .resources-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        .resources-hero {
+            background: linear-gradient(135deg, var(--accent-navy), var(--primary-blue));
+            color: var(--white);
+            padding: var(--spacing-xxl) 0;
+            text-align: center;
+        }
+
+        .resources-hero h1 {
+            color: var(--white);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .resource-category {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .resource-category h2 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .resource-card {
+            background: var(--off-white);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border-left: 4px solid var(--primary-blue);
+            transition: all var(--transition-normal);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resource-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.25rem;
+        }
+
+        .resource-card p {
+            color: var(--dark-gray);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .resource-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .resource-list li {
+            padding-left: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            position: relative;
+            color: var(--dark-gray);
+        }
+
+        .resource-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .stat-highlight {
+            background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%);
+            color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .stat-highlight h2 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .external-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: var(--spacing-sm);
+        }
+
+        .external-link:hover {
+            color: var(--primary-blue-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Resources Page -->
+    <div class="resources-page">
+        <!-- Hero Section -->
+        <section class="resources-hero">
+            <div class="container">
+                <h1>Water Safety Resources</h1>
+                <p style="font-size: 1.25rem; max-width: 700px; margin: 0 auto;">
+                    Free educational materials and information to help keep children safe around water
+                </p>
+            </div>
+        </section>
+
+        <!-- Critical Statistics -->
+        <section style="padding: var(--spacing-xl) 0;">
+            <div class="container">
+                <div class="stat-highlight">
+                    <h2>Every 44 Seconds</h2>
+                    <p style="font-size: 1.25rem; margin: 0;">A child drowns somewhere in the world</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drowning Prevention Facts -->
+        <section style="padding: var(--spacing-xl) 0;">
+            <div class="container">
+                <div class="resource-category">
+                    <h2>🚨 Drowning Prevention Facts</h2>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <h3>Leading Cause of Death</h3>
+                            <p>Drowning is the <strong>leading cause of death</strong> for children ages 1-4 years old in the United States.</p>
+                        </div>
+                        <div class="resource-card">
+                            <h3>It Happens Quickly</h3>
+                            <p>Drowning can happen in <strong>less than 2 minutes</strong> and is often silent - children cannot call for help.</p>
+                        </div>
+                        <div class="resource-card">
+                            <h3>Swim Lessons Reduce Risk</h3>
+                            <p>Formal swim lessons can reduce the risk of drowning by <strong>88%</strong> among children ages 1-4.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Water Safety Tips for Parents -->
+        <section style="padding: var(--spacing-xl) 0; background: var(--white);">
+            <div class="container">
+                <div class="resource-category">
+                    <h2>👨‍👩‍👧‍👦 Water Safety Tips for Parents</h2>
+
+                    <div class="resource-card">
+                        <h3>Supervision is Key</h3>
+                        <ul class="resource-list">
+                            <li>Never leave children unattended near water - not even for a second</li>
+                            <li>Assign a "water watcher" who is not distracted by phones or socializing</li>
+                            <li>Stay within arm's reach of young children and non-swimmers</li>
+                            <li>Learn CPR - it can save a life in an emergency</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card" style="margin-top: var(--spacing-md);">
+                        <h3>Pool Safety</h3>
+                        <ul class="resource-list">
+                            <li>Install a 4-sided fence around pools with self-closing, self-latching gates</li>
+                            <li>Remove toys from the pool when not in use to prevent attraction</li>
+                            <li>Keep rescue equipment and a phone poolside</li>
+                            <li>Drain inflatable pools after each use</li>
+                            <li>Empty buckets and containers that collect water</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card" style="margin-top: var(--spacing-md);">
+                        <h3>Swim Lessons</h3>
+                        <ul class="resource-list">
+                            <li>Enroll children in age-appropriate survival swim lessons</li>
+                            <li>Start as early as 6 months with infant survival swim training</li>
+                            <li>Look for nationally certified instructors with survival swim training</li>
+                            <li>Practice water safety skills year-round, not just in summer</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card" style="margin-top: var(--spacing-md);">
+                        <h3>Beach & Lake Safety</h3>
+                        <ul class="resource-list">
+                            <li>Swim only in designated swimming areas with lifeguards</li>
+                            <li>Use U.S. Coast Guard-approved life jackets for young children</li>
+                            <li>Be aware of water conditions, currents, and weather</li>
+                            <li>Never swim alone</li>
+                            <li>Teach children to never dive into unknown water</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trusted Organizations -->
+        <section style="padding: var(--spacing-xl) 0; background: var(--white);">
+            <div class="container">
+                <div class="resource-category">
+                    <h2>🔗 Trusted Water Safety Organizations</h2>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <h3>National Drowning Prevention Alliance (NDPA)</h3>
+                            <p>Leading voice in drowning prevention advocacy, education, and collaboration.</p>
+                            <a href="https://www.ndpa.org/" target="_blank" rel="noopener" class="external-link">
+                                Visit NDPA.org →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>United States Swim School Association</h3>
+                            <p>Organization dedicated to teaching children to swim and promoting water safety.</p>
+                            <a href="https://www.usswimschools.org/" target="_blank" rel="noopener" class="external-link">
+                                Visit USSwimSchools.org →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>American Red Cross</h3>
+                            <p>Water safety tips, swim lesson resources, and training information.</p>
+                            <a href="https://www.redcross.org/take-a-class/swimming" target="_blank" rel="noopener" class="external-link">
+                                Visit RedCross.org →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>Water Safety USA</h3>
+                            <p>Coalition promoting water competency and drowning prevention education.</p>
+                            <a href="https://www.watersafetyusa.org/" target="_blank" rel="noopener" class="external-link">
+                                Visit WaterSafetyUSA.org →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>Global Alliance for Drowning Prevention (GADP)</h3>
+                            <p>International network working to prevent drowning worldwide.</p>
+                            <a href="https://www.who.int/teams/social-determinants-of-health/safety-and-mobility/drowning" target="_blank" rel="noopener" class="external-link">
+                                Visit WHO GADP →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>Stop Drowning Now</h3>
+                            <p>Foundation dedicated to preventing drowning through education and awareness.</p>
+                            <a href="https://www.stopdrowningnow.org/" target="_blank" rel="noopener" class="external-link">
+                                Visit StopDrowningNow.org →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Downloadable Resources -->
+        <section style="padding: var(--spacing-xl) 0;">
+            <div class="container">
+                <div class="resource-category">
+                    <h2>📥 Downloadable Resources</h2>
+                    <p style="color: var(--dark-gray); margin-bottom: var(--spacing-lg);">
+                        Print and save these free educational materials to help keep your family safe around water.
+                    </p>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <h3>🏊 Pool Safety Checklist</h3>
+                            <p>Essential guidelines to keep children safe around pools, including supervision tips, fencing requirements, and emergency preparedness.</p>
+                            <a href="downloads/pool-safety-checklist.html" target="_blank" class="external-link">
+                                Download PDF →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>🏖️ Beach & Lake Safety Guide</h3>
+                            <p>Stay safe while enjoying open water with rip current safety, life jacket guidelines, and emergency response information.</p>
+                            <a href="downloads/beach-lake-safety.html" target="_blank" class="external-link">
+                                Download PDF →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>👨‍👩‍👧‍👦 Parent Water Safety Tips</h3>
+                            <p>Age-by-age water safety guidelines from infants through teens, including the Water Watcher system and supervision strategies.</p>
+                            <a href="downloads/parent-water-safety-tips.html" target="_blank" class="external-link">
+                                Download PDF →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>📊 Drowning Prevention Facts</h3>
+                            <p>Critical statistics, risk factors, and evidence-based prevention strategies to protect children from drowning.</p>
+                            <a href="downloads/drowning-prevention-facts.html" target="_blank" class="external-link">
+                                Download PDF →
+                            </a>
+                        </div>
+                        <div class="resource-card">
+                            <h3>🖍️ Water Safety Coloring Sheet</h3>
+                            <p>Kid-friendly coloring page with water safety themes, rules, and a water safety pledge for children to color and learn.</p>
+                            <a href="downloads/water-safety-coloring-sheet.html" target="_blank" class="external-link">
+                                Download PDF →
+                            </a>
+                        </div>
+                    </div>
+                    <div style="background: var(--off-white); border: 2px solid var(--primary-blue); border-radius: var(--radius-md); padding: var(--spacing-md); margin-top: var(--spacing-lg); text-align: center;">
+                        <p style="color: var(--accent-navy); margin: 0;">
+                            <strong>How to save as PDF:</strong> Click any link above to open the resource in a new tab, then use your browser's Print function (Ctrl+P or Cmd+P) and select "Save as PDF" as your printer option.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section style="padding: var(--spacing-xxl) 0; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: var(--white); text-align: center;">
+            <div class="container">
+                <h2 style="color: var(--white); margin-bottom: var(--spacing-md);">Ready to Get Started?</h2>
+                <p style="font-size: 1.125rem; margin-bottom: var(--spacing-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Apply for a scholarship to give your child life-saving swim lessons
+                </p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="apply.html" class="btn btn-secondary btn-large">Apply for Scholarship</a>
+                    <a href="donate.html" class="btn btn-primary btn-large" style="background: var(--white); color: var(--primary-blue);">Support Our Mission</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="donors.html">Our Donors</a></li>
+                        <li><a href="corporate-partners.html">Corporate Partners</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Stay Updated</h4>
+                    <p class="footer-tagline" style="margin-bottom: 0.75rem;">Get water safety tips, impact stories, and event updates.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="_honeypot" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="newsletter-input-group">
+                            <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary newsletter-btn" id="newsletterBtn">Subscribe</button>
+                        </div>
+                        <p class="newsletter-status" id="newsletterStatus" style="display: none;"></p>
+                    </form>
+                    <div class="footer-social" style="margin-top: 0.75rem;">
+                        <a href="https://www.instagram.com/makeasplashfoundation" target="_blank" aria-label="Instagram">Instagram</a>
+                        <a href="https://www.facebook.com/makeasplashfoundation" target="_blank" aria-label="Facebook">Facebook</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script src="assets/js/script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAGk7w72nKfJDtMx535wxgK6tAq6UugrJ8",
+            authDomain: "make-a-splash-foundation.firebaseapp.com",
+            projectId: "make-a-splash-foundation",
+            storageBucket: "make-a-splash-foundation.firebasestorage.app",
+            messagingSenderId: "259150039543",
+            appId: "1:259150039543:web:9ac7d1c44befbbce65c6f2"
+        });
+        const functions = getFunctions(app);
+        const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('newsletterBtn');
+                const status = document.getElementById('newsletterStatus');
+                const emailInput = document.getElementById('newsletterEmail');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Subscribing...';
+                status.style.display = 'none';
+                try {
+                    const honeypot = newsletterForm.querySelector('input[name="_honeypot"]');
+                    await onNewsletterSubscribe({ email: emailInput.value, _honeypot: honeypot ? honeypot.value : '' });
+                    status.textContent = 'Subscribed! Check your email for a welcome message.';
+                    status.style.color = '#28a745';
+                    status.style.display = 'block';
+                    newsletterForm.reset();
+                } catch (error) {
+                    console.error('Newsletter error:', error);
+                    status.textContent = 'Something went wrong. Please try again.';
+                    status.style.color = '#dc3545';
+                    status.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

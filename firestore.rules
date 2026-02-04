@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Scholarship applications — public create, admin-only read/update/delete
+    match /scholarship-applications/{applicationId} {
+      allow create: if request.resource.data.keys().hasAll(['applicationId', 'parentInfo', 'children'])
+                    && request.resource.data.parentInfo.keys().hasAll(['firstName', 'lastName', 'email', 'phone'])
+                    && request.resource.data.parentInfo.email is string
+                    && request.resource.data.parentInfo.email.size() > 0
+                    && request.resource.data.parentInfo.email.size() < 256;
+      allow read, update, delete: if request.auth != null
+                                  && request.auth.token.admin == true;
+    }
+
+    // Newsletter subscribers — Cloud Functions handle writes; admin can read
+    match /newsletter-subscribers/{subscriberId} {
+      allow read: if request.auth != null
+                  && request.auth.token.admin == true;
+      allow write: if false; // Only writable via Admin SDK (Cloud Functions)
+    }
+
+    // Donations — written by payment webhooks (Cloud Functions); admin can read
+    match /donations/{donationId} {
+      allow read: if request.auth != null
+                  && request.auth.token.admin == true;
+      allow write: if false; // Only writable via Admin SDK (payment webhooks)
+    }
+
+    // Contact form submissions — public create, admin-only read/delete
+    match /contact-submissions/{submissionId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() > 0
+                    && request.resource.data.email.size() < 256
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() > 0;
+      allow read, delete: if request.auth != null
+                          && request.auth.token.admin == true;
+      allow update: if false; // Contact submissions shouldn't be edited
+    }
+
+    // Corporate partnership inquiries — public create, admin-only read/update/delete
+    match /corporate-inquiries/{inquiryId} {
+      allow create: if request.resource.data.keys().hasAll(['companyName', 'contactName', 'email'])
+                    && request.resource.data.companyName is string
+                    && request.resource.data.companyName.size() > 0
+                    && request.resource.data.contactName is string
+                    && request.resource.data.contactName.size() > 0
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() > 0
+                    && request.resource.data.email.size() < 256;
+      allow read, update, delete: if request.auth != null
+                                  && request.auth.token.admin == true;
+    }
+
+    // Swim schools — admin only CRUD
+    match /swim-schools/{schoolId} {
+      allow read, write: if request.auth != null
+                         && request.auth.token.admin == true;
+    }
+
+    // School payments — admin only CRUD
+    match /school-payments/{paymentId} {
+      allow read, write: if request.auth != null
+                         && request.auth.token.admin == true;
+    }
+
+    // Email templates — admin only CRUD
+    match /email-templates/{templateId} {
+      allow read, write: if request.auth != null
+                         && request.auth.token.admin == true;
+    }
+
+    // Email logs — admin read, Cloud Functions write
+    match /email-logs/{logId} {
+      allow read: if request.auth != null
+                  && request.auth.token.admin == true;
+      allow write: if false; // Only writable via Admin SDK (Cloud Functions)
+    }
+
+    // Waitlist — admin only CRUD
+    match /waitlist/{waitlistId} {
+      allow read, write: if request.auth != null
+                         && request.auth.token.admin == true;
+    }
+
+    // Admin settings — admin only CRUD
+    match /admin-settings/{settingId} {
+      allow read, write: if request.auth != null
+                         && request.auth.token.admin == true;
+    }
+
+    // Scheduled reminders — Cloud Functions only
+    match /scheduled-reminders/{reminderId} {
+      allow read: if request.auth != null
+                  && request.auth.token.admin == true;
+      allow write: if false; // Only writable via Admin SDK (Cloud Functions)
+    }
+
+    // Block all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

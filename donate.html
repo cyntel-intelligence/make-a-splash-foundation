@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Donate to Make A Splash Foundation to help provide survival swim lessons scholarships and prevent childhood drowning. Tax-deductible donations.">
+    <meta property="og:title" content="Donate | Make A Splash Foundation">
+    <meta property="og:description" content="Your tax-deductible donation helps provide life-saving swim lessons to children in need. 501(c)(3) Tax ID: 92-3713877.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makeasplashfoundation.co/donate.html">
+    <meta property="og:image" content="https://makeasplashfoundation.co/assets/images/logo.svg">
+    <meta property="og:site_name" content="Make A Splash Foundation">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Donate | Make A Splash Foundation">
+    <meta name="twitter:description" content="Your tax-deductible donation helps provide life-saving swim lessons to children in need.">
+    <title>Donate | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="canonical" href="https://makeasplashfoundation.co/donate.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .donate-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        .donate-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .donate-header h1 {
+            color: var(--white);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .donate-intro {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .donate-intro p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .impact-message {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(90, 175, 229, 0.1));
+            border-left: 4px solid var(--primary-blue);
+            padding: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+            border-radius: var(--radius-md);
+        }
+
+        .impact-message h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .donation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .donation-form-box {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .donation-form-box h2 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .donation-type-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: var(--spacing-lg);
+            background: var(--light-gray);
+            border-radius: var(--radius-md);
+            padding: 0.25rem;
+        }
+
+        .donation-type-tab {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: transparent;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-radius: var(--radius-sm);
+        }
+
+        .donation-type-tab.active {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .donation-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .amount-btn {
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            font-family: var(--font-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .amount-btn:hover {
+            border-color: var(--primary-blue);
+            background: rgba(74, 144, 226, 0.05);
+        }
+
+        .amount-btn.active {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .custom-amount-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .custom-amount-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            font-size: 1.125rem;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .custom-amount-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .recurring-info {
+            background: var(--off-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .recurring-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .recurring-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .donor-info-section {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 2px solid var(--light-gray);
+        }
+
+        .donor-info-section h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .tax-deductible {
+            background: var(--success);
+            color: var(--white);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .impact-sidebar {
+            background: linear-gradient(135deg, var(--accent-navy), var(--primary-blue-dark));
+            color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .impact-sidebar h2 {
+            color: var(--white);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .impact-sidebar p {
+            line-height: 1.8;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.95;
+        }
+
+        .impact-stats-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .impact-stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .impact-stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .impact-stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .impact-stat-text {
+            font-size: 0.95rem;
+        }
+
+        .ways-to-give {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ways-to-give h2 {
+            color: var(--accent-navy);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .giving-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .giving-option {
+            background: var(--off-white);
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .giving-option:hover {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .giving-option-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .giving-option h3 {
+            color: var(--accent-navy);
+            font-size: 1.125rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .giving-option p {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        .amount-suggestion {
+            background: var(--off-white);
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .amount-suggestion:hover {
+            border-color: var(--primary-blue);
+            background: rgba(74, 144, 226, 0.05);
+        }
+
+        .amount-suggestion strong {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .amount-suggestion span {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--dark-gray);
+        }
+
+        @media (max-width: 768px) {
+            .donation-container {
+                grid-template-columns: 1fr;
+            }
+
+            .donation-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .donation-type-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Donate Page -->
+    <div class="donate-page">
+        <!-- Header -->
+        <div class="donate-header">
+            <div class="container">
+                <h1>Support Our Mission</h1>
+                <p>Help us provide life-saving swim lessons to children in need</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Introduction -->
+            <div class="donate-intro">
+                <h2>Welcome to Make A Splash Foundation's Donation Page</h2>
+                <p>
+                    We are a nonprofit organization dedicated to preventing childhood drowning by raising awareness and providing scholarships for survival swim lessons to families in need.
+                </p>
+                <p>
+                    With your support, we can make a real difference in the lives of children and families by providing scholarships for survival swim lessons to prevent drowning accidents. <strong>Every donation counts and helps us save lives.</strong>
+                </p>
+                <p style="font-size: 1.25rem; color: var(--primary-blue); font-weight: 600; margin-bottom: 0;">
+                    Thank you for your generosity and for joining us in our mission to prevent childhood drowning.
+                </p>
+            </div>
+
+            <!-- Donation Form and Impact Sidebar -->
+            <div class="donation-container">
+                <!-- Donation Form -->
+                <div class="donation-form-box">
+                    <div class="tax-deductible">
+                        ✓ Tax-Deductible Donation | 501(c)(3) Tax ID: 92-3713877
+                    </div>
+
+                    <h2>Make Your Donation</h2>
+
+                    <!-- Donation Type Tabs -->
+                    <div class="donation-type-tabs">
+                        <button class="donation-type-tab active" data-type="one-time">One-Time</button>
+                        <button class="donation-type-tab" data-type="monthly">Monthly</button>
+                        <button class="donation-type-tab" data-type="annual">Annually</button>
+                    </div>
+
+                    <!-- Recurring Donation Info (hidden by default) -->
+                    <div class="recurring-info" id="recurringInfo" style="display: none;">
+                        <p><strong>Recurring Donation:</strong></p>
+                        <p>A donor account is created automatically for recurring donations. Account setup info will be emailed to you.</p>
+                        <p>You can log in to edit your recurring donation any time.</p>
+                    </div>
+
+                    <!-- Donation Form -->
+                    <div style="margin: var(--spacing-lg) 0;">
+                        <!-- Amount Selection -->
+                        <p style="color: var(--dark-gray); margin-bottom: var(--spacing-sm); font-size: 1rem; font-weight: 600;">
+                            Select Donation Amount
+                        </p>
+                        <div class="donation-amounts" id="amountButtons">
+                            <button type="button" class="amount-btn active" data-amount="120">$120</button>
+                            <button type="button" class="amount-btn" data-amount="250">$250</button>
+                            <button type="button" class="amount-btn" data-amount="500">$500</button>
+                            <button type="button" class="amount-btn" data-amount="960">$960</button>
+                            <button type="button" class="amount-btn" data-amount="2500">$2,500</button>
+                            <button type="button" class="amount-btn" data-amount="5000">$5,000</button>
+                        </div>
+
+                        <div class="custom-amount-group" style="margin: var(--spacing-md) 0;">
+                            <label style="display: block; font-size: 0.9rem; color: var(--dark-gray); margin-bottom: 0.25rem;">Or enter a custom amount:</label>
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--dark-gray); font-weight: 600;">$</span>
+                                <input type="number" id="customAmount" class="custom-amount-input" placeholder="Other amount" min="1" step="1" value="120" style="padding-left: 28px;">
+                            </div>
+                        </div>
+
+                        <!-- Donor Info (optional but helps with receipts) -->
+                        <div style="margin: var(--spacing-lg) 0; padding-top: var(--spacing-md); border-top: 1px solid var(--light-gray);">
+                            <p style="font-size: 0.9rem; color: var(--dark-gray); margin-bottom: var(--spacing-sm);">
+                                <strong>Your Information</strong> (for tax receipt)
+                            </p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-sm);">
+                                <input type="text" id="donorName" placeholder="Full Name" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
+                                <input type="email" id="donorEmail" placeholder="Email Address" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
+                            </div>
+                        </div>
+
+                        <!-- Payment Buttons -->
+                        <div style="margin-top: var(--spacing-lg);">
+                            <p style="font-size: 0.9rem; color: var(--dark-gray); margin-bottom: var(--spacing-sm); font-weight: 600;">Choose Payment Method:</p>
+
+                            <!-- Stripe Button -->
+                            <button type="button" id="stripeBtn" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: var(--spacing-sm); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/></svg>
+                                Donate with Card
+                            </button>
+
+                            <!-- Divider -->
+                            <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin: var(--spacing-md) 0;">
+                                <div style="flex: 1; height: 1px; background: var(--light-gray);"></div>
+                                <span style="color: var(--gray); font-size: 0.85rem;">or</span>
+                                <div style="flex: 1; height: 1px; background: var(--light-gray);"></div>
+                            </div>
+
+                            <!-- PayPal Button -->
+                            <a href="https://www.paypal.com/ncp/payment/DUQ4EWNTN5LN6" target="_blank" rel="noopener" class="btn" style="width: 100%; padding: 0.75rem; font-size: 1rem; background: #0070ba; color: white; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; border-radius: var(--radius-md);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.645h7.32c2.66 0 4.552.57 5.62 1.693.476.502.793 1.064.943 1.67.158.635.158 1.39 0 2.244l-.01.06v.52l.404.23c.34.18.612.378.82.594.37.39.62.873.748 1.441.131.585.132 1.28.003 2.066-.147.91-.428 1.7-.837 2.347a4.78 4.78 0 0 1-1.556 1.513 6.51 6.51 0 0 1-2.04.808 10.54 10.54 0 0 1-2.482.262H13.35a.95.95 0 0 0-.938.803l-.03.164-.523 3.32-.023.13a.95.95 0 0 1-.938.803H7.076z"/></svg>
+                                Donate with PayPal
+                            </a>
+                        </div>
+
+                        <p style="font-size: 0.8rem; color: var(--gray); margin-top: var(--spacing-md); text-align: center;">
+                            🔒 All payments are secure and encrypted<br>
+                            Tax-deductible receipt sent automatically via email
+                        </p>
+
+                        <!-- Loading/Error State -->
+                        <div id="donateStatus" style="display: none; margin-top: var(--spacing-md); padding: var(--spacing-sm); border-radius: var(--radius-md); text-align: center;"></div>
+                    </div>
+                </div>
+
+                <!-- Impact Sidebar -->
+                <div class="impact-sidebar">
+                    <h2>Your Impact</h2>
+                    <p>
+                        <strong>Drowning is the #1 cause of accidental death for young children.</strong> Together, we can change that.
+                    </p>
+                    <p>
+                        The Make A Splash Foundation provides survival swim scholarships to families who cannot afford lessons. Your support makes it possible for every child to learn life-saving water skills.
+                    </p>
+
+                    <div class="impact-stats-box">
+                        <h3 style="color: var(--white); margin-bottom: var(--spacing-md);">What Your Donation Can Do:</h3>
+                        <div class="impact-stat-item">
+                            <span class="impact-stat-icon">💙</span>
+                            <span class="impact-stat-text"><strong>$30</strong> - One swim lesson for a child</span>
+                        </div>
+                        <div class="impact-stat-item">
+                            <span class="impact-stat-icon">🏊</span>
+                            <span class="impact-stat-text"><strong>$120</strong> - One week of lessons</span>
+                        </div>
+                        <div class="impact-stat-item">
+                            <span class="impact-stat-icon">🎓</span>
+                            <span class="impact-stat-text"><strong>$900</strong> - Full scholarship for one child</span>
+                        </div>
+                        <div class="impact-stat-item">
+                            <span class="impact-stat-icon">✨</span>
+                            <span class="impact-stat-text"><strong>$1,000</strong> - Supports entire journey (lessons, registration & equipment)</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid rgba(255,255,255,0.2);">
+                        <p style="font-size: 0.95rem; opacity: 0.9;">
+                            <strong>100% of your donation</strong> goes directly to funding survival swim lessons for children in need. We are committed to transparency and responsible stewardship of every dollar donated.
+                        </p>
+                    </div>
+
+                    <blockquote style="margin-top: var(--spacing-md); padding: var(--spacing-md); background: rgba(255,255,255,0.1); border-left: 4px solid var(--secondary-blue); border-radius: var(--radius-sm); font-style: italic;">
+                        "Thanks to donors like you, my child learned to swim and is now safe around water. This gift is priceless."
+                        <cite style="display: block; margin-top: var(--spacing-sm); font-style: normal; opacity: 0.8;">— Scholarship Recipient Family</cite>
+                    </blockquote>
+                </div>
+            </div>
+
+            <!-- Other Ways to Give -->
+            <div class="ways-to-give">
+                <h2>Other Ways to Give</h2>
+                <div class="giving-options">
+                    <div class="giving-option">
+                        <div class="giving-option-icon">🤝</div>
+                        <h3>Become a Partner</h3>
+                        <p>Partner with us as a swim school or corporate sponsor to expand our reach.</p>
+                    </div>
+                    <div class="giving-option">
+                        <div class="giving-option-icon">🎉</div>
+                        <h3>Fundraise for Us</h3>
+                        <p>Host a fundraising event or birthday fundraiser to support our mission.</p>
+                    </div>
+                    <div class="giving-option">
+                        <div class="giving-option-icon">👕</div>
+                        <h3>In-Kind Donations</h3>
+                        <p>Donate swim gear, equipment, or professional services.</p>
+                    </div>
+                    <div class="giving-option">
+                        <div class="giving-option-icon">💼</div>
+                        <h3>Corporate Giving</h3>
+                        <p>Explore corporate sponsorship opportunities and employee matching programs.</p>
+                    </div>
+                    <div class="giving-option">
+                        <div class="giving-option-icon">🎁</div>
+                        <h3>Legacy Giving</h3>
+                        <p>Include Make A Splash Foundation in your estate planning.</p>
+                    </div>
+                    <div class="giving-option">
+                        <div class="giving-option-icon">📧</div>
+                        <h3>Contact Us</h3>
+                        <p>Have questions? Email us at <a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thank You Message -->
+            <div class="donate-intro" style="margin-top: var(--spacing-lg);">
+                <h2>Thank You for Your Support!</h2>
+                <p>
+                    Every donation, no matter the size, makes a meaningful impact in preventing childhood drowning. Together, we're creating a safer future for children in our community.
+                </p>
+                <p style="margin-bottom: 0;">
+                    <strong>Questions?</strong> Contact us at <a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="donors.html">Our Donors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Stay Updated</h4>
+                    <p class="footer-tagline" style="margin-bottom: 0.75rem;">Get water safety tips, impact stories, and event updates.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="_honeypot" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="newsletter-input-group">
+                            <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary newsletter-btn" id="newsletterBtn">Subscribe</button>
+                        </div>
+                        <p class="newsletter-status" id="newsletterStatus" style="display: none;"></p>
+                    </form>
+                    <div class="footer-social" style="margin-top: 0.75rem;">
+                        <a href="https://www.instagram.com/makeasplashfoundation" target="_blank" aria-label="Instagram">Instagram</a>
+                        <a href="https://www.facebook.com/makeasplashfoundation" target="_blank" aria-label="Facebook">Facebook</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script src="assets/js/script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyAGk7w72nKfJDtMx535wxgK6tAq6UugrJ8",
+            authDomain: "make-a-splash-foundation.firebaseapp.com",
+            projectId: "make-a-splash-foundation",
+            storageBucket: "make-a-splash-foundation.firebasestorage.app",
+            messagingSenderId: "259150039543",
+            appId: "1:259150039543:web:9ac7d1c44befbbce65c6f2"
+        });
+
+        const functions = getFunctions(app);
+        const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
+        const createStripeCheckout = httpsCallable(functions, 'stripeCheckout');
+
+        // Newsletter form handler
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('newsletterBtn');
+                const status = document.getElementById('newsletterStatus');
+                const emailInput = document.getElementById('newsletterEmail');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Subscribing...';
+                status.style.display = 'none';
+                try {
+                    const honeypot = newsletterForm.querySelector('input[name="_honeypot"]');
+                    await onNewsletterSubscribe({ email: emailInput.value, _honeypot: honeypot ? honeypot.value : '' });
+                    status.textContent = 'Subscribed! Check your email for a welcome message.';
+                    status.style.color = '#28a745';
+                    status.style.display = 'block';
+                    newsletterForm.reset();
+                } catch (error) {
+                    console.error('Newsletter error:', error);
+                    status.textContent = 'Something went wrong. Please try again.';
+                    status.style.color = '#dc3545';
+                    status.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            });
+        }
+
+        // Stripe checkout handler
+        const stripeBtn = document.getElementById('stripeBtn');
+        if (stripeBtn) {
+            stripeBtn.addEventListener('click', async function() {
+                const amount = document.getElementById('customAmount').value;
+                const donorName = document.getElementById('donorName').value;
+                const donorEmail = document.getElementById('donorEmail').value;
+                const donateStatus = document.getElementById('donateStatus');
+
+                // Get selected donation type (one-time, monthly, annual)
+                const activeTab = document.querySelector('.donation-type-tab.active');
+                const recurring = activeTab ? activeTab.dataset.type : 'one-time';
+
+                if (!amount || parseFloat(amount) < 1) {
+                    donateStatus.textContent = 'Please enter a donation amount of at least $1.';
+                    donateStatus.style.background = '#FFEBEE';
+                    donateStatus.style.color = '#C62828';
+                    donateStatus.style.display = 'block';
+                    return;
+                }
+
+                stripeBtn.disabled = true;
+                stripeBtn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span> Processing...';
+                donateStatus.style.display = 'none';
+
+                try {
+                    const result = await createStripeCheckout({
+                        amount: parseFloat(amount),
+                        donorName: donorName || '',
+                        donorEmail: donorEmail || '',
+                        recurring: recurring === 'one-time' ? null : recurring
+                    });
+
+                    if (result.data && result.data.url) {
+                        window.location.href = result.data.url;
+                    } else {
+                        throw new Error('No checkout URL returned');
+                    }
+                } catch (error) {
+                    console.error('Stripe checkout error:', error);
+                    console.error('Error details - code:', error.code, 'message:', error.message, 'details:', error.details);
+                    let errorMsg = error.message || 'Unable to process payment. Please try PayPal or contact us.';
+                    donateStatus.textContent = errorMsg;
+                    donateStatus.style.background = '#FFEBEE';
+                    donateStatus.style.color = '#C62828';
+                    donateStatus.style.display = 'block';
+                    stripeBtn.disabled = false;
+                    stripeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/></svg> Donate with Card';
+                }
+            });
+        }
+    </script>
+    <script>
+        // Donation Page — Tab switching and amount selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const donationTypeTabs = document.querySelectorAll('.donation-type-tab');
+            const recurringInfo = document.getElementById('recurringInfo');
+            const amountButtons = document.querySelectorAll('.amount-btn');
+            const customAmountInput = document.getElementById('customAmount');
+
+            // Handle donation type tabs (one-time / monthly / annual)
+            donationTypeTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    donationTypeTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const selectedType = this.dataset.type;
+
+                    if (selectedType === 'monthly' || selectedType === 'annual') {
+                        recurringInfo.style.display = 'block';
+                    } else {
+                        recurringInfo.style.display = 'none';
+                    }
+                });
+            });
+
+            // Handle preset amount buttons
+            amountButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    amountButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    customAmountInput.value = this.dataset.amount;
+                });
+            });
+
+            // Handle custom amount input — deselect preset buttons
+            customAmountInput.addEventListener('input', function() {
+                amountButtons.forEach(b => b.classList.remove('active'));
+            });
+
+            // Check URL for canceled state
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('canceled') === 'true') {
+                const donateStatus = document.getElementById('donateStatus');
+                if (donateStatus) {
+                    donateStatus.textContent = 'Payment was canceled. You can try again when ready.';
+                    donateStatus.style.background = '#FFF3E0';
+                    donateStatus.style.color = '#E65100';
+                    donateStatus.style.display = 'block';
+                }
+            }
+        });
+    </script>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</body>
+</html>

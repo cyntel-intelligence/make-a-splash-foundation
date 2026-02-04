@@ -1,0 +1,3454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Dashboard | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #4A90E2;
+            --primary-dark: #2E5F8E;
+            --navy: #1E3A5F;
+            --success: #28A745;
+            --warning: #FFC107;
+            --danger: #DC3545;
+            --info: #17A2B8;
+            --white: #FFFFFF;
+            --off-white: #F8F9FA;
+            --light-gray: #E9ECEF;
+            --gray: #ADB5BD;
+            --dark-gray: #495057;
+            --charcoal: #343A40;
+            --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 8px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--off-white);
+            color: var(--charcoal);
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--navy), var(--primary));
+        }
+
+        .login-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 180px;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-box h1 {
+            font-family: var(--font);
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-box p {
+            color: var(--dark-gray);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark-gray);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            width: 100%;
+        }
+
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-sm {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-warning { background: var(--warning); color: var(--charcoal); }
+        .btn-info { background: var(--info); color: var(--white); }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover { background: var(--primary); color: var(--white); }
+        .btn-secondary { background: var(--dark-gray); color: var(--white); }
+        .btn-secondary:hover { background: var(--charcoal); }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* ===== DASHBOARD LAYOUT ===== */
+        .dashboard { display: none; }
+
+        .dash-header {
+            background: var(--navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .dash-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dash-header img { height: 36px; }
+
+        .dash-header h1 {
+            font-family: var(--font);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .dash-header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .dash-header-right .user-email { opacity: 0.8; }
+
+        .btn-logout {
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: var(--font);
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+        .dash-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ===== TAB NAVIGATION ===== */
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover { background: var(--off-white); }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--off-white);
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-family: var(--font);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.875rem;
+            color: var(--dark-gray);
+            margin-top: 0.5rem;
+        }
+
+        .stat-card.stat-success .stat-number { color: var(--success); }
+        .stat-card.stat-warning .stat-number { color: var(--warning); }
+        .stat-card.stat-danger .stat-number { color: var(--danger); }
+
+        /* ===== TABLE STYLES ===== */
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .panel-header h2 {
+            font-family: var(--font);
+            font-size: 1.25rem;
+            color: var(--navy);
+        }
+
+        .panel-header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar select, .filter-bar input {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+        }
+
+        .filter-bar select:focus, .filter-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .data-table {
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--off-white);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-family: var(--font);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .data-table th:hover { background: var(--light-gray); }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:hover td { background: rgba(74, 144, 226, 0.03); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-new { background: #E3F2FD; color: #1565C0; }
+        .status-pending { background: #E3F2FD; color: #1565C0; }
+        .status-under_review { background: #FFF3E0; color: #E65100; }
+        .status-approved { background: #E8F5E9; color: #2E7D32; }
+        .status-denied { background: #FFEBEE; color: #C62828; }
+        .status-active { background: #E0F7FA; color: #00838F; }
+        .status-completed { background: #F3E5F5; color: #7B1FA2; }
+
+        .clickable-row { cursor: pointer; }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray);
+        }
+
+        .empty-state p { font-size: 1.1rem; }
+
+        /* ===== APPLICATION DETAIL MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active { display: flex; justify-content: center; align-items: flex-start; }
+
+        .modal {
+            background: var(--white);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: var(--shadow-lg);
+            margin: 2rem auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-header h2 {
+            font-family: var(--font);
+            font-size: 1.25rem;
+            color: var(--navy);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        .modal-body { padding: 1.5rem; }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section h3 {
+            font-family: var(--font);
+            font-size: 1rem;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 2rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-item .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-item .value {
+            font-size: 0.95rem;
+            color: var(--charcoal);
+        }
+
+        /* Status update form in modal */
+        .status-form {
+            background: var(--off-white);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+        }
+
+        .status-form .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .status-form .form-row > div { flex: 1; }
+
+        .status-form select, .status-form textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+        }
+
+        .status-form textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .status-form select:focus, .status-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Notes list */
+        .notes-list { list-style: none; }
+
+        .notes-list li {
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-meta {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .note-text { font-size: 0.9rem; }
+
+        /* Document links */
+        .doc-list { list-style: none; }
+
+        .doc-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .doc-list li:last-child { border-bottom: none; }
+
+        .doc-list a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .doc-list a:hover { text-decoration: underline; }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--light-gray);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .dash-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 1rem;
+            }
+
+            .dash-content { padding: 1rem; }
+
+            .tab-nav {
+                flex-direction: column;
+            }
+
+            .tab-btn { border-bottom: none; border-left: 3px solid transparent; }
+            .tab-btn.active { border-left-color: var(--primary); border-bottom: none; }
+
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+
+            .detail-grid { grid-template-columns: 1fr; }
+
+            .data-table { overflow-x: auto; }
+
+            .filter-bar { width: 100%; }
+
+            .panel-header { flex-direction: column; align-items: flex-start; }
+
+            .modal { margin: 1rem; }
+
+            .status-form .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <img src="assets/images/logo.svg" alt="Make A Splash Foundation">
+            <h1>Admin Dashboard</h1>
+            <p>Sign in to manage applications and subscribers</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+                <p class="login-error" id="loginError"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard" id="dashboard">
+        <!-- Header -->
+        <div class="dash-header">
+            <div class="dash-header-left">
+                <img src="assets/images/logo.svg" alt="Logo">
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="dash-header-right">
+                <span class="user-email" id="userEmail"></span>
+                <button class="btn-logout" id="logoutBtn">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="dash-content">
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="overview">Overview</button>
+                <button class="tab-btn" data-tab="applications">Applications</button>
+                <button class="tab-btn" data-tab="active-scholarships">Active Scholarships</button>
+                <button class="tab-btn" data-tab="donations">Donations</button>
+                <button class="tab-btn" data-tab="subscribers">Subscribers</button>
+                <button class="tab-btn" data-tab="swim-schools">Swim Schools</button>
+                <button class="tab-btn" data-tab="communication">Communication</button>
+                <button class="tab-btn" data-tab="reports">Reports</button>
+                <button class="tab-btn" data-tab="waitlist">Waitlist</button>
+                <button class="tab-btn" data-tab="contacts">Contacts</button>
+                <button class="tab-btn" data-tab="corporate">Corporate</button>
+            </div>
+
+            <!-- OVERVIEW TAB -->
+            <div class="tab-panel active" id="tab-overview">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotal">--</div>
+                        <div class="stat-label">Total Applications</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statNew">--</div>
+                        <div class="stat-label">New / Pending</div>
+                    </div>
+                    <div class="stat-card stat-warning">
+                        <div class="stat-number" id="statReview">--</div>
+                        <div class="stat-label">Under Review</div>
+                    </div>
+                    <div class="stat-card stat-success">
+                        <div class="stat-number" id="statApproved">--</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid #00838F;">
+                        <div class="stat-number" id="statActive" style="color: #00838F;">--</div>
+                        <div class="stat-label">Active Scholarships</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid #7B1FA2;">
+                        <div class="stat-number" id="statCompleted" style="color: #7B1FA2;">--</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card stat-danger">
+                        <div class="stat-number" id="statDenied">--</div>
+                        <div class="stat-label">Denied</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statSubscribers">--</div>
+                        <div class="stat-label">Newsletter Subscribers</div>
+                    </div>
+                    <div class="stat-card stat-success">
+                        <div class="stat-number" id="statDonations">--</div>
+                        <div class="stat-label">Total Donations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statDonationAmount">--</div>
+                        <div class="stat-label">Total Raised</div>
+                    </div>
+                </div>
+
+                <div class="panel-header">
+                    <h2>Recent Applications</h2>
+                </div>
+                <div class="data-table" id="recentAppsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+                </div>
+            </div>
+
+            <!-- APPLICATIONS TAB -->
+            <div class="tab-panel" id="tab-applications">
+                <div class="panel-header">
+                    <h2>Scholarship Applications</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <select id="filterStatus">
+                                <option value="all">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="under_review">Under Review</option>
+                                <option value="approved">Approved</option>
+                                <option value="denied">Denied</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <input type="text" id="filterSearch" placeholder="Search by name or email...">
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="exportApplicationsCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="data-table" id="appsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading applications...</p></div>
+                </div>
+            </div>
+
+            <!-- SUBSCRIBERS TAB -->
+            <div class="tab-panel" id="tab-subscribers">
+                <div class="panel-header">
+                    <h2>Newsletter Subscribers</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <input type="text" id="subSearch" placeholder="Search by email...">
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openImportSubscribersModal()">Import CSV</button>
+                        <button class="btn btn-sm btn-secondary" onclick="exportSubscribersCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="data-table" id="subsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading subscribers...</p></div>
+                </div>
+            </div>
+
+            <!-- DONATIONS TAB -->
+            <div class="tab-panel" id="tab-donations">
+                <div class="panel-header">
+                    <h2>Donation History</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <select id="filterPayment">
+                                <option value="all">All Methods</option>
+                                <option value="stripe">Stripe</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                            <input type="text" id="donationSearch" placeholder="Search by email...">
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="exportDonationsCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="data-table" id="donationsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading donations...</p></div>
+                </div>
+            </div>
+
+            <!-- ACTIVE SCHOLARSHIPS TAB -->
+            <div class="tab-panel" id="tab-active-scholarships">
+                <div class="panel-header">
+                    <h2>Active Scholarships</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <select id="filterActiveStatus">
+                                <option value="active">Currently Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="all">All Active & Completed</option>
+                            </select>
+                            <input type="text" id="activeSearch" placeholder="Search by name...">
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="exportActiveScholarshipsCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="data-table" id="activeScholarshipsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading active scholarships...</p></div>
+                </div>
+            </div>
+
+            <!-- SWIM SCHOOLS TAB -->
+            <div class="tab-panel" id="tab-swim-schools">
+                <div class="panel-header">
+                    <h2>Partner Swim Schools</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <select id="filterSchoolStatus">
+                                <option value="all">All Schools</option>
+                                <option value="active">Active</option>
+                                <option value="accepting">Accepting Students</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            <input type="text" id="schoolSearch" placeholder="Search by name or location...">
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openSchoolModal()">+ Add School</button>
+                    </div>
+                </div>
+                <div class="data-table" id="swimSchoolsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading swim schools...</p></div>
+                </div>
+
+                <div class="panel-header" style="margin-top: 2rem;">
+                    <h2>Payment History to Schools</h2>
+                    <div class="panel-header-actions">
+                        <div class="filter-bar">
+                            <select id="filterPaymentSchool">
+                                <option value="all">All Schools</option>
+                            </select>
+                            <input type="date" id="paymentDateFrom" placeholder="From date">
+                            <input type="date" id="paymentDateTo" placeholder="To date">
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openPaymentModal()">+ Record Payment</button>
+                    </div>
+                </div>
+                <div class="data-table" id="schoolPaymentsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading payment history...</p></div>
+                </div>
+            </div>
+
+            <!-- COMMUNICATION TAB -->
+            <div class="tab-panel" id="tab-communication">
+                <!-- Email Templates Section -->
+                <div class="panel-header">
+                    <h2>Email Templates</h2>
+                    <button class="btn btn-sm btn-primary" onclick="openTemplateModal()">+ New Template</button>
+                </div>
+                <div class="data-table" id="emailTemplatesTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading templates...</p></div>
+                </div>
+
+                <!-- Bulk Email Section -->
+                <div class="panel-header" style="margin-top: 2rem;">
+                    <h2>Send Bulk Email</h2>
+                </div>
+                <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Select Template</label>
+                            <select id="bulkEmailTemplate" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                                <option value="">-- Select a template --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Select Recipients</label>
+                            <select id="bulkEmailRecipients" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                                <option value="">-- Select recipients --</option>
+                                <option value="all_applicants">All Applicants</option>
+                                <option value="pending">Pending Applications</option>
+                                <option value="approved">Approved Applicants</option>
+                                <option value="active">Active Scholarships</option>
+                                <option value="completed">Completed Scholarships</option>
+                                <option value="subscribers">Newsletter Subscribers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Custom Subject (optional - overrides template)</label>
+                        <input type="text" id="bulkEmailSubject" placeholder="Leave blank to use template subject" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                    </div>
+                    <div id="bulkEmailPreview" style="display: none; background: var(--off-white); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                        <p style="font-weight: 600; margin-bottom: 0.5rem;">Preview (<span id="recipientCount">0</span> recipients):</p>
+                        <div id="previewContent" style="font-size: 0.9rem;"></div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-sm btn-outline" onclick="previewBulkEmail()">Preview</button>
+                        <button class="btn btn-sm btn-primary" onclick="sendBulkEmail()" id="sendBulkBtn" disabled>Send Emails</button>
+                        <span id="bulkEmailStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                    </div>
+                </div>
+
+                <!-- Reminder Settings Section -->
+                <div class="panel-header" style="margin-top: 2rem;">
+                    <h2>Automated Reminder Settings</h2>
+                </div>
+                <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 0.75rem; color: var(--navy);">Document Expiration Reminders</h4>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="docReminderEnabled" checked>
+                                    <span>Enable document expiration reminders</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: var(--dark-gray);">Days before expiration to remind:</label>
+                                <input type="number" id="docReminderDays" value="30" min="1" max="90" style="width: 80px; padding: 0.4rem; border: 2px solid var(--light-gray); border-radius: var(--radius); margin-left: 0.5rem;">
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.75rem; color: var(--navy);">Lesson Progress Reminders</h4>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="progressReminderEnabled" checked>
+                                    <span>Enable progress check-in reminders</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: var(--dark-gray);">Days without update to trigger:</label>
+                                <input type="number" id="progressReminderDays" value="14" min="1" max="60" style="width: 80px; padding: 0.4rem; border: 2px solid var(--light-gray); border-radius: var(--radius); margin-left: 0.5rem;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--light-gray);">
+                        <button class="btn btn-sm btn-primary" onclick="saveReminderSettings()">Save Settings</button>
+                        <span id="reminderSettingsStatus" style="font-size: 0.85rem; color: var(--gray); margin-left: 0.75rem;"></span>
+                    </div>
+                </div>
+
+                <!-- Email Logs Section -->
+                <div class="panel-header" style="margin-top: 2rem;">
+                    <h2>Email Logs</h2>
+                    <div class="filter-bar">
+                        <select id="filterEmailType">
+                            <option value="all">All Types</option>
+                            <option value="status_change">Status Change</option>
+                            <option value="bulk">Bulk Email</option>
+                            <option value="reminder">Reminder</option>
+                        </select>
+                        <input type="text" id="emailLogSearch" placeholder="Search by recipient...">
+                    </div>
+                </div>
+                <div class="data-table" id="emailLogsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading email logs...</p></div>
+                </div>
+            </div>
+
+            <!-- REPORTS TAB -->
+            <div class="tab-panel" id="tab-reports">
+                <div class="panel-header">
+                    <h2>Analytics Dashboard</h2>
+                </div>
+
+                <!-- Charts Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <h3 style="font-size: 1rem; color: var(--navy); margin-bottom: 1rem;">Applications Over Time</h3>
+                        <canvas id="applicationsChart" height="200"></canvas>
+                    </div>
+                    <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <h3 style="font-size: 1rem; color: var(--navy); margin-bottom: 1rem;">Funding by Month</h3>
+                        <canvas id="fundingChart" height="200"></canvas>
+                    </div>
+                    <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <h3 style="font-size: 1rem; color: var(--navy); margin-bottom: 1rem;">Completion Rates</h3>
+                        <canvas id="completionChart" height="200"></canvas>
+                    </div>
+                    <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <h3 style="font-size: 1rem; color: var(--navy); margin-bottom: 1rem;">Applications by Status</h3>
+                        <canvas id="statusChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Impact Report Section -->
+                <div class="panel-header">
+                    <h2>Annual Impact Report</h2>
+                    <div class="panel-header-actions">
+                        <select id="impactReportYear" style="padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+                        <button class="btn btn-sm btn-primary" onclick="generateImpactReport()">Generate Report</button>
+                    </div>
+                </div>
+                <div id="impactReportContainer" style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--primary);" id="impactChildrenHelped">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Children Helped</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success);" id="impactFundsDistributed">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Funds Distributed</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--info);" id="impactAvgScholarship">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Avg. Scholarship</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: #7B1FA2;" id="impactCompletionRate">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Completion Rate</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--navy);" id="impactSchoolsPartnered">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Schools Partnered</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--off-white); border-radius: var(--radius);">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--warning);" id="impactTotalDonations">--</div>
+                            <div style="font-size: 0.85rem; color: var(--dark-gray);">Total Donations</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn btn-sm btn-outline" onclick="exportImpactReport()">Export as PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WAITLIST TAB -->
+            <div class="tab-panel" id="tab-waitlist">
+                <!-- Fund Status Section -->
+                <div class="panel-header">
+                    <h2>Fund Status</h2>
+                </div>
+                <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--dark-gray);">Available Funds</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.9rem;">$</span>
+                                <input type="number" id="availableFunds" value="0" min="0" step="0.01" style="flex: 1; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 1.25rem; font-weight: 600;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--dark-gray);">Low Funds Threshold</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.9rem;">$</span>
+                                <input type="number" id="lowFundsThreshold" value="500" min="0" step="0.01" style="flex: 1; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn btn-primary" onclick="updateFundStatus()">Update Funds</button>
+                        </div>
+                    </div>
+                    <div id="fundStatusAlert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius); margin-top: 1rem;"></div>
+                    <span id="fundUpdateStatus" style="font-size: 0.85rem; color: var(--gray);"></span>
+                </div>
+
+                <!-- Waitlist Queue Section -->
+                <div class="panel-header">
+                    <h2>Waitlist Queue</h2>
+                    <div class="panel-header-actions">
+                        <span id="waitlistCount" style="font-size: 0.9rem; color: var(--dark-gray); margin-right: 1rem;">0 applicants waiting</span>
+                        <button class="btn btn-sm btn-success" onclick="processNextWaitlist()" id="processWaitlistBtn" disabled>Process Next</button>
+                    </div>
+                </div>
+                <div class="data-table" id="waitlistTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading waitlist...</p></div>
+                </div>
+            </div>
+
+            <!-- CONTACTS TAB -->
+            <div class="tab-panel" id="tab-contacts">
+                <div class="panel-header">
+                    <h2>Contact Form Submissions</h2>
+                    <div class="filter-bar">
+                        <input type="text" id="contactSearch" placeholder="Search by name or email...">
+                    </div>
+                </div>
+                <div class="data-table" id="contactsTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading contact submissions...</p></div>
+                </div>
+            </div>
+
+            <!-- CORPORATE INQUIRIES TAB -->
+            <div class="tab-panel" id="tab-corporate">
+                <div class="panel-header">
+                    <h2>Corporate Partnership Inquiries</h2>
+                    <div class="filter-bar">
+                        <select id="filterCorporateStatus">
+                            <option value="all">All Statuses</option>
+                            <option value="new">New</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                        <input type="text" id="corporateSearch" placeholder="Search by company...">
+                    </div>
+                </div>
+                <div class="data-table" id="corporateTable">
+                    <div class="loading"><div class="spinner"></div><p>Loading corporate inquiries...</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION DETAIL MODAL -->
+    <div class="modal-overlay" id="appModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Application Details</h2>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SWIM SCHOOL MODAL -->
+    <div class="modal-overlay" id="schoolModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="schoolModalTitle">Add Swim School</h2>
+                <button class="modal-close" onclick="closeSchoolModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="schoolForm">
+                    <input type="hidden" id="schoolId">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>School Name *</label>
+                            <input type="text" id="schoolName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Person</label>
+                            <input type="text" id="schoolContact">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="schoolEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="schoolPhone">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Address</label>
+                            <input type="text" id="schoolAddress">
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="schoolCity">
+                        </div>
+                        <div class="form-group">
+                            <label>State, ZIP</label>
+                            <input type="text" id="schoolStateZip">
+                        </div>
+                        <div class="form-group">
+                            <label>Student Capacity</label>
+                            <input type="number" id="schoolCapacity" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Rate per Lesson ($)</label>
+                            <input type="number" id="schoolRate" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="schoolStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: center; padding-top: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0;">
+                                <input type="checkbox" id="schoolAccepting" checked>
+                                <span>Accepting Students</span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Notes</label>
+                            <textarea id="schoolNotes" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius); min-height: 80px;"></textarea>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary">Save School</button>
+                        <button type="button" class="btn btn-outline" onclick="closeSchoolModal()">Cancel</button>
+                        <span id="schoolSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCHOOL PAYMENT MODAL -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Record Payment to School</h2>
+                <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label>Swim School *</label>
+                        <select id="paymentSchool" required>
+                            <option value="">-- Select School --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($) *</label>
+                        <input type="number" id="paymentAmount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Date *</label>
+                        <input type="date" id="paymentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Linked Application (optional)</label>
+                        <select id="paymentApplication">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="check">Check</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Reference/Check Number</label>
+                        <input type="text" id="paymentReference">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="paymentNotes" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius); min-height: 60px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary">Record Payment</button>
+                        <button type="button" class="btn btn-outline" onclick="closePaymentModal()">Cancel</button>
+                        <span id="paymentSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMAIL TEMPLATE MODAL -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="templateModalTitle">Create Email Template</h2>
+                <button class="modal-close" onclick="closeTemplateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="templateForm">
+                    <input type="hidden" id="templateId">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Template Name *</label>
+                            <input type="text" id="templateName" required placeholder="e.g., Approval Notification">
+                        </div>
+                        <div class="form-group">
+                            <label>Template Type *</label>
+                            <select id="templateType" required>
+                                <option value="status_change">Status Change</option>
+                                <option value="reminder">Reminder</option>
+                                <option value="newsletter">Newsletter</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Subject Line *</label>
+                            <input type="text" id="templateSubject" required placeholder="Your Scholarship Application Update">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Email Body *</label>
+                            <textarea id="templateBody" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius); min-height: 200px; font-family: var(--font-body);" placeholder="Dear {{firstName}},
+
+Your scholarship application has been {{status}}.
+
+..."></textarea>
+                        </div>
+                    </div>
+                    <div style="background: var(--off-white); padding: 1rem; border-radius: var(--radius); margin: 1rem 0;">
+                        <p style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem;">Available Placeholders:</p>
+                        <code style="font-size: 0.8rem; color: var(--dark-gray);">
+                            {{firstName}}, {{lastName}}, {{email}}, {{childName}}, {{status}}, {{applicationId}}, {{awardAmount}}, {{swimSchool}}, {{currentDate}}
+                        </code>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button type="submit" class="btn btn-primary">Save Template</button>
+                        <button type="button" class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
+                        <span id="templateSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- WAITLIST ADD MODAL -->
+    <div class="modal-overlay" id="waitlistModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Add to Waitlist</h2>
+                <button class="modal-close" onclick="closeWaitlistModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="waitlistForm">
+                    <input type="hidden" id="waitlistAppId">
+                    <div class="form-group">
+                        <label>Applicant</label>
+                        <input type="text" id="waitlistAppName" readonly style="background: var(--off-white);">
+                    </div>
+                    <div class="form-group">
+                        <label>Reason for Waitlist</label>
+                        <select id="waitlistReason">
+                            <option value="insufficient_funds">Insufficient Funds</option>
+                            <option value="capacity">School Capacity Full</option>
+                            <option value="pending_documents">Pending Documents</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="waitlistPriority">
+                            <option value="normal">Normal</option>
+                            <option value="high">High</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="waitlistNotes" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius); min-height: 60px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary">Add to Waitlist</button>
+                        <button type="button" class="btn btn-outline" onclick="closeWaitlistModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT SUBSCRIBERS MODAL -->
+    <div class="modal-overlay" id="importSubscribersModal">
+        <div class="modal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h2>Import Subscribers from CSV</h2>
+                <button class="modal-close" onclick="closeImportSubscribersModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: var(--off-white); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">CSV Format Requirements:</p>
+                    <ul style="font-size: 0.9rem; color: var(--dark-gray); margin-left: 1.25rem;">
+                        <li>First row should be headers: <code>email,name</code></li>
+                        <li>Email column is required, name is optional</li>
+                        <li>Duplicates will be automatically skipped</li>
+                    </ul>
+                    <p style="font-size: 0.85rem; margin-top: 0.75rem;">
+                        <a href="javascript:downloadSampleCSV()" style="color: var(--primary);">Download sample CSV template</a>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Select CSV File</label>
+                    <input type="file" id="subscribersCsvFile" accept=".csv" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                </div>
+                <div id="importPreview" style="display: none; margin: 1rem 0;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">Preview (<span id="importPreviewCount">0</span> subscribers):</p>
+                    <div id="importPreviewTable" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--light-gray); border-radius: var(--radius);"></div>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="importSubscribers()" id="importSubscribersBtn" disabled>Import Subscribers</button>
+                    <button class="btn btn-outline" onclick="closeImportSubscribersModal()">Cancel</button>
+                </div>
+                <div id="importStatus" style="margin-top: 1rem; font-size: 0.9rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+
+        // Firebase init
+        const app = initializeApp({
+            apiKey: "AIzaSyAGk7w72nKfJDtMx535wxgK6tAq6UugrJ8",
+            authDomain: "make-a-splash-foundation.firebaseapp.com",
+            projectId: "make-a-splash-foundation",
+            storageBucket: "make-a-splash-foundation.firebasestorage.app",
+            messagingSenderId: "259150039543",
+            appId: "1:259150039543:web:9ac7d1c44befbbce65c6f2"
+        });
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app);
+        const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
+        const updateApplicationStatus = httpsCallable(functions, 'updateApplicationStatus');
+        const createSwimSchool = httpsCallable(functions, 'createSwimSchool');
+        const updateSwimSchool = httpsCallable(functions, 'updateSwimSchool');
+        const recordSchoolPayment = httpsCallable(functions, 'recordSchoolPayment');
+        const sendTemplatedEmail = httpsCallable(functions, 'sendTemplatedEmail');
+        const sendBulkEmailFn = httpsCallable(functions, 'sendBulkEmail');
+        const addToWaitlistFn = httpsCallable(functions, 'addToWaitlist');
+        const removeFromWaitlistFn = httpsCallable(functions, 'removeFromWaitlist');
+        const processWaitlistFn = httpsCallable(functions, 'processWaitlist');
+        const updateAvailableFundsFn = httpsCallable(functions, 'updateAvailableFunds');
+        const generateImpactReportFn = httpsCallable(functions, 'generateImpactReport');
+        const importSubscribersFn = httpsCallable(functions, 'importSubscribers');
+
+        // DOM refs
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userEmailEl = document.getElementById('userEmail');
+        const appModal = document.getElementById('appModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalBody = document.getElementById('modalBody');
+
+        // State
+        let allApplications = [];
+        let allSubscribers = [];
+        let allDonations = [];
+        let allContacts = [];
+        let allCorporateInquiries = [];
+        let allSwimSchools = [];
+        let allSchoolPayments = [];
+        let allEmailTemplates = [];
+        let allEmailLogs = [];
+        let allWaitlist = [];
+        let adminSettings = {};
+        let currentUser = null;
+        let charts = {};
+
+        // ===== AUTH =====
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginError.style.display = 'none';
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+
+            try {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                loginError.textContent = error.code === 'auth/invalid-credential'
+                    ? 'Invalid email or password.'
+                    : 'Sign in failed. Please try again.';
+                loginError.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Check admin claim
+                const tokenResult = await user.getIdTokenResult();
+                if (!tokenResult.claims.admin) {
+                    // Try to set admin claim (only works for whitelisted emails)
+                    try {
+                        await setAdminClaim();
+                        // Force token refresh to get the new claim
+                        await user.getIdToken(true);
+                        const newToken = await user.getIdTokenResult();
+                        if (!newToken.claims.admin) {
+                            loginError.textContent = 'Account is not authorized for admin access.';
+                            loginError.style.display = 'block';
+                            await signOut(auth);
+                            return;
+                        }
+                    } catch (err) {
+                        loginError.textContent = 'Account is not authorized for admin access.';
+                        loginError.style.display = 'block';
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Sign In';
+                        await signOut(auth);
+                        return;
+                    }
+                }
+
+                // Show dashboard
+                loginScreen.style.display = 'none';
+                dashboard.style.display = 'block';
+                userEmailEl.textContent = user.email;
+                loadDashboardData();
+            } else {
+                currentUser = null;
+                loginScreen.style.display = 'flex';
+                dashboard.style.display = 'none';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        // ===== TABS =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        // ===== LOAD DATA =====
+        async function loadDashboardData() {
+            try {
+                // Load applications
+                const appsQuery = query(
+                    collection(db, 'scholarship-applications'),
+                    orderBy('submittedAt', 'desc')
+                );
+                const appsSnap = await getDocs(appsQuery);
+                allApplications = appsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                // Load subscribers
+                const subsQuery = query(
+                    collection(db, 'newsletter-subscribers'),
+                    orderBy('subscribedAt', 'desc')
+                );
+                const subsSnap = await getDocs(subsQuery);
+                allSubscribers = subsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                // Load donations
+                const donationsQuery = query(
+                    collection(db, 'donations'),
+                    orderBy('createdAt', 'desc')
+                );
+                const donationsSnap = await getDocs(donationsQuery);
+                allDonations = donationsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                // Load contact submissions
+                try {
+                    const contactsQuery = query(
+                        collection(db, 'contact-submissions'),
+                        orderBy('submittedAt', 'desc')
+                    );
+                    const contactsSnap = await getDocs(contactsQuery);
+                    allContacts = contactsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No contact submissions yet');
+                    allContacts = [];
+                }
+
+                // Load corporate inquiries
+                try {
+                    const corpQuery = query(
+                        collection(db, 'corporate-inquiries'),
+                        orderBy('submittedAt', 'desc')
+                    );
+                    const corpSnap = await getDocs(corpQuery);
+                    allCorporateInquiries = corpSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No corporate inquiries yet');
+                    allCorporateInquiries = [];
+                }
+
+                // Load swim schools
+                try {
+                    const schoolsQuery = query(
+                        collection(db, 'swim-schools'),
+                        orderBy('name', 'asc')
+                    );
+                    const schoolsSnap = await getDocs(schoolsQuery);
+                    allSwimSchools = schoolsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No swim schools yet');
+                    allSwimSchools = [];
+                }
+
+                // Load school payments
+                try {
+                    const paymentsQuery = query(
+                        collection(db, 'school-payments'),
+                        orderBy('paymentDate', 'desc')
+                    );
+                    const paymentsSnap = await getDocs(paymentsQuery);
+                    allSchoolPayments = paymentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No school payments yet');
+                    allSchoolPayments = [];
+                }
+
+                // Load email templates
+                try {
+                    const templatesQuery = query(
+                        collection(db, 'email-templates'),
+                        orderBy('name', 'asc')
+                    );
+                    const templatesSnap = await getDocs(templatesQuery);
+                    allEmailTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No email templates yet');
+                    allEmailTemplates = [];
+                }
+
+                // Load email logs
+                try {
+                    const logsQuery = query(
+                        collection(db, 'email-logs'),
+                        orderBy('sentAt', 'desc'),
+                        limit(100)
+                    );
+                    const logsSnap = await getDocs(logsQuery);
+                    allEmailLogs = logsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No email logs yet');
+                    allEmailLogs = [];
+                }
+
+                // Load waitlist
+                try {
+                    const waitlistQuery = query(
+                        collection(db, 'waitlist'),
+                        orderBy('position', 'asc')
+                    );
+                    const waitlistSnap = await getDocs(waitlistQuery);
+                    allWaitlist = waitlistSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.log('No waitlist yet');
+                    allWaitlist = [];
+                }
+
+                // Load admin settings
+                try {
+                    const settingsDoc = await getDoc(doc(db, 'admin-settings', 'general'));
+                    adminSettings = settingsDoc.exists() ? settingsDoc.data() : {};
+                } catch (e) {
+                    console.log('No admin settings yet');
+                    adminSettings = {};
+                }
+
+                renderOverview();
+                renderApplicationsTable();
+                renderSubscribersTable();
+                renderDonationsTable();
+                renderActiveScholarshipsTable();
+                renderContactsTable();
+                renderCorporateTable();
+                renderSwimSchoolsTable();
+                renderSchoolPaymentsTable();
+                renderEmailTemplatesTable();
+                renderEmailLogsTable();
+                renderWaitlistTable();
+                renderCharts();
+                loadAdminSettings();
+                populateDropdowns();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('recentAppsTable').innerHTML = `
+                    <div class="empty-state"><p>Error loading data. Make sure your account has admin permissions.</p></div>
+                `;
+            }
+        }
+
+        // ===== RENDER OVERVIEW =====
+        function renderOverview() {
+            const counts = { pending: 0, new: 0, under_review: 0, approved: 0, denied: 0, active: 0, completed: 0 };
+            allApplications.forEach(app => {
+                let s = app.status || 'pending';
+                if (s === 'new') s = 'pending'; // Normalize old 'new' status
+                if (counts[s] !== undefined) counts[s]++;
+            });
+
+            document.getElementById('statTotal').textContent = allApplications.length;
+            document.getElementById('statNew').textContent = counts.pending + counts.new;
+            document.getElementById('statReview').textContent = counts.under_review;
+            document.getElementById('statApproved').textContent = counts.approved;
+            document.getElementById('statActive').textContent = counts.active;
+            document.getElementById('statCompleted').textContent = counts.completed;
+            document.getElementById('statDenied').textContent = counts.denied;
+            document.getElementById('statSubscribers').textContent = allSubscribers.length;
+
+            // Donation stats
+            const totalDonationAmount = allDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+            document.getElementById('statDonations').textContent = allDonations.length;
+            document.getElementById('statDonationAmount').textContent = '$' + totalDonationAmount.toLocaleString();
+
+            // Recent applications (last 5)
+            const recent = allApplications.slice(0, 5);
+            renderTable('recentAppsTable', recent, true);
+        }
+
+        // ===== RENDER APPLICATIONS TABLE =====
+        function renderApplicationsTable() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchTerm = document.getElementById('filterSearch').value.toLowerCase();
+
+            let filtered = allApplications;
+
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(a => {
+                    let appStatus = a.status || 'pending';
+                    if (appStatus === 'new') appStatus = 'pending';
+                    return appStatus === statusFilter;
+                });
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(a => {
+                    const name = `${a.parentInfo?.firstName || ''} ${a.parentInfo?.lastName || ''}`.toLowerCase();
+                    const email = (a.parentInfo?.email || '').toLowerCase();
+                    return name.includes(searchTerm) || email.includes(searchTerm);
+                });
+            }
+
+            renderTable('appsTable', filtered, false);
+        }
+
+        function renderTable(containerId, apps, isRecent) {
+            const container = document.getElementById(containerId);
+
+            if (apps.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No applications found.</p></div>`;
+                return;
+            }
+
+            const rows = apps.map(app => {
+                const name = `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`;
+                const email = app.parentInfo?.email || '';
+                const status = app.status || 'new';
+                const date = app.submittedAt?.toDate?.() ? app.submittedAt.toDate().toLocaleDateString() : 'N/A';
+                const childCount = (app.children || []).length;
+
+                return `<tr class="clickable-row" data-id="${app.id}">
+                    <td>${escapeHtml(name)}</td>
+                    <td>${escapeHtml(email)}</td>
+                    <td>${childCount}</td>
+                    <td><span class="status-badge status-${status}">${status.replace('_', ' ')}</span></td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Applicant Name</th>
+                            <th>Email</th>
+                            <th>Children</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+
+            // Click handlers for rows
+            container.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', () => openAppDetail(row.dataset.id));
+            });
+        }
+
+        // ===== RENDER SUBSCRIBERS TABLE =====
+        function renderSubscribersTable() {
+            const searchTerm = document.getElementById('subSearch').value.toLowerCase();
+            let filtered = allSubscribers;
+
+            if (searchTerm) {
+                filtered = filtered.filter(s =>
+                    (s.email || '').toLowerCase().includes(searchTerm) ||
+                    (s.name || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('subsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No subscribers found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(sub => {
+                const date = sub.subscribedAt?.toDate?.() ? sub.subscribedAt.toDate().toLocaleDateString() : 'N/A';
+                return `<tr>
+                    <td>${escapeHtml(sub.email || '')}</td>
+                    <td>${escapeHtml(sub.name || '(none)')}</td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Subscribed Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        // ===== RENDER DONATIONS TABLE =====
+        function renderDonationsTable() {
+            const paymentFilter = document.getElementById('filterPayment').value;
+            const searchTerm = document.getElementById('donationSearch').value.toLowerCase();
+            let filtered = allDonations;
+
+            if (paymentFilter !== 'all') {
+                filtered = filtered.filter(d => d.paymentMethod === paymentFilter);
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(d =>
+                    (d.donorEmail || '').toLowerCase().includes(searchTerm) ||
+                    (d.donorName || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('donationsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No donations found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(donation => {
+                const date = donation.createdAt?.toDate?.() ? donation.createdAt.toDate().toLocaleDateString() : 'N/A';
+                const amount = donation.amount ? '$' + donation.amount.toFixed(2) : '$0.00';
+                const method = donation.paymentMethod === 'stripe' ? 'Card (Stripe)' : 'PayPal';
+                const recurring = donation.recurring ? '<span style="background:#E3F2FD;color:#1565C0;padding:0.15rem 0.4rem;border-radius:8px;font-size:0.7rem;">Recurring</span>' : '';
+
+                return `<tr>
+                    <td>${escapeHtml(donation.donorName || '(Anonymous)')}</td>
+                    <td>${escapeHtml(donation.donorEmail || '')}</td>
+                    <td style="font-weight:600;color:var(--success);">${amount}</td>
+                    <td>${method} ${recurring}</td>
+                    <td>${donation.receiptSent ? '<span style="color:var(--success);">Sent</span>' : '<span style="color:var(--gray);">Pending</span>'}</td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Donor Name</th>
+                            <th>Email</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Receipt</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        // ===== RENDER ACTIVE SCHOLARSHIPS TABLE =====
+        function renderActiveScholarshipsTable() {
+            const statusFilter = document.getElementById('filterActiveStatus').value;
+            const searchTerm = document.getElementById('activeSearch').value.toLowerCase();
+
+            let filtered = allApplications.filter(a => {
+                const status = a.status || 'pending';
+                if (statusFilter === 'active') return status === 'active';
+                if (statusFilter === 'completed') return status === 'completed';
+                return status === 'active' || status === 'completed';
+            });
+
+            if (searchTerm) {
+                filtered = filtered.filter(a => {
+                    const name = `${a.parentInfo?.firstName || ''} ${a.parentInfo?.lastName || ''}`.toLowerCase();
+                    const childNames = (a.children || []).map(c => (c.name || '').toLowerCase()).join(' ');
+                    return name.includes(searchTerm) || childNames.includes(searchTerm);
+                });
+            }
+
+            const container = document.getElementById('activeScholarshipsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No active scholarships found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(app => {
+                const parentName = `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`;
+                const children = (app.children || []).map(c => c.name || 'N/A').join(', ');
+                const status = app.status || 'active';
+                const awardDate = app.awardInfo?.awardDate || 'N/A';
+                const awardAmount = app.awardInfo?.amount ? '$' + app.awardInfo.amount.toLocaleString() : 'N/A';
+                const swimSchool = app.awardInfo?.swimSchool || 'N/A';
+                const lessonsCompleted = app.awardInfo?.lessonsCompleted || 0;
+                const totalLessons = app.awardInfo?.totalLessons || 0;
+                const progress = totalLessons > 0 ? Math.round((lessonsCompleted / totalLessons) * 100) : 0;
+
+                return `<tr class="clickable-row" data-id="${app.id}">
+                    <td>${escapeHtml(parentName)}</td>
+                    <td>${escapeHtml(children)}</td>
+                    <td>${escapeHtml(swimSchool)}</td>
+                    <td>${awardAmount}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <div style="flex:1;height:8px;background:var(--light-gray);border-radius:4px;overflow:hidden;">
+                                <div style="width:${progress}%;height:100%;background:${progress >= 100 ? 'var(--success)' : 'var(--primary)'};"></div>
+                            </div>
+                            <span style="font-size:0.8rem;color:var(--dark-gray);">${lessonsCompleted}/${totalLessons}</span>
+                        </div>
+                    </td>
+                    <td><span class="status-badge status-${status}">${status}</span></td>
+                    <td>${awardDate}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parent/Guardian</th>
+                            <th>Children</th>
+                            <th>Swim School</th>
+                            <th>Award Amount</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Award Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+
+            container.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', () => openAppDetail(row.dataset.id));
+            });
+        }
+
+        // ===== RENDER CONTACTS TABLE =====
+        function renderContactsTable() {
+            const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
+            let filtered = allContacts;
+
+            if (searchTerm) {
+                filtered = filtered.filter(c =>
+                    (c.name || '').toLowerCase().includes(searchTerm) ||
+                    (c.email || '').toLowerCase().includes(searchTerm) ||
+                    (c.subject || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('contactsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No contact submissions found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(contact => {
+                const date = contact.submittedAt?.toDate?.() ? contact.submittedAt.toDate().toLocaleDateString() : 'N/A';
+                const subject = contact.subject || '(No subject)';
+                const message = (contact.message || '').substring(0, 80) + ((contact.message || '').length > 80 ? '...' : '');
+
+                return `<tr>
+                    <td>${escapeHtml(contact.name || '')}</td>
+                    <td><a href="mailto:${escapeHtml(contact.email || '')}">${escapeHtml(contact.email || '')}</a></td>
+                    <td>${escapeHtml(subject)}</td>
+                    <td style="max-width:300px;">${escapeHtml(message)}</td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        // ===== RENDER CORPORATE TABLE =====
+        function renderCorporateTable() {
+            const statusFilter = document.getElementById('filterCorporateStatus').value;
+            const searchTerm = document.getElementById('corporateSearch').value.toLowerCase();
+            let filtered = allCorporateInquiries;
+
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(c => (c.status || 'new') === statusFilter);
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(c =>
+                    (c.companyName || '').toLowerCase().includes(searchTerm) ||
+                    (c.contactName || '').toLowerCase().includes(searchTerm) ||
+                    (c.email || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('corporateTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No corporate inquiries found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(inquiry => {
+                const date = inquiry.submittedAt?.toDate?.() ? inquiry.submittedAt.toDate().toLocaleDateString() : 'N/A';
+                const status = inquiry.status || 'new';
+                const tier = inquiry.interestedTier || 'N/A';
+
+                return `<tr>
+                    <td style="font-weight:600;">${escapeHtml(inquiry.companyName || '')}</td>
+                    <td>${escapeHtml(inquiry.contactName || '')}</td>
+                    <td><a href="mailto:${escapeHtml(inquiry.email || '')}">${escapeHtml(inquiry.email || '')}</a></td>
+                    <td>${escapeHtml(inquiry.phone || 'N/A')}</td>
+                    <td>${escapeHtml(tier)}</td>
+                    <td><span class="status-badge status-${status === 'new' ? 'new' : status === 'contacted' ? 'under_review' : status === 'in_progress' ? 'approved' : 'completed'}">${status.replace('_', ' ')}</span></td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Interested Tier</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        // Filters
+        document.getElementById('filterStatus').addEventListener('change', renderApplicationsTable);
+        document.getElementById('filterSearch').addEventListener('input', renderApplicationsTable);
+        document.getElementById('subSearch').addEventListener('input', renderSubscribersTable);
+        document.getElementById('filterPayment').addEventListener('change', renderDonationsTable);
+        document.getElementById('donationSearch').addEventListener('input', renderDonationsTable);
+        document.getElementById('filterActiveStatus').addEventListener('change', renderActiveScholarshipsTable);
+        document.getElementById('activeSearch').addEventListener('input', renderActiveScholarshipsTable);
+        document.getElementById('contactSearch').addEventListener('input', renderContactsTable);
+        document.getElementById('filterCorporateStatus').addEventListener('change', renderCorporateTable);
+        document.getElementById('corporateSearch').addEventListener('input', renderCorporateTable);
+
+        // ===== APPLICATION DETAIL MODAL =====
+        function openAppDetail(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) return;
+
+            const name = `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`;
+            const status = app.status || 'new';
+            const date = app.submittedAt?.toDate?.() ? app.submittedAt.toDate().toLocaleString() : 'N/A';
+
+            document.getElementById('modalTitle').textContent = `Application: ${name}`;
+
+            // Build children section
+            const childrenHtml = (app.children || []).map((child, i) => `
+                <div class="detail-item">
+                    <div class="label">Child ${i + 1}</div>
+                    <div class="value">${escapeHtml(child.name || 'N/A')} | DOB: ${escapeHtml(child.dob || 'N/A')} | Gender: ${escapeHtml(child.gender || 'N/A')}</div>
+                </div>
+            `).join('') || '<p style="color: var(--gray);">No children data</p>';
+
+            // Build documents section
+            const docs = app.documents || {};
+            const docsHtml = Object.entries(docs).length > 0
+                ? `<ul class="doc-list">${Object.entries(docs).map(([key, url]) =>
+                    `<li><a href="${escapeHtml(url)}" target="_blank">${escapeHtml(key)}</a></li>`
+                ).join('')}</ul>`
+                : '<p style="color: var(--gray);">No documents uploaded</p>';
+
+            // Build notes section
+            const notes = app.notes || [];
+            const notesHtml = notes.length > 0
+                ? `<ul class="notes-list">${notes.map(n => `
+                    <li>
+                        <div class="note-meta">${escapeHtml(n.author || '')} &middot; ${escapeHtml(n.createdAt || '')} &middot; Status changed to <span class="status-badge status-${n.statusChange || 'new'}">${(n.statusChange || 'new').replace('_', ' ')}</span></div>
+                        <div class="note-text">${escapeHtml(n.text || '')}</div>
+                    </li>
+                `).join('')}</ul>`
+                : '<p style="color: var(--gray);">No notes yet</p>';
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3>Parent / Guardian Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Full Name</div>
+                            <div class="value">${escapeHtml(name)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Email</div>
+                            <div class="value"><a href="mailto:${escapeHtml(app.parentInfo?.email || '')}">${escapeHtml(app.parentInfo?.email || '')}</a></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Phone</div>
+                            <div class="value">${escapeHtml(app.parentInfo?.phone || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Date of Birth</div>
+                            <div class="value">${escapeHtml(app.parentInfo?.dob || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Address</div>
+                            <div class="value">${escapeHtml(app.parentInfo?.address || '')} ${escapeHtml(app.parentInfo?.cityStateZip || '')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Application ID</div>
+                            <div class="value" style="font-family: monospace;">${escapeHtml(app.applicationId || app.id)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Children</h3>
+                    ${childrenHtml}
+                </div>
+
+                <div class="detail-section">
+                    <h3>Additional Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Monthly Income</div>
+                            <div class="value">${escapeHtml(app.financialInfo?.monthlyIncome || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Employer</div>
+                            <div class="value">${escapeHtml(app.employmentInfo?.employer || 'N/A')}</div>
+                        </div>
+                    </div>
+                    ${app.additionalInfo?.needDescription ? `
+                        <div class="detail-item" style="margin-top: 0.75rem;">
+                            <div class="label">Why Scholarship Is Needed</div>
+                            <div class="value">${escapeHtml(app.additionalInfo.needDescription)}</div>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="detail-section">
+                    <h3>Uploaded Documents</h3>
+                    ${docsHtml}
+                </div>
+
+                <div class="detail-section">
+                    <h3>Notes & History</h3>
+                    ${notesHtml}
+                </div>
+
+                <div class="detail-section" id="awardInfoSection" style="display: ${status === 'active' || status === 'approved' || status === 'completed' ? 'block' : 'none'};">
+                    <h3>Award Information</h3>
+                    <div class="status-form">
+                        <div class="detail-grid" style="margin-bottom: 1rem;">
+                            <div class="detail-item">
+                                <div class="label">Swim School</div>
+                                <input type="text" id="awardSwimSchool" value="${escapeHtml(app.awardInfo?.swimSchool || '')}" placeholder="Enter swim school name" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Award Amount ($)</div>
+                                <input type="number" id="awardAmount" value="${app.awardInfo?.amount || ''}" placeholder="e.g., 500" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Award Date</div>
+                                <input type="date" id="awardDate" value="${app.awardInfo?.awardDate || ''}" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Total Lessons</div>
+                                <input type="number" id="awardTotalLessons" value="${app.awardInfo?.totalLessons || ''}" placeholder="e.g., 12" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Lessons Completed</div>
+                                <input type="number" id="awardLessonsCompleted" value="${app.awardInfo?.lessonsCompleted || 0}" placeholder="0" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Expected Completion</div>
+                                <input type="date" id="awardExpectedCompletion" value="${app.awardInfo?.expectedCompletion || ''}" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                            </div>
+                        </div>
+                        <div class="detail-item" style="margin-bottom: 0;">
+                            <div class="label">Award Notes</div>
+                            <textarea id="awardNotes" placeholder="Notes about the scholarship award..." style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);min-height:60px;resize:vertical;">${escapeHtml(app.awardInfo?.notes || '')}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Update Status</h3>
+                    <div class="status-form">
+                        <div class="form-row">
+                            <div>
+                                <label style="display:block; font-weight:600; font-size:0.8rem; margin-bottom:0.25rem; color: var(--dark-gray);">Status</label>
+                                <select id="modalStatusSelect">
+                                    <option value="pending" ${status === 'pending' || status === 'new' ? 'selected' : ''}>Pending</option>
+                                    <option value="under_review" ${status === 'under_review' ? 'selected' : ''}>Under Review</option>
+                                    <option value="approved" ${status === 'approved' ? 'selected' : ''}>Approved</option>
+                                    <option value="denied" ${status === 'denied' ? 'selected' : ''}>Denied</option>
+                                    <option value="active" ${status === 'active' ? 'selected' : ''}>Active</option>
+                                    <option value="completed" ${status === 'completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display:block; font-weight:600; font-size:0.8rem; margin-bottom:0.25rem; color: var(--dark-gray);">Add Note (optional)</label>
+                            <textarea id="modalNote" placeholder="Add a note about this status change..."></textarea>
+                        </div>
+                        <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary btn-sm" id="modalSaveBtn" data-appid="${app.id}">Save Changes</button>
+                            <button class="btn btn-warning btn-sm" onclick="openWaitlistModal('${app.id}', '${escapeHtml(name)}')" ${allWaitlist.some(w => w.applicationId === app.id) ? 'disabled title="Already on waitlist"' : ''}>
+                                ${allWaitlist.some(w => w.applicationId === app.id) ? 'On Waitlist' : 'Add to Waitlist'}
+                            </button>
+                            <span id="modalSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; padding-top: 0.5rem; font-size: 0.8rem; color: var(--gray);">
+                    Submitted: ${date}
+                </div>
+            `;
+
+            // Save button handler
+            document.getElementById('modalSaveBtn').addEventListener('click', async function() {
+                const btn = this;
+                const statusEl = document.getElementById('modalSaveStatus');
+                const newStatus = document.getElementById('modalStatusSelect').value;
+                const note = document.getElementById('modalNote').value;
+                const appDocId = btn.dataset.appid;
+
+                // Gather award info
+                const awardInfo = {
+                    swimSchool: document.getElementById('awardSwimSchool')?.value || '',
+                    amount: parseFloat(document.getElementById('awardAmount')?.value) || 0,
+                    awardDate: document.getElementById('awardDate')?.value || '',
+                    totalLessons: parseInt(document.getElementById('awardTotalLessons')?.value) || 0,
+                    lessonsCompleted: parseInt(document.getElementById('awardLessonsCompleted')?.value) || 0,
+                    expectedCompletion: document.getElementById('awardExpectedCompletion')?.value || '',
+                    notes: document.getElementById('awardNotes')?.value || ''
+                };
+
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+                statusEl.textContent = '';
+
+                try {
+                    await updateApplicationStatus({
+                        applicationId: appDocId,
+                        status: newStatus,
+                        note: note,
+                        awardInfo: awardInfo
+                    });
+
+                    // Update local state
+                    const appIndex = allApplications.findIndex(a => a.id === appDocId);
+                    if (appIndex !== -1) {
+                        allApplications[appIndex].status = newStatus;
+                        allApplications[appIndex].awardInfo = awardInfo;
+                        if (note.trim()) {
+                            if (!allApplications[appIndex].notes) allApplications[appIndex].notes = [];
+                            allApplications[appIndex].notes.push({
+                                text: note.trim(),
+                                author: currentUser.email,
+                                createdAt: new Date().toISOString(),
+                                statusChange: newStatus
+                            });
+                        }
+                    }
+
+                    statusEl.textContent = 'Saved!';
+                    statusEl.style.color = 'var(--success)';
+
+                    // Refresh tables
+                    renderOverview();
+                    renderApplicationsTable();
+                    renderActiveScholarshipsTable();
+
+                    // Refresh modal content
+                    setTimeout(() => openAppDetail(appDocId), 500);
+                } catch (error) {
+                    console.error('Error updating status:', error);
+                    statusEl.textContent = 'Error saving. Please try again.';
+                    statusEl.style.color = 'var(--danger)';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Changes';
+                }
+            });
+
+            appModal.classList.add('active');
+        }
+
+        // Close modal
+        modalClose.addEventListener('click', () => appModal.classList.remove('active'));
+        appModal.addEventListener('click', (e) => {
+            if (e.target === appModal) appModal.classList.remove('active');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') appModal.classList.remove('active');
+        });
+
+        // ===== HELPERS =====
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = String(str);
+            return div.innerHTML;
+        }
+
+        // ===== CSV EXPORT FUNCTIONS =====
+        window.exportApplicationsCSV = function() {
+            const headers = ['Name', 'Email', 'Phone', 'Address', 'Children', 'Status', 'Submitted Date', 'Application ID'];
+            const rows = allApplications.map(app => [
+                `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`,
+                app.parentInfo?.email || '',
+                app.parentInfo?.phone || '',
+                `${app.parentInfo?.address || ''} ${app.parentInfo?.cityStateZip || ''}`,
+                (app.children || []).map(c => c.name).join('; '),
+                app.status || 'pending',
+                app.submittedAt?.toDate?.() ? app.submittedAt.toDate().toLocaleDateString() : '',
+                app.applicationId || app.id
+            ]);
+            downloadCSV(headers, rows, 'applications.csv');
+        };
+
+        window.exportSubscribersCSV = function() {
+            const headers = ['Email', 'Name', 'Subscribed Date'];
+            const rows = allSubscribers.map(sub => [
+                sub.email || '',
+                sub.name || '',
+                sub.subscribedAt?.toDate?.() ? sub.subscribedAt.toDate().toLocaleDateString() : ''
+            ]);
+            downloadCSV(headers, rows, 'subscribers.csv');
+        };
+
+        window.exportDonationsCSV = function() {
+            const headers = ['Donor Name', 'Email', 'Amount', 'Payment Method', 'Recurring', 'Transaction ID', 'Date'];
+            const rows = allDonations.map(d => [
+                d.donorName || '',
+                d.donorEmail || '',
+                d.amount || 0,
+                d.paymentMethod || '',
+                d.recurring ? 'Yes' : 'No',
+                d.transactionId || '',
+                d.createdAt?.toDate?.() ? d.createdAt.toDate().toLocaleDateString() : ''
+            ]);
+            downloadCSV(headers, rows, 'donations.csv');
+        };
+
+        window.exportActiveScholarshipsCSV = function() {
+            const active = allApplications.filter(a => a.status === 'active' || a.status === 'completed');
+            const headers = ['Parent Name', 'Children', 'Swim School', 'Award Amount', 'Lessons Completed', 'Total Lessons', 'Status', 'Award Date'];
+            const rows = active.map(app => [
+                `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`,
+                (app.children || []).map(c => c.name).join('; '),
+                app.awardInfo?.swimSchool || '',
+                app.awardInfo?.amount || 0,
+                app.awardInfo?.lessonsCompleted || 0,
+                app.awardInfo?.totalLessons || 0,
+                app.status || '',
+                app.awardInfo?.awardDate || ''
+            ]);
+            downloadCSV(headers, rows, 'active-scholarships.csv');
+        };
+
+        function downloadCSV(headers, rows, filename) {
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        // ===== SWIM SCHOOLS =====
+        function renderSwimSchoolsTable() {
+            const statusFilter = document.getElementById('filterSchoolStatus').value;
+            const searchTerm = document.getElementById('schoolSearch').value.toLowerCase();
+
+            let filtered = allSwimSchools;
+
+            if (statusFilter === 'active') {
+                filtered = filtered.filter(s => s.status === 'active');
+            } else if (statusFilter === 'accepting') {
+                filtered = filtered.filter(s => s.acceptingStudents);
+            } else if (statusFilter === 'inactive') {
+                filtered = filtered.filter(s => s.status === 'inactive');
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(s =>
+                    (s.name || '').toLowerCase().includes(searchTerm) ||
+                    (s.city || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('swimSchoolsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No swim schools found. <a href="javascript:openSchoolModal()">Add your first school</a></p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(school => {
+                const accepting = school.acceptingStudents ? '<span style="color:var(--success);">Yes</span>' : '<span style="color:var(--gray);">No</span>';
+                const statusClass = school.status === 'active' ? 'status-active' : 'status-denied';
+                return `<tr>
+                    <td style="font-weight:600;">${escapeHtml(school.name)}</td>
+                    <td>${escapeHtml(school.contactPerson || '')}</td>
+                    <td><a href="mailto:${escapeHtml(school.email)}">${escapeHtml(school.email)}</a></td>
+                    <td>${escapeHtml(school.city || '')}${school.stateZip ? ', ' + escapeHtml(school.stateZip) : ''}</td>
+                    <td>${school.capacity || 'N/A'}</td>
+                    <td>${accepting}</td>
+                    <td><span class="status-badge ${statusClass}">${school.status || 'active'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editSchool('${school.id}')">Edit</button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>School Name</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Location</th>
+                            <th>Capacity</th>
+                            <th>Accepting</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        window.openSchoolModal = function(schoolId = null) {
+            document.getElementById('schoolForm').reset();
+            document.getElementById('schoolId').value = '';
+            document.getElementById('schoolModalTitle').textContent = 'Add Swim School';
+            document.getElementById('schoolSaveStatus').textContent = '';
+
+            if (schoolId) {
+                const school = allSwimSchools.find(s => s.id === schoolId);
+                if (school) {
+                    document.getElementById('schoolModalTitle').textContent = 'Edit Swim School';
+                    document.getElementById('schoolId').value = school.id;
+                    document.getElementById('schoolName').value = school.name || '';
+                    document.getElementById('schoolContact').value = school.contactPerson || '';
+                    document.getElementById('schoolEmail').value = school.email || '';
+                    document.getElementById('schoolPhone').value = school.phone || '';
+                    document.getElementById('schoolAddress').value = school.address || '';
+                    document.getElementById('schoolCity').value = school.city || '';
+                    document.getElementById('schoolStateZip').value = school.stateZip || '';
+                    document.getElementById('schoolCapacity').value = school.capacity || '';
+                    document.getElementById('schoolRate').value = school.ratePerLesson || '';
+                    document.getElementById('schoolStatus').value = school.status || 'active';
+                    document.getElementById('schoolAccepting').checked = school.acceptingStudents !== false;
+                    document.getElementById('schoolNotes').value = school.notes || '';
+                }
+            }
+
+            document.getElementById('schoolModal').classList.add('active');
+        };
+
+        window.editSchool = function(schoolId) {
+            openSchoolModal(schoolId);
+        };
+
+        window.closeSchoolModal = function() {
+            document.getElementById('schoolModal').classList.remove('active');
+        };
+
+        document.getElementById('schoolForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusEl = document.getElementById('schoolSaveStatus');
+            statusEl.textContent = 'Saving...';
+            statusEl.style.color = 'var(--gray)';
+
+            const schoolData = {
+                name: document.getElementById('schoolName').value,
+                contactPerson: document.getElementById('schoolContact').value,
+                email: document.getElementById('schoolEmail').value,
+                phone: document.getElementById('schoolPhone').value,
+                address: document.getElementById('schoolAddress').value,
+                city: document.getElementById('schoolCity').value,
+                stateZip: document.getElementById('schoolStateZip').value,
+                capacity: parseInt(document.getElementById('schoolCapacity').value) || 0,
+                ratePerLesson: parseFloat(document.getElementById('schoolRate').value) || 0,
+                status: document.getElementById('schoolStatus').value,
+                acceptingStudents: document.getElementById('schoolAccepting').checked,
+                notes: document.getElementById('schoolNotes').value
+            };
+
+            const schoolId = document.getElementById('schoolId').value;
+
+            try {
+                if (schoolId) {
+                    await updateDoc(doc(db, 'swim-schools', schoolId), {
+                        ...schoolData,
+                        updatedAt: serverTimestamp()
+                    });
+                    const idx = allSwimSchools.findIndex(s => s.id === schoolId);
+                    if (idx !== -1) allSwimSchools[idx] = { id: schoolId, ...schoolData };
+                } else {
+                    const docRef = await addDoc(collection(db, 'swim-schools'), {
+                        ...schoolData,
+                        createdAt: serverTimestamp()
+                    });
+                    allSwimSchools.push({ id: docRef.id, ...schoolData });
+                }
+
+                statusEl.textContent = 'Saved!';
+                statusEl.style.color = 'var(--success)';
+                renderSwimSchoolsTable();
+                populateDropdowns();
+                setTimeout(closeSchoolModal, 1000);
+            } catch (error) {
+                console.error('Error saving school:', error);
+                statusEl.textContent = 'Error saving. Please try again.';
+                statusEl.style.color = 'var(--danger)';
+            }
+        });
+
+        // ===== SCHOOL PAYMENTS =====
+        function renderSchoolPaymentsTable() {
+            const schoolFilter = document.getElementById('filterPaymentSchool').value;
+            const dateFrom = document.getElementById('paymentDateFrom').value;
+            const dateTo = document.getElementById('paymentDateTo').value;
+
+            let filtered = allSchoolPayments;
+
+            if (schoolFilter !== 'all') {
+                filtered = filtered.filter(p => p.schoolId === schoolFilter);
+            }
+            if (dateFrom) {
+                filtered = filtered.filter(p => p.paymentDate >= dateFrom);
+            }
+            if (dateTo) {
+                filtered = filtered.filter(p => p.paymentDate <= dateTo);
+            }
+
+            const container = document.getElementById('schoolPaymentsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No payment records found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(payment => {
+                const school = allSwimSchools.find(s => s.id === payment.schoolId);
+                const app = allApplications.find(a => a.id === payment.applicationId);
+                return `<tr>
+                    <td>${escapeHtml(school?.name || 'Unknown')}</td>
+                    <td style="font-weight:600;color:var(--success);">$${(payment.amount || 0).toFixed(2)}</td>
+                    <td>${payment.paymentDate || 'N/A'}</td>
+                    <td>${app ? escapeHtml(`${app.parentInfo?.firstName} ${app.parentInfo?.lastName}`) : 'N/A'}</td>
+                    <td>${escapeHtml(payment.paymentMethod || '')}</td>
+                    <td>${escapeHtml(payment.reference || '')}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>School</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Linked Application</th>
+                            <th>Method</th>
+                            <th>Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        window.openPaymentModal = function() {
+            document.getElementById('paymentForm').reset();
+            document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('paymentSaveStatus').textContent = '';
+            document.getElementById('paymentModal').classList.add('active');
+        };
+
+        window.closePaymentModal = function() {
+            document.getElementById('paymentModal').classList.remove('active');
+        };
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusEl = document.getElementById('paymentSaveStatus');
+            statusEl.textContent = 'Saving...';
+
+            const paymentData = {
+                schoolId: document.getElementById('paymentSchool').value,
+                amount: parseFloat(document.getElementById('paymentAmount').value),
+                paymentDate: document.getElementById('paymentDate').value,
+                applicationId: document.getElementById('paymentApplication').value || null,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                reference: document.getElementById('paymentReference').value,
+                notes: document.getElementById('paymentNotes').value
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, 'school-payments'), {
+                    ...paymentData,
+                    createdAt: serverTimestamp(),
+                    createdBy: currentUser.email
+                });
+                allSchoolPayments.unshift({ id: docRef.id, ...paymentData });
+                statusEl.textContent = 'Saved!';
+                statusEl.style.color = 'var(--success)';
+                renderSchoolPaymentsTable();
+                setTimeout(closePaymentModal, 1000);
+            } catch (error) {
+                console.error('Error saving payment:', error);
+                statusEl.textContent = 'Error saving.';
+                statusEl.style.color = 'var(--danger)';
+            }
+        });
+
+        // ===== EMAIL TEMPLATES =====
+        function renderEmailTemplatesTable() {
+            const container = document.getElementById('emailTemplatesTable');
+
+            if (allEmailTemplates.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No email templates yet. <a href="javascript:openTemplateModal()">Create your first template</a></p></div>`;
+                return;
+            }
+
+            const rows = allEmailTemplates.map(template => {
+                return `<tr>
+                    <td style="font-weight:600;">${escapeHtml(template.name)}</td>
+                    <td><span class="status-badge status-${template.type === 'status_change' ? 'active' : template.type === 'reminder' ? 'under_review' : 'pending'}">${template.type}</span></td>
+                    <td>${escapeHtml(template.subject)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editTemplate('${template.id}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTemplate('${template.id}')">Delete</button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template Name</th>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        window.openTemplateModal = function(templateId = null) {
+            document.getElementById('templateForm').reset();
+            document.getElementById('templateId').value = '';
+            document.getElementById('templateModalTitle').textContent = 'Create Email Template';
+            document.getElementById('templateSaveStatus').textContent = '';
+
+            if (templateId) {
+                const template = allEmailTemplates.find(t => t.id === templateId);
+                if (template) {
+                    document.getElementById('templateModalTitle').textContent = 'Edit Email Template';
+                    document.getElementById('templateId').value = template.id;
+                    document.getElementById('templateName').value = template.name || '';
+                    document.getElementById('templateType').value = template.type || 'custom';
+                    document.getElementById('templateSubject').value = template.subject || '';
+                    document.getElementById('templateBody').value = template.body || '';
+                }
+            }
+
+            document.getElementById('templateModal').classList.add('active');
+        };
+
+        window.editTemplate = function(templateId) {
+            openTemplateModal(templateId);
+        };
+
+        window.closeTemplateModal = function() {
+            document.getElementById('templateModal').classList.remove('active');
+        };
+
+        window.deleteTemplate = async function(templateId) {
+            if (!confirm('Are you sure you want to delete this template?')) return;
+            try {
+                await deleteDoc(doc(db, 'email-templates', templateId));
+                allEmailTemplates = allEmailTemplates.filter(t => t.id !== templateId);
+                renderEmailTemplatesTable();
+                populateDropdowns();
+            } catch (error) {
+                console.error('Error deleting template:', error);
+                alert('Error deleting template');
+            }
+        };
+
+        document.getElementById('templateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusEl = document.getElementById('templateSaveStatus');
+            statusEl.textContent = 'Saving...';
+            statusEl.style.color = 'var(--gray)';
+
+            const templateData = {
+                name: document.getElementById('templateName').value,
+                type: document.getElementById('templateType').value,
+                subject: document.getElementById('templateSubject').value,
+                body: document.getElementById('templateBody').value
+            };
+
+            const templateId = document.getElementById('templateId').value;
+
+            try {
+                if (templateId) {
+                    await updateDoc(doc(db, 'email-templates', templateId), {
+                        ...templateData,
+                        updatedAt: serverTimestamp()
+                    });
+                    const idx = allEmailTemplates.findIndex(t => t.id === templateId);
+                    if (idx !== -1) allEmailTemplates[idx] = { id: templateId, ...templateData };
+                } else {
+                    const docRef = await addDoc(collection(db, 'email-templates'), {
+                        ...templateData,
+                        createdAt: serverTimestamp()
+                    });
+                    allEmailTemplates.push({ id: docRef.id, ...templateData });
+                }
+
+                statusEl.textContent = 'Saved!';
+                statusEl.style.color = 'var(--success)';
+                renderEmailTemplatesTable();
+                populateDropdowns();
+                setTimeout(closeTemplateModal, 1000);
+            } catch (error) {
+                console.error('Error saving template:', error);
+                statusEl.textContent = 'Error saving.';
+                statusEl.style.color = 'var(--danger)';
+            }
+        });
+
+        // ===== EMAIL LOGS =====
+        function renderEmailLogsTable() {
+            const typeFilter = document.getElementById('filterEmailType').value;
+            const searchTerm = document.getElementById('emailLogSearch').value.toLowerCase();
+
+            let filtered = allEmailLogs;
+
+            if (typeFilter !== 'all') {
+                filtered = filtered.filter(l => l.type === typeFilter);
+            }
+            if (searchTerm) {
+                filtered = filtered.filter(l =>
+                    (l.recipient || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const container = document.getElementById('emailLogsTable');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No email logs found.</p></div>`;
+                return;
+            }
+
+            const rows = filtered.map(log => {
+                const date = log.sentAt?.toDate?.() ? log.sentAt.toDate().toLocaleString() : 'N/A';
+                const statusClass = log.status === 'sent' ? 'status-active' : log.status === 'failed' ? 'status-denied' : 'status-pending';
+                return `<tr>
+                    <td>${escapeHtml(log.recipient)}</td>
+                    <td>${escapeHtml(log.subject)}</td>
+                    <td><span class="status-badge status-${log.type === 'status_change' ? 'active' : log.type === 'bulk' ? 'under_review' : 'pending'}">${log.type}</span></td>
+                    <td><span class="status-badge ${statusClass}">${log.status}</span></td>
+                    <td>${date}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recipient</th>
+                            <th>Subject</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Sent At</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        // ===== BULK EMAIL =====
+        window.previewBulkEmail = function() {
+            const templateId = document.getElementById('bulkEmailTemplate').value;
+            const recipientType = document.getElementById('bulkEmailRecipients').value;
+
+            if (!templateId || !recipientType) {
+                alert('Please select a template and recipients');
+                return;
+            }
+
+            const template = allEmailTemplates.find(t => t.id === templateId);
+            if (!template) return;
+
+            let recipients = [];
+            if (recipientType === 'all_applicants') {
+                recipients = allApplications.map(a => a.parentInfo?.email).filter(Boolean);
+            } else if (recipientType === 'subscribers') {
+                recipients = allSubscribers.map(s => s.email).filter(Boolean);
+            } else {
+                recipients = allApplications.filter(a => a.status === recipientType).map(a => a.parentInfo?.email).filter(Boolean);
+            }
+
+            recipients = [...new Set(recipients)]; // Remove duplicates
+
+            document.getElementById('recipientCount').textContent = recipients.length;
+            document.getElementById('previewContent').innerHTML = `
+                <p><strong>Subject:</strong> ${escapeHtml(template.subject)}</p>
+                <p><strong>Preview:</strong></p>
+                <div style="background: white; padding: 1rem; border-radius: 4px; border: 1px solid var(--light-gray); max-height: 150px; overflow-y: auto;">${escapeHtml(template.body).substring(0, 500)}...</div>
+            `;
+            document.getElementById('bulkEmailPreview').style.display = 'block';
+            document.getElementById('sendBulkBtn').disabled = recipients.length === 0;
+        };
+
+        window.sendBulkEmail = async function() {
+            const templateId = document.getElementById('bulkEmailTemplate').value;
+            const recipientType = document.getElementById('bulkEmailRecipients').value;
+            const customSubject = document.getElementById('bulkEmailSubject').value;
+
+            if (!confirm('Are you sure you want to send this email to all selected recipients?')) return;
+
+            const statusEl = document.getElementById('bulkEmailStatus');
+            const btn = document.getElementById('sendBulkBtn');
+            btn.disabled = true;
+            statusEl.textContent = 'Sending...';
+
+            try {
+                await sendBulkEmailFn({
+                    templateId,
+                    recipientType,
+                    customSubject: customSubject || null
+                });
+                statusEl.textContent = 'Emails sent successfully!';
+                statusEl.style.color = 'var(--success)';
+                document.getElementById('bulkEmailPreview').style.display = 'none';
+                // Reload email logs
+                setTimeout(loadDashboardData, 2000);
+            } catch (error) {
+                console.error('Error sending bulk email:', error);
+                statusEl.textContent = 'Error sending emails: ' + error.message;
+                statusEl.style.color = 'var(--danger)';
+                btn.disabled = false;
+            }
+        };
+
+        // ===== REMINDER SETTINGS =====
+        function loadAdminSettings() {
+            if (adminSettings.availableFunds !== undefined) {
+                document.getElementById('availableFunds').value = adminSettings.availableFunds;
+            }
+            if (adminSettings.lowFundsThreshold !== undefined) {
+                document.getElementById('lowFundsThreshold').value = adminSettings.lowFundsThreshold;
+            }
+            if (adminSettings.docReminderEnabled !== undefined) {
+                document.getElementById('docReminderEnabled').checked = adminSettings.docReminderEnabled;
+            }
+            if (adminSettings.docReminderDays !== undefined) {
+                document.getElementById('docReminderDays').value = adminSettings.docReminderDays;
+            }
+            if (adminSettings.progressReminderEnabled !== undefined) {
+                document.getElementById('progressReminderEnabled').checked = adminSettings.progressReminderEnabled;
+            }
+            if (adminSettings.progressReminderDays !== undefined) {
+                document.getElementById('progressReminderDays').value = adminSettings.progressReminderDays;
+            }
+
+            updateFundStatusAlert();
+        }
+
+        window.saveReminderSettings = async function() {
+            const statusEl = document.getElementById('reminderSettingsStatus');
+            statusEl.textContent = 'Saving...';
+
+            const settings = {
+                docReminderEnabled: document.getElementById('docReminderEnabled').checked,
+                docReminderDays: parseInt(document.getElementById('docReminderDays').value) || 30,
+                progressReminderEnabled: document.getElementById('progressReminderEnabled').checked,
+                progressReminderDays: parseInt(document.getElementById('progressReminderDays').value) || 14
+            };
+
+            try {
+                await setDoc(doc(db, 'admin-settings', 'general'), settings, { merge: true });
+                Object.assign(adminSettings, settings);
+                statusEl.textContent = 'Saved!';
+                statusEl.style.color = 'var(--success)';
+                setTimeout(() => statusEl.textContent = '', 2000);
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                statusEl.textContent = 'Error saving.';
+                statusEl.style.color = 'var(--danger)';
+            }
+        };
+
+        // ===== CHARTS =====
+        function renderCharts() {
+            // Applications Over Time (line chart)
+            const monthlyApps = {};
+            allApplications.forEach(app => {
+                const date = app.submittedAt?.toDate?.();
+                if (date) {
+                    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    monthlyApps[key] = (monthlyApps[key] || 0) + 1;
+                }
+            });
+
+            const sortedMonths = Object.keys(monthlyApps).sort();
+            const last12Months = sortedMonths.slice(-12);
+
+            const appCtx = document.getElementById('applicationsChart');
+            if (charts.applications) charts.applications.destroy();
+            charts.applications = new Chart(appCtx, {
+                type: 'line',
+                data: {
+                    labels: last12Months.map(m => {
+                        const [y, mo] = m.split('-');
+                        return new Date(y, mo - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                    }),
+                    datasets: [{
+                        label: 'Applications',
+                        data: last12Months.map(m => monthlyApps[m] || 0),
+                        borderColor: '#4A90E2',
+                        backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            // Funding by Month (bar chart)
+            const monthlyFunding = {};
+            allApplications.filter(a => a.awardInfo?.amount).forEach(app => {
+                const date = app.awardInfo?.awardDate;
+                if (date) {
+                    const key = date.substring(0, 7);
+                    monthlyFunding[key] = (monthlyFunding[key] || 0) + (app.awardInfo.amount || 0);
+                }
+            });
+
+            const fundingMonths = Object.keys(monthlyFunding).sort().slice(-12);
+
+            const fundCtx = document.getElementById('fundingChart');
+            if (charts.funding) charts.funding.destroy();
+            charts.funding = new Chart(fundCtx, {
+                type: 'bar',
+                data: {
+                    labels: fundingMonths.map(m => {
+                        const [y, mo] = m.split('-');
+                        return new Date(y, mo - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                    }),
+                    datasets: [{
+                        label: 'Funds Distributed',
+                        data: fundingMonths.map(m => monthlyFunding[m] || 0),
+                        backgroundColor: '#28A745'
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            // Completion Rates (doughnut chart)
+            const active = allApplications.filter(a => a.status === 'active').length;
+            const completed = allApplications.filter(a => a.status === 'completed').length;
+
+            const compCtx = document.getElementById('completionChart');
+            if (charts.completion) charts.completion.destroy();
+            charts.completion = new Chart(compCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Completed'],
+                    datasets: [{
+                        data: [active, completed],
+                        backgroundColor: ['#17A2B8', '#7B1FA2']
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Applications by Status (pie chart)
+            const statusCounts = {};
+            allApplications.forEach(app => {
+                const status = app.status || 'pending';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+
+            const statCtx = document.getElementById('statusChart');
+            if (charts.status) charts.status.destroy();
+            charts.status = new Chart(statCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusCounts).map(s => s.replace('_', ' ')),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#4A90E2', '#FFC107', '#28A745', '#DC3545', '#17A2B8', '#7B1FA2']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        // ===== IMPACT REPORT =====
+        window.generateImpactReport = async function() {
+            const year = document.getElementById('impactReportYear').value;
+
+            // Filter data by year
+            const yearApps = allApplications.filter(app => {
+                const date = app.submittedAt?.toDate?.();
+                return date && date.getFullYear() === parseInt(year);
+            });
+
+            const activeCompleted = yearApps.filter(a => a.status === 'active' || a.status === 'completed');
+            const completed = yearApps.filter(a => a.status === 'completed').length;
+
+            // Calculate children helped (count all children in active/completed apps)
+            let childrenHelped = 0;
+            activeCompleted.forEach(app => {
+                childrenHelped += (app.children || []).length || 1;
+            });
+
+            // Calculate funds distributed
+            const fundsDistributed = activeCompleted.reduce((sum, app) => sum + (app.awardInfo?.amount || 0), 0);
+
+            // Average scholarship
+            const avgScholarship = activeCompleted.length > 0 ? fundsDistributed / activeCompleted.length : 0;
+
+            // Completion rate
+            const completionRate = activeCompleted.length > 0 ? (completed / activeCompleted.length * 100) : 0;
+
+            // Schools partnered
+            const schoolsUsed = new Set(activeCompleted.map(a => a.awardInfo?.swimSchool).filter(Boolean));
+
+            // Total donations for year
+            const yearDonations = allDonations.filter(d => {
+                const date = d.createdAt?.toDate?.();
+                return date && date.getFullYear() === parseInt(year);
+            });
+            const totalDonations = yearDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+
+            // Update display
+            document.getElementById('impactChildrenHelped').textContent = childrenHelped;
+            document.getElementById('impactFundsDistributed').textContent = '$' + fundsDistributed.toLocaleString();
+            document.getElementById('impactAvgScholarship').textContent = '$' + Math.round(avgScholarship).toLocaleString();
+            document.getElementById('impactCompletionRate').textContent = completionRate.toFixed(0) + '%';
+            document.getElementById('impactSchoolsPartnered').textContent = schoolsUsed.size || allSwimSchools.length;
+            document.getElementById('impactTotalDonations').textContent = '$' + totalDonations.toLocaleString();
+        };
+
+        window.exportImpactReport = function() {
+            const year = document.getElementById('impactReportYear').value;
+            const content = `
+Make A Splash Foundation - ${year} Impact Report
+================================================
+
+Children Helped: ${document.getElementById('impactChildrenHelped').textContent}
+Funds Distributed: ${document.getElementById('impactFundsDistributed').textContent}
+Average Scholarship: ${document.getElementById('impactAvgScholarship').textContent}
+Completion Rate: ${document.getElementById('impactCompletionRate').textContent}
+Partner Schools: ${document.getElementById('impactSchoolsPartnered').textContent}
+Total Donations Received: ${document.getElementById('impactTotalDonations').textContent}
+
+Generated on: ${new Date().toLocaleDateString()}
+            `;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `impact-report-${year}.txt`;
+            link.click();
+        };
+
+        // ===== WAITLIST =====
+        function renderWaitlistTable() {
+            const container = document.getElementById('waitlistTable');
+            document.getElementById('waitlistCount').textContent = allWaitlist.length + ' applicants waiting';
+            document.getElementById('processWaitlistBtn').disabled = allWaitlist.length === 0;
+
+            if (allWaitlist.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No applicants on waitlist.</p></div>`;
+                return;
+            }
+
+            const rows = allWaitlist.map((item, index) => {
+                const app = allApplications.find(a => a.id === item.applicationId);
+                const name = app ? `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}` : 'Unknown';
+                const childCount = app ? (app.children || []).length : 0;
+                const addedDate = item.addedAt?.toDate?.() ? item.addedAt.toDate().toLocaleDateString() : 'N/A';
+                const priorityClass = item.priority === 'high' ? 'status-danger' : item.priority === 'low' ? 'status-pending' : 'status-active';
+
+                return `<tr>
+                    <td style="font-weight:600;">${index + 1}</td>
+                    <td>${escapeHtml(name)}</td>
+                    <td>${childCount}</td>
+                    <td>${escapeHtml(item.reason || '').replace('_', ' ')}</td>
+                    <td><span class="status-badge ${priorityClass}">${item.priority || 'normal'}</span></td>
+                    <td>${addedDate}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="removeFromWaitlist('${item.id}')">Remove</button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Applicant</th>
+                            <th>Children</th>
+                            <th>Reason</th>
+                            <th>Priority</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        window.updateFundStatus = async function() {
+            const statusEl = document.getElementById('fundUpdateStatus');
+            statusEl.textContent = 'Updating...';
+
+            const availableFunds = parseFloat(document.getElementById('availableFunds').value) || 0;
+            const lowFundsThreshold = parseFloat(document.getElementById('lowFundsThreshold').value) || 500;
+
+            try {
+                await setDoc(doc(db, 'admin-settings', 'general'), {
+                    availableFunds,
+                    lowFundsThreshold
+                }, { merge: true });
+
+                adminSettings.availableFunds = availableFunds;
+                adminSettings.lowFundsThreshold = lowFundsThreshold;
+
+                statusEl.textContent = 'Updated!';
+                statusEl.style.color = 'var(--success)';
+                updateFundStatusAlert();
+                setTimeout(() => statusEl.textContent = '', 2000);
+            } catch (error) {
+                console.error('Error updating funds:', error);
+                statusEl.textContent = 'Error updating.';
+                statusEl.style.color = 'var(--danger)';
+            }
+        };
+
+        function updateFundStatusAlert() {
+            const alertEl = document.getElementById('fundStatusAlert');
+            const funds = adminSettings.availableFunds || 0;
+            const threshold = adminSettings.lowFundsThreshold || 500;
+
+            if (funds < threshold) {
+                alertEl.style.display = 'block';
+                alertEl.style.background = '#FFEBEE';
+                alertEl.style.color = '#C62828';
+                alertEl.innerHTML = `<strong>Low Funds Alert:</strong> Available funds ($${funds.toLocaleString()}) are below the threshold ($${threshold.toLocaleString()}). Consider fundraising or processing waitlist cautiously.`;
+            } else {
+                alertEl.style.display = 'block';
+                alertEl.style.background = '#E8F5E9';
+                alertEl.style.color = '#2E7D32';
+                alertEl.innerHTML = `<strong>Funds Status:</strong> Available funds ($${funds.toLocaleString()}) are healthy.`;
+            }
+        }
+
+        window.processNextWaitlist = async function() {
+            if (allWaitlist.length === 0) return;
+
+            const next = allWaitlist[0];
+            const app = allApplications.find(a => a.id === next.applicationId);
+            if (!app) {
+                alert('Application not found');
+                return;
+            }
+
+            if (!confirm(`Process ${app.parentInfo?.firstName} ${app.parentInfo?.lastName} from the waitlist? This will send them a notification.`)) return;
+
+            try {
+                await processWaitlistFn({ waitlistId: next.id });
+                allWaitlist.shift();
+                renderWaitlistTable();
+                alert('Applicant processed and notified!');
+            } catch (error) {
+                console.error('Error processing waitlist:', error);
+                alert('Error processing: ' + error.message);
+            }
+        };
+
+        window.removeFromWaitlist = async function(waitlistId) {
+            if (!confirm('Remove this applicant from the waitlist?')) return;
+
+            try {
+                await deleteDoc(doc(db, 'waitlist', waitlistId));
+                allWaitlist = allWaitlist.filter(w => w.id !== waitlistId);
+                renderWaitlistTable();
+            } catch (error) {
+                console.error('Error removing from waitlist:', error);
+                alert('Error removing from waitlist');
+            }
+        };
+
+        window.openWaitlistModal = function(appId, appName) {
+            document.getElementById('waitlistForm').reset();
+            document.getElementById('waitlistAppId').value = appId;
+            document.getElementById('waitlistAppName').value = appName;
+            document.getElementById('waitlistModal').classList.add('active');
+        };
+
+        window.closeWaitlistModal = function() {
+            document.getElementById('waitlistModal').classList.remove('active');
+        };
+
+        document.getElementById('waitlistForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const appId = document.getElementById('waitlistAppId').value;
+            const reason = document.getElementById('waitlistReason').value;
+            const priority = document.getElementById('waitlistPriority').value;
+            const notes = document.getElementById('waitlistNotes').value;
+
+            try {
+                const position = allWaitlist.length + 1;
+                const docRef = await addDoc(collection(db, 'waitlist'), {
+                    applicationId: appId,
+                    reason,
+                    priority,
+                    notes,
+                    position,
+                    addedAt: serverTimestamp(),
+                    addedBy: currentUser.email
+                });
+                allWaitlist.push({ id: docRef.id, applicationId: appId, reason, priority, notes, position });
+                renderWaitlistTable();
+                closeWaitlistModal();
+            } catch (error) {
+                console.error('Error adding to waitlist:', error);
+                alert('Error adding to waitlist');
+            }
+        });
+
+        // ===== POPULATE DROPDOWNS =====
+        function populateDropdowns() {
+            // Swim schools dropdown for payments
+            const schoolSelect = document.getElementById('paymentSchool');
+            const filterSchoolSelect = document.getElementById('filterPaymentSchool');
+            const schoolOptions = allSwimSchools.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+            schoolSelect.innerHTML = '<option value="">-- Select School --</option>' + schoolOptions;
+            filterSchoolSelect.innerHTML = '<option value="all">All Schools</option>' + schoolOptions;
+
+            // Applications dropdown for payments
+            const appSelect = document.getElementById('paymentApplication');
+            const activeApps = allApplications.filter(a => a.status === 'active' || a.status === 'approved');
+            const appOptions = activeApps.map(a => {
+                const name = `${a.parentInfo?.firstName || ''} ${a.parentInfo?.lastName || ''}`;
+                return `<option value="${a.id}">${escapeHtml(name)}</option>`;
+            }).join('');
+            appSelect.innerHTML = '<option value="">-- None --</option>' + appOptions;
+
+            // Email templates dropdown
+            const templateSelect = document.getElementById('bulkEmailTemplate');
+            const templateOptions = allEmailTemplates.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+            templateSelect.innerHTML = '<option value="">-- Select a template --</option>' + templateOptions;
+        }
+
+        // Filter event listeners for new tabs
+        document.getElementById('filterSchoolStatus')?.addEventListener('change', renderSwimSchoolsTable);
+        document.getElementById('schoolSearch')?.addEventListener('input', renderSwimSchoolsTable);
+        document.getElementById('filterPaymentSchool')?.addEventListener('change', renderSchoolPaymentsTable);
+        document.getElementById('paymentDateFrom')?.addEventListener('change', renderSchoolPaymentsTable);
+        document.getElementById('paymentDateTo')?.addEventListener('change', renderSchoolPaymentsTable);
+        document.getElementById('filterEmailType')?.addEventListener('change', renderEmailLogsTable);
+        document.getElementById('emailLogSearch')?.addEventListener('input', renderEmailLogsTable);
+
+        // ===== IMPORT SUBSCRIBERS =====
+        let parsedSubscribers = [];
+
+        window.openImportSubscribersModal = function() {
+            document.getElementById('subscribersCsvFile').value = '';
+            document.getElementById('importPreview').style.display = 'none';
+            document.getElementById('importStatus').innerHTML = '';
+            document.getElementById('importSubscribersBtn').disabled = true;
+            parsedSubscribers = [];
+            document.getElementById('importSubscribersModal').classList.add('active');
+        };
+
+        window.closeImportSubscribersModal = function() {
+            document.getElementById('importSubscribersModal').classList.remove('active');
+        };
+
+        window.downloadSampleCSV = function() {
+            const sample = 'email,name\njohn@example.com,John Smith\njane@example.com,Jane Doe\n';
+            const blob = new Blob([sample], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'subscribers-template.csv';
+            link.click();
+        };
+
+        // Parse CSV file when selected
+        document.getElementById('subscribersCsvFile')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const text = event.target.result;
+                const lines = text.split(/\r?\n/).filter(line => line.trim());
+
+                if (lines.length < 2) {
+                    document.getElementById('importStatus').innerHTML = '<span style="color: var(--danger);">CSV must have a header row and at least one data row.</span>';
+                    return;
+                }
+
+                // Parse header
+                const header = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/['"]/g, ''));
+                const emailIndex = header.findIndex(h => h === 'email' || h === 'e-mail' || h === 'email address');
+                const nameIndex = header.findIndex(h => h === 'name' || h === 'full name' || h === 'subscriber name');
+
+                if (emailIndex === -1) {
+                    document.getElementById('importStatus').innerHTML = '<span style="color: var(--danger);">CSV must have an "email" column.</span>';
+                    return;
+                }
+
+                // Parse data rows
+                parsedSubscribers = [];
+                const existingEmails = new Set(allSubscribers.map(s => s.email?.toLowerCase()));
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = parseCSVLine(lines[i]);
+                    const email = values[emailIndex]?.trim().toLowerCase();
+                    const name = nameIndex !== -1 ? values[nameIndex]?.trim() : '';
+
+                    if (email && isValidEmailFormat(email)) {
+                        if (!existingEmails.has(email)) {
+                            parsedSubscribers.push({ email, name });
+                            existingEmails.add(email); // Prevent duplicates within the file
+                        }
+                    }
+                }
+
+                // Show preview
+                if (parsedSubscribers.length === 0) {
+                    document.getElementById('importStatus').innerHTML = '<span style="color: var(--warning);">No new valid subscribers found. All may already exist or emails are invalid.</span>';
+                    document.getElementById('importPreview').style.display = 'none';
+                    document.getElementById('importSubscribersBtn').disabled = true;
+                    return;
+                }
+
+                document.getElementById('importPreviewCount').textContent = parsedSubscribers.length;
+                const previewRows = parsedSubscribers.slice(0, 10).map(s =>
+                    `<tr><td style="padding: 0.5rem;">${escapeHtml(s.email)}</td><td style="padding: 0.5rem;">${escapeHtml(s.name || '(no name)')}</td></tr>`
+                ).join('');
+                const moreText = parsedSubscribers.length > 10 ? `<tr><td colspan="2" style="padding: 0.5rem; color: var(--gray); text-align: center;">...and ${parsedSubscribers.length - 10} more</td></tr>` : '';
+
+                document.getElementById('importPreviewTable').innerHTML = `
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead><tr style="background: var(--off-white);"><th style="padding: 0.5rem; text-align: left;">Email</th><th style="padding: 0.5rem; text-align: left;">Name</th></tr></thead>
+                        <tbody>${previewRows}${moreText}</tbody>
+                    </table>
+                `;
+                document.getElementById('importPreview').style.display = 'block';
+                document.getElementById('importSubscribersBtn').disabled = false;
+                document.getElementById('importStatus').innerHTML = `<span style="color: var(--success);">Found ${parsedSubscribers.length} new subscribers to import.</span>`;
+            };
+            reader.readAsText(file);
+        });
+
+        // Parse CSV line handling quoted values
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function isValidEmailFormat(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length < 256;
+        }
+
+        window.importSubscribers = async function() {
+            if (parsedSubscribers.length === 0) return;
+
+            const btn = document.getElementById('importSubscribersBtn');
+            const statusEl = document.getElementById('importStatus');
+            btn.disabled = true;
+            btn.textContent = 'Importing...';
+            statusEl.innerHTML = '<span style="color: var(--gray);">Importing subscribers, please wait...</span>';
+
+            try {
+                const result = await importSubscribersFn({ subscribers: parsedSubscribers });
+                const data = result.data;
+
+                statusEl.innerHTML = `<span style="color: var(--success);">Successfully imported ${data.imported} subscribers!</span>` +
+                    (data.skipped > 0 ? `<br><span style="color: var(--warning);">${data.skipped} duplicates were skipped.</span>` : '');
+
+                // Refresh subscribers list
+                const subsQuery = query(
+                    collection(db, 'newsletter-subscribers'),
+                    orderBy('subscribedAt', 'desc')
+                );
+                const subsSnap = await getDocs(subsQuery);
+                allSubscribers = subsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderSubscribersTable();
+                renderOverview();
+
+                btn.textContent = 'Done!';
+                setTimeout(() => {
+                    closeImportSubscribersModal();
+                    btn.textContent = 'Import Subscribers';
+                }, 2000);
+            } catch (error) {
+                console.error('Import error:', error);
+                statusEl.innerHTML = `<span style="color: var(--danger);">Error importing: ${error.message}</span>`;
+                btn.disabled = false;
+                btn.textContent = 'Import Subscribers';
+            }
+        };
+    </script>
+</body>
+</html>

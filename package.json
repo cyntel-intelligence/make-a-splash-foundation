@@ -1,0 +1,17 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "A modern, responsive website for the Make A Splash Foundation - a 501(c)(3) nonprofit dedicated to preventing childhood drowning through survival swim scholarships.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "firebase": "^12.7.0",
+    "firebase-tools": "^15.2.1"
+  }
+}

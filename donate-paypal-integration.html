@@ -1,0 +1,191 @@
+<!-- ========================================
+     PAYPAL DONATION BUTTON INTEGRATION
+     Super easy - No backend required!
+     ======================================== -->
+
+<!-- Replace your donation form section in donate.html with this: -->
+
+<div class="donation-form-box">
+    <div class="tax-deductible">
+        ✓ Tax-Deductible Donation | 501(c)(3) Tax ID: 92-3713877
+    </div>
+
+    <h2>Make Your Donation</h2>
+
+    <!-- PayPal Donation Options -->
+    <div style="text-align: center; margin: var(--spacing-lg) 0;">
+
+        <!-- OPTION 1: PayPal Standard Donate Button -->
+        <div class="paypal-option" style="margin-bottom: var(--spacing-lg);">
+            <h3>Donate via PayPal</h3>
+            <p style="color: var(--dark-gray); margin-bottom: var(--spacing-md);">
+                Safe, secure, and supports one-time or recurring donations
+            </p>
+
+            <!-- PayPal Button Code - GET YOUR OWN FROM PAYPAL -->
+            <form action="https://www.paypal.com/donate" method="post" target="_top">
+                <!-- REPLACE THIS with your actual PayPal hosted button ID -->
+                <input type="hidden" name="hosted_button_id" value="YOUR_BUTTON_ID_HERE" />
+
+                <!-- Donation amount selection -->
+                <div class="donation-amounts" style="margin-bottom: var(--spacing-md);">
+                    <select name="amount" class="custom-amount-input" style="width: 100%; max-width: 300px; margin: 0 auto;">
+                        <option value="">Select Amount</option>
+                        <option value="25">$25 - One Swim Lesson</option>
+                        <option value="50">$50 - Two Swim Lessons</option>
+                        <option value="100">$100 - Week of Lessons</option>
+                        <option value="250">$250 - Half Scholarship</option>
+                        <option value="500">$500 - Full Scholarship</option>
+                        <option value="1000">$1,000 - Multiple Children</option>
+                        <option value="">Custom Amount</option>
+                    </select>
+                </div>
+
+                <!-- PayPal Donate Button -->
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+            </form>
+
+            <p style="font-size: 0.875rem; color: var(--gray); margin-top: var(--spacing-sm);">
+                🔒 Secure payment processing by PayPal
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: var(--spacing-md) 0;">
+            <span style="color: var(--gray);">OR</span>
+        </div>
+
+        <!-- OPTION 2: PayPal Giving Fund (0% Fees!) -->
+        <div class="paypal-giving-option">
+            <h3>Donate via PayPal Giving Fund</h3>
+            <p style="color: var(--success); font-weight: 600; margin-bottom: var(--spacing-sm);">
+                ✓ 100% of your donation goes to Make A Splash Foundation - Zero fees!
+            </p>
+            <p style="color: var(--dark-gray); margin-bottom: var(--spacing-md); font-size: 0.95rem;">
+                PayPal Giving Fund covers all transaction costs
+            </p>
+
+            <!-- PayPal Giving Fund Button -->
+            <a href="https://www.paypal.com/fundraiser/charity/YOUR_CHARITY_ID" target="_blank" class="btn btn-primary btn-large" style="display: inline-block;">
+                Donate via PayPal Giving Fund
+            </a>
+
+            <p style="font-size: 0.875rem; color: var(--gray); margin-top: var(--spacing-sm);">
+                Opens in new window
+            </p>
+        </div>
+    </div>
+
+    <!-- Donor Information (Optional - for your records) -->
+    <div class="donor-info-section" style="border-top: 2px solid var(--light-gray); padding-top: var(--spacing-lg); margin-top: var(--spacing-lg);">
+        <h3>Want Updates? (Optional)</h3>
+        <p style="color: var(--dark-gray); margin-bottom: var(--spacing-md);">
+            Leave your email to receive impact updates and tax receipts
+        </p>
+        <form id="donor-info-form" style="max-width: 500px; margin: 0 auto;">
+            <div class="form-group">
+                <input type="email" id="donor-email" placeholder="your@email.com" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md);">
+            </div>
+            <button type="submit" class="btn btn-outline">Subscribe to Updates</button>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================
+     SETUP INSTRUCTIONS:
+
+     STEP 1: Get PayPal Donate Button
+     1. Log in to PayPal Business at https://www.paypal.com
+     2. Go to: Tools → PayPal Buttons
+     3. Choose "Donation" button
+     4. Customize your button
+     5. Copy the code
+     6. Replace "YOUR_BUTTON_ID_HERE" above with your button ID
+
+     STEP 2: Set Up PayPal Giving Fund (For 0% Fees!)
+     1. Go to: https://www.paypal.com/us/fundraiser/charity/create
+     2. Sign up as Make A Splash Foundation
+     3. Submit 501(c)(3) documentation (Tax ID: 92-3713877)
+     4. Get approved (usually 2-3 business days)
+     5. Get your charity fundraiser link
+     6. Replace "YOUR_CHARITY_ID" above with your link
+
+     STEP 3: Test It!
+     - Use PayPal Sandbox for testing
+     - Make a real $1 donation to test
+     - Verify you receive the funds
+
+     ======================================== -->
+
+<!-- Alternative: Embedded PayPal Form -->
+<!-- If you want a more integrated experience, use this: -->
+
+<script>
+    // PayPal Smart Payment Buttons
+    // Requires PayPal SDK - add this to your <head>:
+    // <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
+
+    // Then add this where you want the button:
+    // <div id="paypal-button-container"></div>
+
+    // And this script:
+    /*
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    description: 'Donation to Make A Splash Foundation',
+                    amount: {
+                        value: document.getElementById('donation-amount').value
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('Thank you for your donation, ' + details.payer.name.given_name + '!');
+                window.location.href = 'thank-you.html';
+            });
+        },
+        onError: function(err) {
+            alert('An error occurred. Please try again.');
+            console.error(err);
+        }
+    }).render('#paypal-button-container');
+    */
+</script>
+
+<!-- ========================================
+     SIMPLEST OPTION: Direct Link
+
+     Just create a button that links to PayPal:
+     ======================================== -->
+
+<style>
+    .simple-paypal-button {
+        display: inline-block;
+        background: #0070ba;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.125rem;
+        transition: background 0.3s;
+    }
+    .simple-paypal-button:hover {
+        background: #005ea6;
+        color: white;
+    }
+</style>
+
+<!-- Use this simple link approach: -->
+<div style="text-align: center; margin: var(--spacing-xl) 0;">
+    <h2>Donate Now</h2>
+    <p style="margin-bottom: var(--spacing-md);">Click below to make a secure donation via PayPal</p>
+    <a href="https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID"
+       target="_blank"
+       class="simple-paypal-button">
+        Donate with PayPal
+    </a>
+</div>

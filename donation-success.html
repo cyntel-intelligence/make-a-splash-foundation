@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJL63ED644"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QJL63ED644');
+    </script>
+    <meta name="description" content="Thank you for your donation to Make A Splash Foundation!">
+    <meta name="robots" content="noindex">
+    <title>Thank You! | Make A Splash Foundation</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .success-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--off-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-content {
+            text-align: center;
+            max-width: 650px;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--success), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .success-title {
+            font-family: var(--font-primary);
+            font-size: 2.5rem;
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .success-subtitle {
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .success-message {
+            font-family: var(--font-secondary);
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            line-height: 1.8;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .receipt-note {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .receipt-note h3 {
+            color: var(--accent-navy);
+            font-family: var(--font-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .receipt-note p {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .impact-box {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .impact-box h3 {
+            color: white;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .impact-box p {
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        .success-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-section {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 2px solid var(--light-gray);
+        }
+
+        .share-section h3 {
+            color: var(--accent-navy);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .share-section p {
+            color: var(--dark-gray);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .share-btn.facebook {
+            background: #1877F2;
+            color: white;
+        }
+
+        .share-btn.twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 480px) {
+            .success-title {
+                font-size: 1.75rem;
+            }
+
+            .success-icon {
+                width: 90px;
+                height: 90px;
+            }
+
+            .success-icon svg {
+                width: 45px;
+                height: 45px;
+            }
+
+            .success-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#impact" class="nav-link">Our Impact</a></li>
+                <li><a href="resources.html" class="nav-link">Resources</a></li>
+                <li><a href="corporate-partners.html" class="nav-link">Corporate Partners</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="apply.html" class="btn btn-primary-nav">Apply for Scholarship</a></li>
+                <li><a href="donate.html" class="btn btn-secondary-nav">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Success Content -->
+    <div class="success-page">
+        <div class="success-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+            </div>
+
+            <h1 class="success-title">Thank You!</h1>
+            <p class="success-subtitle">Your donation has been received</p>
+
+            <p class="success-message">
+                Your generosity will help provide life-saving swim lessons to children in need. Because of donors like you, we can continue our mission to prevent childhood drowning.
+            </p>
+
+            <div class="receipt-note">
+                <h3>Tax Receipt</h3>
+                <p>A tax-deductible receipt has been sent to your email address. Please keep it for your records.</p>
+            </div>
+
+            <div class="impact-box">
+                <h3>Your Impact</h3>
+                <p>Every donation helps us provide survival swim scholarships to families who cannot afford lessons. Together, we're making water safety accessible to every child.</p>
+            </div>
+
+            <div class="success-actions">
+                <a href="index.html" class="btn btn-primary btn-large">Return Home</a>
+                <a href="index.html#programs" class="btn btn-secondary btn-large">Learn About Our Programs</a>
+            </div>
+
+            <div class="share-section">
+                <h3>Spread the Word</h3>
+                <p>Help us reach more families by sharing our mission</p>
+                <div class="share-buttons">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://makeasplashfoundation.co" target="_blank" class="share-btn facebook">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Share
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=I%20just%20donated%20to%20Make%20A%20Splash%20Foundation%20to%20help%20prevent%20childhood%20drowning!&url=https://makeasplashfoundation.co" target="_blank" class="share-btn twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                        Tweet
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/images/logo.svg" alt="Make A Splash Foundation" class="footer-logo">
+                    <p class="footer-tagline">Making water safety accessible to every child</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="apply.html">Apply for Scholarship</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="donors.html">Our Donors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@makeasplashfoundation.co">contact@makeasplashfoundation.co</a></li>
+                        <li>@makeasplashfoundation</li>
+                        <li>Tax ID: 92-3713877</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Make A Splash Foundation Inc. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

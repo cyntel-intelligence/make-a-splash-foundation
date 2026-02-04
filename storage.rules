@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Scholarship application documents
+    match /scholarship-applications/{applicationId}/{filename} {
+      // Only allow image and PDF uploads, max 10MB, filename must be reasonable length
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/jpeg')
+                       || request.resource.contentType.matches('image/png')
+                       || request.resource.contentType.matches('image/webp')
+                       || request.resource.contentType.matches('image/avif')
+                       || request.resource.contentType.matches('image/heic')
+                       || request.resource.contentType.matches('image/heif')
+                       || request.resource.contentType.matches('application/pdf')
+                       || request.resource.contentType.matches('application/octet-stream'))
+                   && filename.size() < 256;
+
+      // Read access for download URLs (needed by the application form)
+      allow read: if true;
+    }
+
+    // Block everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
