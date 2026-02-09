@@ -378,6 +378,7 @@
         .status-denied { background: #FFEBEE; color: #C62828; }
         .status-active { background: #E0F7FA; color: #00838F; }
         .status-completed { background: #F3E5F5; color: #7B1FA2; }
+        .status-archived { background: #ECEFF1; color: #546E7A; }
 
         .clickable-row { cursor: pointer; }
 
@@ -722,6 +723,7 @@
                                 <option value="denied">Denied</option>
                                 <option value="active">Active</option>
                                 <option value="completed">Completed</option>
+                                <option value="archived">Archived</option>
                             </select>
                             <input type="text" id="filterSearch" placeholder="Search by name or email...">
                         </div>
@@ -1658,7 +1660,7 @@ Your scholarship application has been {{status}}.
 
         // ===== RENDER OVERVIEW =====
         function renderOverview() {
-            const counts = { pending: 0, under_review: 0, approved: 0, denied: 0, active: 0, completed: 0 };
+            const counts = { pending: 0, under_review: 0, approved: 0, denied: 0, active: 0, completed: 0, archived: 0 };
             allApplications.forEach(app => {
                 let s = app.status || 'pending';
                 // Normalize 'new' status to 'pending' (legacy support)
@@ -2266,6 +2268,7 @@ Your scholarship application has been {{status}}.
                                     <option value="denied" ${status === 'denied' ? 'selected' : ''}>Denied</option>
                                     <option value="active" ${status === 'active' ? 'selected' : ''}>Active</option>
                                     <option value="completed" ${status === 'completed' ? 'selected' : ''}>Completed</option>
+                                    <option value="archived" ${status === 'archived' ? 'selected' : ''}>Archived</option>
                                 </select>
                             </div>
                         </div>

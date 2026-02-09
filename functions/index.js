@@ -447,7 +447,7 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
     }
 
     const { applicationId, status, note, awardInfo, sendEmail } = data;
-    const validStatuses = ['pending', 'new', 'under_review', 'approved', 'denied', 'active', 'completed'];
+    const validStatuses = ['pending', 'new', 'under_review', 'approved', 'denied', 'active', 'completed', 'archived'];
 
     if (!applicationId || typeof applicationId !== 'string') {
         throw new functions.https.HttpsError('invalid-argument', 'Application ID required.');
