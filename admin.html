@@ -836,7 +836,10 @@
                 <!-- Email Templates Section -->
                 <div class="panel-header">
                     <h2>Email Templates</h2>
-                    <button class="btn btn-sm btn-primary" onclick="openTemplateModal()">+ New Template</button>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-sm btn-primary" onclick="openTemplateModal()">+ New Template</button>
+                        <button class="btn btn-sm btn-success" id="createDefaultTemplatesBtn" onclick="createDefaultTemplates()">Create Default Templates</button>
+                    </div>
                 </div>
                 <div class="data-table" id="emailTemplatesTable">
                     <div class="loading"><div class="spinner"></div><p>Loading templates...</p></div>
@@ -1005,7 +1008,7 @@
                         </div>
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-sm btn-outline" onclick="exportImpactReport()">Export as PDF</button>
+                        <button class="btn btn-sm btn-outline" onclick="exportImpactReport()">Export Report</button>
                     </div>
                 </div>
             </div>
@@ -1389,6 +1392,8 @@ Your scholarship application has been {{status}}.
         const createSwimSchool = httpsCallable(functions, 'createSwimSchool');
         const updateSwimSchool = httpsCallable(functions, 'updateSwimSchool');
         const recordSchoolPayment = httpsCallable(functions, 'recordSchoolPayment');
+        const updateApprovalEmailTemplateFunc = httpsCallable(functions, 'updateApprovalEmailTemplate');
+        const createDefaultEmailTemplatesFn = httpsCallable(functions, 'createDefaultEmailTemplates');
         const sendTemplatedEmail = httpsCallable(functions, 'sendTemplatedEmail');
         const sendBulkEmailFn = httpsCallable(functions, 'sendBulkEmail');
         const addToWaitlistFn = httpsCallable(functions, 'addToWaitlist');
@@ -1653,15 +1658,16 @@ Your scholarship application has been {{status}}.
 
         // ===== RENDER OVERVIEW =====
         function renderOverview() {
-            const counts = { pending: 0, new: 0, under_review: 0, approved: 0, denied: 0, active: 0, completed: 0 };
+            const counts = { pending: 0, under_review: 0, approved: 0, denied: 0, active: 0, completed: 0 };
             allApplications.forEach(app => {
                 let s = app.status || 'pending';
-                if (s === 'new') s = 'pending'; // Normalize old 'new' status
+                // Normalize 'new' status to 'pending' (legacy support)
+                if (s === 'new') s = 'pending';
                 if (counts[s] !== undefined) counts[s]++;
             });
 
             document.getElementById('statTotal').textContent = allApplications.length;
-            document.getElementById('statNew').textContent = counts.pending + counts.new;
+            document.getElementById('statNew').textContent = counts.pending;
             document.getElementById('statReview').textContent = counts.under_review;
             document.getElementById('statApproved').textContent = counts.approved;
             document.getElementById('statActive').textContent = counts.active;
@@ -1878,28 +1884,59 @@ Your scholarship application has been {{status}}.
 
             const rows = filtered.map(app => {
                 const parentName = `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`;
-                const children = (app.children || []).map(c => c.name || 'N/A').join(', ');
+                const allChildren = app.children || [];
+                const awardedChildren = app.awardInfo?.awardedChildren || [];
                 const status = app.status || 'active';
                 const awardDate = app.awardInfo?.awardDate || 'N/A';
                 const awardAmount = app.awardInfo?.amount ? '$' + app.awardInfo.amount.toLocaleString() : 'N/A';
                 const swimSchool = app.awardInfo?.swimSchool || 'N/A';
-                const lessonsCompleted = app.awardInfo?.lessonsCompleted || 0;
-                const totalLessons = app.awardInfo?.totalLessons || 0;
-                const progress = totalLessons > 0 ? Math.round((lessonsCompleted / totalLessons) * 100) : 0;
+
+                // Build children display with per-child progress
+                let childrenDisplay = '';
+                let progressDisplay = '';
+
+                if (awardedChildren.length > 0) {
+                    const awarded = awardedChildren.filter(ac => ac.awarded);
+                    childrenDisplay = awarded.map(ac => {
+                        const name = allChildren[ac.childIndex]?.name || 'Child';
+                        const amt = ac.amount ? ` ($${ac.amount})` : '';
+                        return name + amt;
+                    }).join(', ') || 'N/A';
+                    progressDisplay = awarded.map(ac => {
+                        const childName = allChildren[ac.childIndex]?.name || 'Child';
+                        const completed = ac.lessonsCompleted || 0;
+                        const total = ac.totalLessons || 0;
+                        const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+                        return `<div style="margin-bottom:4px;">
+                            <span style="font-size:0.75rem;color:var(--dark-gray);">${escapeHtml(childName)}</span>
+                            <div style="display:flex;align-items:center;gap:0.5rem;">
+                                <div style="flex:1;height:6px;background:var(--light-gray);border-radius:3px;overflow:hidden;">
+                                    <div style="width:${pct}%;height:100%;background:${pct >= 100 ? 'var(--success)' : 'var(--primary)'};"></div>
+                                </div>
+                                <span style="font-size:0.75rem;color:var(--dark-gray);">${completed}/${total}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    // Fallback for old data without awardedChildren
+                    childrenDisplay = allChildren.map(c => c.name || 'N/A').join(', ');
+                    const lessonsCompleted = app.awardInfo?.lessonsCompleted || 0;
+                    const totalLessons = app.awardInfo?.totalLessons || 0;
+                    const progress = totalLessons > 0 ? Math.round((lessonsCompleted / totalLessons) * 100) : 0;
+                    progressDisplay = `<div style="display:flex;align-items:center;gap:0.5rem;">
+                        <div style="flex:1;height:8px;background:var(--light-gray);border-radius:4px;overflow:hidden;">
+                            <div style="width:${progress}%;height:100%;background:${progress >= 100 ? 'var(--success)' : 'var(--primary)'};"></div>
+                        </div>
+                        <span style="font-size:0.8rem;color:var(--dark-gray);">${lessonsCompleted}/${totalLessons}</span>
+                    </div>`;
+                }
 
                 return `<tr class="clickable-row" data-id="${app.id}">
                     <td>${escapeHtml(parentName)}</td>
-                    <td>${escapeHtml(children)}</td>
+                    <td>${escapeHtml(childrenDisplay)}</td>
                     <td>${escapeHtml(swimSchool)}</td>
                     <td>${awardAmount}</td>
-                    <td>
-                        <div style="display:flex;align-items:center;gap:0.5rem;">
-                            <div style="flex:1;height:8px;background:var(--light-gray);border-radius:4px;overflow:hidden;">
-                                <div style="width:${progress}%;height:100%;background:${progress >= 100 ? 'var(--success)' : 'var(--primary)'};"></div>
-                            </div>
-                            <span style="font-size:0.8rem;color:var(--dark-gray);">${lessonsCompleted}/${totalLessons}</span>
-                        </div>
-                    </td>
+                    <td>${progressDisplay}</td>
                     <td><span class="status-badge status-${status}">${status}</span></td>
                     <td>${awardDate}</td>
                 </tr>`;
@@ -2070,9 +2107,10 @@ Your scholarship application has been {{status}}.
             // Build documents section
             const docs = app.documents || {};
             const docsHtml = Object.entries(docs).length > 0
-                ? `<ul class="doc-list">${Object.entries(docs).map(([key, url]) =>
-                    `<li><a href="${escapeHtml(url)}" target="_blank">${escapeHtml(key)}</a></li>`
-                ).join('')}</ul>`
+                ? `<ul class="doc-list">${Object.entries(docs).map(([key, url]) => {
+                    const safeUrl = sanitizeUrl(url);
+                    return `<li><a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(key)}</a></li>`;
+                }).join('')}</ul>`
                 : '<p style="color: var(--gray);">No documents uploaded</p>';
 
             // Build notes section
@@ -2169,18 +2207,45 @@ Your scholarship application has been {{status}}.
                                 <input type="date" id="awardDate" value="${app.awardInfo?.awardDate || ''}" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
                             </div>
                             <div class="detail-item">
-                                <div class="label">Total Lessons</div>
-                                <input type="number" id="awardTotalLessons" value="${app.awardInfo?.totalLessons || ''}" placeholder="e.g., 12" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
-                            </div>
-                            <div class="detail-item">
-                                <div class="label">Lessons Completed</div>
-                                <input type="number" id="awardLessonsCompleted" value="${app.awardInfo?.lessonsCompleted || 0}" placeholder="0" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
-                            </div>
-                            <div class="detail-item">
                                 <div class="label">Expected Completion</div>
                                 <input type="date" id="awardExpectedCompletion" value="${app.awardInfo?.expectedCompletion || ''}" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
                             </div>
                         </div>
+
+                        <!-- Per-Child Award Section -->
+                        <div style="margin: 1rem 0; padding: 1rem; background: var(--light-gray); border-radius: var(--radius);">
+                            <div class="label" style="margin-bottom: 0.75rem; font-weight: 600;">Children Awarded</div>
+                            <div id="awardedChildrenContainer">
+                                ${(app.children || []).map((child, i) => {
+                                    const childAward = (app.awardInfo?.awardedChildren || []).find(ac => ac.childIndex === i) || {};
+                                    const isAwarded = childAward.awarded || false;
+                                    const childAmount = childAward.amount || '';
+                                    const totalLessons = childAward.totalLessons || '';
+                                    const lessonsCompleted = childAward.lessonsCompleted || 0;
+                                    return `
+                                        <div class="awarded-child-row" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: white; border-radius: var(--radius); margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; min-width: 150px;">
+                                                <input type="checkbox" class="child-awarded-checkbox" data-child-index="${i}" ${isAwarded ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
+                                                <span style="font-weight: 500;">${escapeHtml(child.name || 'Child ' + (i + 1))}</span>
+                                            </label>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <label style="font-size: 0.8rem; color: var(--dark-gray);">Award $:</label>
+                                                <input type="number" class="child-award-amount" data-child-index="${i}" value="${childAmount}" placeholder="0" style="width: 80px; padding: 0.4rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 0.85rem;">
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <label style="font-size: 0.8rem; color: var(--dark-gray);">Lessons:</label>
+                                                <input type="number" class="child-total-lessons" data-child-index="${i}" value="${totalLessons}" placeholder="Total" style="width: 70px; padding: 0.4rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 0.85rem;">
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <label style="font-size: 0.8rem; color: var(--dark-gray);">Completed:</label>
+                                                <input type="number" class="child-lessons-completed" data-child-index="${i}" value="${lessonsCompleted}" placeholder="0" style="width: 70px; padding: 0.4rem; border: 2px solid var(--light-gray); border-radius: var(--radius); font-size: 0.85rem;">
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('') || '<p style="color: var(--gray); font-style: italic;">No children on this application</p>'}
+                            </div>
+                        </div>
+
                         <div class="detail-item" style="margin-bottom: 0;">
                             <div class="label">Award Notes</div>
                             <textarea id="awardNotes" placeholder="Notes about the scholarship award..." style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);min-height:60px;resize:vertical;">${escapeHtml(app.awardInfo?.notes || '')}</textarea>
@@ -2208,12 +2273,19 @@ Your scholarship application has been {{status}}.
                             <label style="display:block; font-weight:600; font-size:0.8rem; margin-bottom:0.25rem; color: var(--dark-gray);">Add Note (optional)</label>
                             <textarea id="modalNote" placeholder="Add a note about this status change..."></textarea>
                         </div>
-                        <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <button class="btn btn-primary btn-sm" id="modalSaveBtn" data-appid="${app.id}">Save Changes</button>
-                            <button class="btn btn-warning btn-sm" onclick="openWaitlistModal('${app.id}', '${escapeHtml(name)}')" ${allWaitlist.some(w => w.applicationId === app.id) ? 'disabled title="Already on waitlist"' : ''}>
-                                ${allWaitlist.some(w => w.applicationId === app.id) ? 'On Waitlist' : 'Add to Waitlist'}
-                            </button>
-                            <span id="modalSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--light-gray);">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin-bottom: 0.5rem;">
+                                <input type="checkbox" id="sendStatusEmail" style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-size: 0.9rem;">Send notification email to applicant</span>
+                            </label>
+                            <p style="font-size: 0.75rem; color: var(--gray); margin: 0 0 0.75rem 26px;">Emails can be sent for: Approved, Denied, Active, Completed</p>
+                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                                <button class="btn btn-primary btn-sm" id="modalSaveBtn" data-appid="${app.id}">Save Changes</button>
+                                <button class="btn btn-warning btn-sm" onclick="openWaitlistModal('${app.id}', '${escapeHtml(name)}')" ${allWaitlist.some(w => w.applicationId === app.id) ? 'disabled title="Already on waitlist"' : ''}>
+                                    ${allWaitlist.some(w => w.applicationId === app.id) ? 'On Waitlist' : 'Add to Waitlist'}
+                                </button>
+                                <span id="modalSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2223,24 +2295,86 @@ Your scholarship application has been {{status}}.
                 </div>
             `;
 
+            // Show/hide award info section based on status selection
+            document.getElementById('modalStatusSelect').addEventListener('change', function() {
+                const awardSection = document.getElementById('awardInfoSection');
+                const showStatuses = ['approved', 'active', 'completed'];
+                if (awardSection) {
+                    awardSection.style.display = showStatuses.includes(this.value) ? 'block' : 'none';
+                }
+            });
+
             // Save button handler
             document.getElementById('modalSaveBtn').addEventListener('click', async function() {
                 const btn = this;
+
+                // Prevent double-clicks
+                if (btn.disabled) return;
+
                 const statusEl = document.getElementById('modalSaveStatus');
                 const newStatus = document.getElementById('modalStatusSelect').value;
                 const note = document.getElementById('modalNote').value;
                 const appDocId = btn.dataset.appid;
+                const sendEmail = document.getElementById('sendStatusEmail').checked;
+
+                // Gather per-child award data
+                const awardedChildren = [];
+                let totalChildAmount = 0;
+                document.querySelectorAll('.child-awarded-checkbox').forEach(checkbox => {
+                    const idx = parseInt(checkbox.dataset.childIndex);
+                    const amountInput = document.querySelector(`.child-award-amount[data-child-index="${idx}"]`);
+                    const totalLessonsInput = document.querySelector(`.child-total-lessons[data-child-index="${idx}"]`);
+                    const lessonsCompletedInput = document.querySelector(`.child-lessons-completed[data-child-index="${idx}"]`);
+                    const childAmount = parseFloat(amountInput?.value) || 0;
+                    if (checkbox.checked) {
+                        totalChildAmount += childAmount;
+                    }
+                    awardedChildren.push({
+                        childIndex: idx,
+                        awarded: checkbox.checked,
+                        amount: childAmount,
+                        totalLessons: parseInt(totalLessonsInput?.value) || 0,
+                        lessonsCompleted: parseInt(lessonsCompletedInput?.value) || 0
+                    });
+                });
+
+                // Use per-child total if available, otherwise use manual input
+                const manualAmount = parseFloat(document.getElementById('awardAmount')?.value) || 0;
+                const finalAmount = totalChildAmount > 0 ? totalChildAmount : manualAmount;
 
                 // Gather award info
                 const awardInfo = {
                     swimSchool: document.getElementById('awardSwimSchool')?.value || '',
-                    amount: parseFloat(document.getElementById('awardAmount')?.value) || 0,
+                    amount: finalAmount,
                     awardDate: document.getElementById('awardDate')?.value || '',
-                    totalLessons: parseInt(document.getElementById('awardTotalLessons')?.value) || 0,
-                    lessonsCompleted: parseInt(document.getElementById('awardLessonsCompleted')?.value) || 0,
                     expectedCompletion: document.getElementById('awardExpectedCompletion')?.value || '',
-                    notes: document.getElementById('awardNotes')?.value || ''
+                    notes: document.getElementById('awardNotes')?.value || '',
+                    awardedChildren: awardedChildren
                 };
+
+                // Require award details when approving
+                if (newStatus === 'approved') {
+                    if (!awardInfo.swimSchool.trim()) {
+                        statusEl.textContent = 'Please enter a Swim School before approving.';
+                        statusEl.style.color = 'var(--danger)';
+                        document.getElementById('awardSwimSchool')?.focus();
+                        return;
+                    }
+                    // Check at least one child is selected with an amount
+                    const hasAwardedChild = awardedChildren.some(c => c.awarded);
+                    if (awardedChildren.length > 0 && !hasAwardedChild) {
+                        statusEl.textContent = 'Please select at least one child to award the scholarship to.';
+                        statusEl.style.color = 'var(--danger)';
+                        return;
+                    }
+                    // Check that awarded children have amounts
+                    const awardedWithoutAmount = awardedChildren.filter(c => c.awarded && (!c.amount || c.amount <= 0));
+                    if (awardedWithoutAmount.length > 0) {
+                        statusEl.textContent = 'Please enter an award amount for each selected child.';
+                        statusEl.style.color = 'var(--danger)';
+                        return;
+                    }
+                }
 
                 btn.disabled = true;
                 btn.textContent = 'Saving...';
@@ -2251,7 +2385,8 @@ Your scholarship application has been {{status}}.
                         applicationId: appDocId,
                         status: newStatus,
                         note: note,
-                        awardInfo: awardInfo
+                        awardInfo: awardInfo,
+                        sendEmail: sendEmail
                     });
 
                     // Update local state
@@ -2298,8 +2433,34 @@ Your scholarship application has been {{status}}.
         appModal.addEventListener('click', (e) => {
             if (e.target === appModal) appModal.classList.remove('active');
         });
+
+        // Close all modals on overlay click
+        document.getElementById('schoolModal').addEventListener('click', (e) => {
+            if (e.target.id === 'schoolModal') closeSchoolModal();
+        });
+        document.getElementById('paymentModal').addEventListener('click', (e) => {
+            if (e.target.id === 'paymentModal') closePaymentModal();
+        });
+        document.getElementById('templateModal').addEventListener('click', (e) => {
+            if (e.target.id === 'templateModal') closeTemplateModal();
+        });
+        document.getElementById('waitlistModal').addEventListener('click', (e) => {
+            if (e.target.id === 'waitlistModal') closeWaitlistModal();
+        });
+        document.getElementById('importSubscribersModal').addEventListener('click', (e) => {
+            if (e.target.id === 'importSubscribersModal') closeImportSubscribersModal();
+        });
+
+        // Close all modals on Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') appModal.classList.remove('active');
+            if (e.key === 'Escape') {
+                appModal.classList.remove('active');
+                if (document.getElementById('schoolModal').classList.contains('active')) closeSchoolModal();
+                if (document.getElementById('paymentModal').classList.contains('active')) closePaymentModal();
+                if (document.getElementById('templateModal').classList.contains('active')) closeTemplateModal();
+                if (document.getElementById('waitlistModal').classList.contains('active')) closeWaitlistModal();
+                if (document.getElementById('importSubscribersModal').classList.contains('active')) closeImportSubscribersModal();
+            }
         });
 
         // ===== HELPERS =====
@@ -2308,6 +2469,24 @@ Your scholarship application has been {{status}}.
             const div = document.createElement('div');
             div.textContent = String(str);
             return div.innerHTML;
+        }
+
+        function sanitizeUrl(url) {
+            if (!url || typeof url !== 'string') return '#';
+            const trimmed = url.trim().toLowerCase();
+            // Block javascript:, data:, and vbscript: protocols
+            if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) {
+                return '#';
+            }
+            // Only allow http, https, and Firebase storage URLs
+            if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('gs://')) {
+                return url;
+            }
+            // Allow relative URLs starting with /
+            if (url.startsWith('/')) {
+                return url;
+            }
+            return '#';
         }
 
         // ===== CSV EXPORT FUNCTIONS =====
@@ -2352,17 +2531,58 @@ Your scholarship application has been {{status}}.
 
         window.exportActiveScholarshipsCSV = function() {
             const active = allApplications.filter(a => a.status === 'active' || a.status === 'completed');
-            const headers = ['Parent Name', 'Children', 'Swim School', 'Award Amount', 'Lessons Completed', 'Total Lessons', 'Status', 'Award Date'];
-            const rows = active.map(app => [
-                `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`,
-                (app.children || []).map(c => c.name).join('; '),
-                app.awardInfo?.swimSchool || '',
-                app.awardInfo?.amount || 0,
-                app.awardInfo?.lessonsCompleted || 0,
-                app.awardInfo?.totalLessons || 0,
-                app.status || '',
-                app.awardInfo?.awardDate || ''
-            ]);
+            const headers = ['Parent Name', 'Parent Email', 'Child Name', 'Child Award Amount', 'Lessons Completed', 'Total Lessons', 'Progress %', 'Swim School', 'Status', 'Award Date'];
+            const rows = [];
+
+            active.forEach(app => {
+                const parentName = `${app.parentInfo?.firstName || ''} ${app.parentInfo?.lastName || ''}`;
+                const parentEmail = app.parentInfo?.email || '';
+                const swimSchool = app.awardInfo?.swimSchool || '';
+                const awardDate = app.awardInfo?.awardDate || '';
+                const awardedChildren = app.awardInfo?.awardedChildren || [];
+                const children = app.children || [];
+
+                if (awardedChildren.length > 0) {
+                    // Export per-child data
+                    awardedChildren.filter(ac => ac.awarded).forEach(ac => {
+                        const childName = children[ac.childIndex]?.name || 'Child ' + (ac.childIndex + 1);
+                        const completed = ac.lessonsCompleted || 0;
+                        const total = ac.totalLessons || 0;
+                        const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+                        rows.push([
+                            parentName,
+                            parentEmail,
+                            childName,
+                            ac.amount || 0,
+                            completed,
+                            total,
+                            progress + '%',
+                            swimSchool,
+                            app.status || '',
+                            awardDate
+                        ]);
+                    });
+                } else {
+                    // Fallback for old data format
+                    const childNames = children.map(c => c.name).join('; ');
+                    const completed = app.awardInfo?.lessonsCompleted || 0;
+                    const total = app.awardInfo?.totalLessons || 0;
+                    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+                    rows.push([
+                        parentName,
+                        parentEmail,
+                        childNames,
+                        app.awardInfo?.amount || 0,
+                        completed,
+                        total,
+                        progress + '%',
+                        swimSchool,
+                        app.status || '',
+                        awardDate
+                    ]);
+                }
+            });
+
             downloadCSV(headers, rows, 'active-scholarships.csv');
         };
 
@@ -2647,7 +2867,7 @@ Your scholarship application has been {{status}}.
                     <td>${escapeHtml(template.subject)}</td>
                     <td>
                         <button class="btn btn-sm btn-outline" onclick="editTemplate('${template.id}')">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTemplate('${template.id}')">Delete</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTemplate('${template.id}', this)">Delete</button>
                     </td>
                 </tr>`;
             }).join('');
@@ -2696,8 +2916,44 @@ Your scholarship application has been {{status}}.
             document.getElementById('templateModal').classList.remove('active');
         };
 
-        window.deleteTemplate = async function(templateId) {
+        window.createDefaultTemplates = async function() {
+            const btn = document.getElementById('createDefaultTemplatesBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+            try {
+                const result = await createDefaultEmailTemplatesFn({});
+                const data = result.data;
+
+                if (data.created.length > 0) {
+                    alert(`Created ${data.created.length} new templates:\n- ${data.created.join('\n- ')}\n\n${data.skipped.length > 0 ? `Skipped ${data.skipped.length} existing templates.` : ''}`);
+                } else {
+                    alert('All default templates already exist.');
+                }
+
+                // Refresh templates list
+                const templatesSnap = await getDocs(collection(db, 'email-templates'));
+                allEmailTemplates = templatesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderEmailTemplatesTable();
+                populateDropdowns();
+            } catch (error) {
+                console.error('Error creating templates:', error);
+                alert('Error creating templates: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        };
+
+        window.deleteTemplate = async function(templateId, btn) {
             if (!confirm('Are you sure you want to delete this template?')) return;
+
+            // Show loading state
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Deleting...';
+            }
+
             try {
                 await deleteDoc(doc(db, 'email-templates', templateId));
                 allEmailTemplates = allEmailTemplates.filter(t => t.id !== templateId);
@@ -2706,6 +2962,11 @@ Your scholarship application has been {{status}}.
             } catch (error) {
                 console.error('Error deleting template:', error);
                 alert('Error deleting template');
+                // Restore button state
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Delete';
+                }
             }
         };
 
@@ -3117,7 +3378,7 @@ Generated on: ${new Date().toLocaleDateString()}
                     <td><span class="status-badge ${priorityClass}">${item.priority || 'normal'}</span></td>
                     <td>${addedDate}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" onclick="removeFromWaitlist('${item.id}')">Remove</button>
+                        <button class="btn btn-sm btn-danger" onclick="removeFromWaitlist('${item.id}', this)">Remove</button>
                     </td>
                 </tr>`;
             }).join('');
@@ -3208,8 +3469,14 @@ Generated on: ${new Date().toLocaleDateString()}
             }
         };
 
-        window.removeFromWaitlist = async function(waitlistId) {
+        window.removeFromWaitlist = async function(waitlistId, btn) {
             if (!confirm('Remove this applicant from the waitlist?')) return;
+
+            // Show loading state
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Removing...';
+            }
 
             try {
                 await deleteDoc(doc(db, 'waitlist', waitlistId));
@@ -3218,6 +3485,11 @@ Generated on: ${new Date().toLocaleDateString()}
             } catch (error) {
                 console.error('Error removing from waitlist:', error);
                 alert('Error removing from waitlist');
+                // Restore button state
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Remove';
+                }
             }
         };
 

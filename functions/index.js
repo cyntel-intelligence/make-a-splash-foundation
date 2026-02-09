@@ -446,7 +446,7 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
         throw new functions.https.HttpsError('permission-denied', 'Admin access required.');
     }
 
-    const { applicationId, status, note, awardInfo } = data;
+    const { applicationId, status, note, awardInfo, sendEmail } = data;
     const validStatuses = ['pending', 'new', 'under_review', 'approved', 'denied', 'active', 'completed'];
 
     if (!applicationId || typeof applicationId !== 'string') {
@@ -459,7 +459,9 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
     const updateData = {
         status,
         lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-        updatedBy: context.auth.token.email
+        updatedBy: context.auth.token.email,
+        // Flag to control whether the Firestore trigger should send an email
+        sendStatusEmail: sendEmail === true
     };
 
     // Add award info if provided (for active/approved/completed scholarships)
@@ -468,11 +470,19 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
             swimSchool: sanitize(awardInfo.swimSchool || ''),
             amount: parseFloat(awardInfo.amount) || 0,
             awardDate: sanitize(awardInfo.awardDate || ''),
-            totalLessons: parseInt(awardInfo.totalLessons) || 0,
-            lessonsCompleted: parseInt(awardInfo.lessonsCompleted) || 0,
             expectedCompletion: sanitize(awardInfo.expectedCompletion || ''),
             notes: sanitize(awardInfo.notes || '')
         };
+        // Handle per-child award data
+        if (Array.isArray(awardInfo.awardedChildren)) {
+            updateData.awardInfo.awardedChildren = awardInfo.awardedChildren.map(child => ({
+                childIndex: parseInt(child.childIndex) || 0,
+                awarded: Boolean(child.awarded),
+                amount: parseFloat(child.amount) || 0,
+                totalLessons: parseInt(child.totalLessons) || 0,
+                lessonsCompleted: parseInt(child.lessonsCompleted) || 0
+            }));
+        }
     }
 
     // Add note if provided
@@ -902,6 +912,7 @@ function replacePlaceholders(template, data) {
         '{{lastName}}': data.lastName || '',
         '{{email}}': data.email || '',
         '{{childName}}': data.childName || '',
+        '{{childrenDetails}}': data.childrenDetails || data.childName || '',
         '{{status}}': data.status || '',
         '{{applicationId}}': data.applicationId || '',
         '{{awardAmount}}': data.awardAmount ? `$${data.awardAmount}` : '',
@@ -1107,9 +1118,21 @@ exports.onApplicationStatusChange = functions.firestore
         const before = change.before.data();
         const after = change.after.data();
 
-        // Check if status changed to approved or denied
+        // Check if status changed
         if (before.status === after.status) return null;
-        if (after.status !== 'approved' && after.status !== 'denied') return null;
+
+        // Check if email should be sent (controlled by admin via sendStatusEmail flag)
+        if (after.sendStatusEmail !== true) {
+            console.log('Skipping email - sendStatusEmail flag is not true');
+            return null;
+        }
+
+        // Only send emails for these status changes
+        const emailStatuses = ['approved', 'denied', 'active', 'completed'];
+        if (!emailStatuses.includes(after.status)) {
+            console.log('Skipping email - status not in email list:', after.status);
+            return null;
+        }
 
         // Find appropriate template
         const templatesSnap = await admin.firestore()
@@ -1119,31 +1142,70 @@ exports.onApplicationStatusChange = functions.firestore
 
         if (templatesSnap.empty) {
             console.log('No status change templates found');
+            // Clear the flag even if no template found
+            await change.after.ref.update({ sendStatusEmail: false });
             return null;
         }
 
-        // Find template matching the status (approval or denial)
+        // Find template matching the status
         let template = null;
         for (const doc of templatesSnap.docs) {
             const t = doc.data();
-            if (t.name.toLowerCase().includes(after.status)) {
+            const templateName = (t.name || '').toLowerCase();
+            // Match template name to status (e.g., "approval" for "approved", "completion" for "completed")
+            if (templateName.includes(after.status) ||
+                (after.status === 'approved' && templateName.includes('approv')) ||
+                (after.status === 'denied' && (templateName.includes('deni') || templateName.includes('reject'))) ||
+                (after.status === 'active' && templateName.includes('active')) ||
+                (after.status === 'completed' && (templateName.includes('complet') || templateName.includes('congratul')))) {
                 template = { id: doc.id, ...t };
                 break;
             }
         }
 
         if (!template) {
+            // Use first template as fallback
             template = { id: templatesSnap.docs[0].id, ...templatesSnap.docs[0].data() };
+            console.log('Using fallback template for status:', after.status);
         }
 
         const recipient = after.parentInfo?.email;
         if (!recipient || !isValidEmail(recipient)) return null;
 
+        // Build awarded children info
+        const children = after.children || [];
+        const awardedChildren = after.awardInfo?.awardedChildren || [];
+        let awardedChildrenNames = [];
+        let awardedChildrenDetails = [];
+
+        if (awardedChildren.length > 0) {
+            awardedChildren.forEach(ac => {
+                if (ac.awarded && children[ac.childIndex]) {
+                    const childName = children[ac.childIndex].name;
+                    awardedChildrenNames.push(childName);
+                    const amount = ac.amount ? `$${ac.amount}` : '';
+                    const lessons = ac.totalLessons ? `${ac.totalLessons} lessons` : '';
+                    const details = [amount, lessons].filter(Boolean).join(', ');
+                    awardedChildrenDetails.push(`${childName}${details ? ` (${details})` : ''}`);
+                }
+            });
+        }
+
+        // Fallback to first child if no awardedChildren data
+        const childNameDisplay = awardedChildrenNames.length > 0
+            ? awardedChildrenNames.join(', ')
+            : (children[0]?.name || '');
+
+        const childrenDetailsDisplay = awardedChildrenDetails.length > 0
+            ? awardedChildrenDetails.join(', ')
+            : childNameDisplay;
+
         const placeholders = {
             firstName: after.parentInfo?.firstName || '',
             lastName: after.parentInfo?.lastName || '',
             email: recipient,
-            childName: (after.children || [])[0]?.name || '',
+            childName: childNameDisplay,
+            childrenDetails: childrenDetailsDisplay,
             status: after.status,
             applicationId: after.applicationId || context.params.applicationId,
             awardAmount: after.awardInfo?.amount,
@@ -1184,6 +1246,9 @@ exports.onApplicationStatusChange = functions.firestore
             });
 
             console.log('Status change email sent to:', recipient);
+
+            // Clear the sendStatusEmail flag after successful send
+            await change.after.ref.update({ sendStatusEmail: false });
         } catch (error) {
             console.error('Error sending status change email:', error);
             await admin.firestore().collection('email-logs').add({
@@ -1196,6 +1261,9 @@ exports.onApplicationStatusChange = functions.firestore
                 sentAt: admin.firestore.FieldValue.serverTimestamp(),
                 applicationId: context.params.applicationId
             });
+
+            // Clear the flag even on failure to prevent retries
+            await change.after.ref.update({ sendStatusEmail: false });
         }
 
         return null;
@@ -1725,5 +1793,248 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
     } catch (error) {
         console.error('Stripe webhook processing error:', error);
         return res.status(200).json({ received: true }); // Return 200 to prevent retries
+    }
+});
+
+// ========================================
+// EMAIL TEMPLATE UPDATE (ADMIN ONLY)
+// ========================================
+
+exports.updateApprovalEmailTemplate = functions.https.onCall(async (data, context) => {
+    // Must be admin
+    if (!context.auth || !context.auth.token.admin) {
+        throw new functions.https.HttpsError('permission-denied', 'Admin access required.');
+    }
+
+    const newBody = `Dear {{firstName}},
+
+We are thrilled to inform you that your scholarship application for swim lessons has been APPROVED!
+
+Scholarship Details:
+- Children Awarded: {{childrenDetails}}
+- Swim School: {{swimSchool}}
+- Total Award: {{awardAmount}}
+
+Next Steps:
+1. Please contact {{swimSchool}} to discuss registration and scheduling
+2. Ensure your contact information is up to date
+3. Prepare your child for an exciting journey to water safety!
+
+If you have any questions, please don't hesitate to reach out to us at contact@makeasplashfoundation.co
+
+We're so excited to help your child learn to swim!
+
+Warm regards,
+Make A Splash Foundation Team
+
+---
+Make A Splash Foundation Inc.
+501(c)(3) Nonprofit Organization
+Tax ID: 92-3713877`;
+
+    try {
+        // Find the approval template
+        const templatesSnap = await admin.firestore()
+            .collection('email-templates')
+            .where('type', '==', 'status_change')
+            .get();
+
+        let approvalTemplateId = null;
+
+        templatesSnap.docs.forEach(doc => {
+            const docData = doc.data();
+            if (docData.name && docData.name.toLowerCase().includes('approv')) {
+                approvalTemplateId = doc.id;
+            }
+        });
+
+        if (!approvalTemplateId) {
+            // Create new template
+            const newDoc = await admin.firestore().collection('email-templates').add({
+                name: 'Application Approved',
+                type: 'status_change',
+                subject: 'Great News! Your Scholarship Application has been Approved!',
+                body: newBody,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true, message: 'Created new template', templateId: newDoc.id };
+        } else {
+            // Update existing template
+            await admin.firestore().collection('email-templates').doc(approvalTemplateId).update({
+                subject: 'Great News! Your Scholarship Application has been Approved!',
+                body: newBody,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true, message: 'Updated existing template', templateId: approvalTemplateId };
+        }
+    } catch (error) {
+        console.error('Error updating template:', error);
+        throw new functions.https.HttpsError('internal', 'Failed to update template: ' + error.message);
+    }
+});
+
+// ========================================
+// CREATE DEFAULT STATUS EMAIL TEMPLATES
+// ========================================
+
+exports.createDefaultEmailTemplates = functions.https.onCall(async (data, context) => {
+    // Must be admin
+    if (!context.auth || !context.auth.token.admin) {
+        throw new functions.https.HttpsError('permission-denied', 'Admin access required.');
+    }
+
+    const templates = [
+        {
+            name: 'Application Approved',
+            type: 'status_change',
+            subject: 'Great News! Your Scholarship Application has been Approved!',
+            body: `Dear {{firstName}},
+
+We are thrilled to inform you that your scholarship application for swim lessons has been APPROVED!
+
+Scholarship Details:
+- Children Awarded: {{childrenDetails}}
+- Swim School: {{swimSchool}}
+- Total Award: {{awardAmount}}
+
+Next Steps:
+1. Please contact {{swimSchool}} to discuss registration and scheduling
+2. Ensure your contact information is up to date
+3. Prepare your child for an exciting journey to water safety!
+
+If you have any questions, please don't hesitate to reach out to us at contact@makeasplashfoundation.co
+
+We're so excited to help your child learn to swim!
+
+Warm regards,
+Make A Splash Foundation Team`
+        },
+        {
+            name: 'Application Denied',
+            type: 'status_change',
+            subject: 'Update on Your Scholarship Application',
+            body: `Dear {{firstName}},
+
+Thank you for your interest in the Make A Splash Foundation scholarship program.
+
+After careful review of your application, we regret to inform you that we are unable to approve your scholarship request at this time.
+
+This decision was not easy, and we understand it may be disappointing. Please know that we receive many more applications than we can fund, and this decision does not reflect on your family's worthiness.
+
+We encourage you to:
+- Reapply in the future as circumstances may change
+- Explore other local swim lesson assistance programs
+- Contact us if your situation changes significantly
+
+If you have any questions or would like to discuss alternative options, please reach out to us at contact@makeasplashfoundation.co
+
+Thank you for considering Make A Splash Foundation.
+
+Sincerely,
+Make A Splash Foundation Team`
+        },
+        {
+            name: 'Scholarship Active - Lessons Starting',
+            type: 'status_change',
+            subject: 'Your Scholarship is Now Active - Swim Lessons Starting!',
+            body: `Dear {{firstName}},
+
+Great news! Your scholarship is now ACTIVE and swim lessons can begin!
+
+Scholarship Details:
+- Children: {{childrenDetails}}
+- Swim School: {{swimSchool}}
+- Award Amount: {{awardAmount}}
+
+What happens next:
+1. {{swimSchool}} has been notified and is expecting you
+2. Please contact them directly to schedule lesson times
+3. Ensure your child has appropriate swimwear and towels
+
+Important reminders:
+- Please attend all scheduled lessons
+- Notify us and the swim school if you need to reschedule
+- We may check in periodically to see how lessons are going
+
+We're so excited for this journey! Learning to swim is a life-saving skill.
+
+If you have any questions, contact us at contact@makeasplashfoundation.co
+
+Best wishes,
+Make A Splash Foundation Team`
+        },
+        {
+            name: 'Scholarship Completed - Congratulations!',
+            type: 'status_change',
+            subject: 'Congratulations! Swim Lessons Completed!',
+            body: `Dear {{firstName}},
+
+CONGRATULATIONS! We are thrilled to celebrate this wonderful milestone!
+
+{{childName}} has successfully completed their swim lessons through the Make A Splash Foundation scholarship program!
+
+This is a tremendous achievement. Your child has gained life-saving water safety skills that will stay with them forever.
+
+We would love to hear about your experience:
+- How did the lessons go?
+- What was the most memorable moment?
+- Would you be willing to share a testimonial or photo for our website?
+
+Please reply to this email or contact us at contact@makeasplashfoundation.co
+
+Thank you for being part of the Make A Splash Foundation family. We hope you'll share our mission with others who might benefit from this program.
+
+With warm congratulations,
+Make A Splash Foundation Team
+
+---
+Make A Splash Foundation Inc.
+501(c)(3) Nonprofit Organization
+Tax ID: 92-3713877`
+        }
+    ];
+
+    const created = [];
+    const skipped = [];
+
+    try {
+        // Get existing templates
+        const existingSnap = await admin.firestore()
+            .collection('email-templates')
+            .where('type', '==', 'status_change')
+            .get();
+
+        const existingNames = existingSnap.docs.map(d => (d.data().name || '').toLowerCase());
+
+        for (const template of templates) {
+            const templateNameLower = template.name.toLowerCase();
+            // Check if a similar template already exists
+            const exists = existingNames.some(name =>
+                name.includes(templateNameLower.split(' ')[0]) || // Match first word
+                templateNameLower.includes(name.split(' ')[0])
+            );
+
+            if (!exists) {
+                await admin.firestore().collection('email-templates').add({
+                    ...template,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+                created.push(template.name);
+            } else {
+                skipped.push(template.name);
+            }
+        }
+
+        return {
+            success: true,
+            created: created,
+            skipped: skipped,
+            message: `Created ${created.length} templates, skipped ${skipped.length} existing templates`
+        };
+    } catch (error) {
+        console.error('Error creating templates:', error);
+        throw new functions.https.HttpsError('internal', 'Failed to create templates: ' + error.message);
     }
 });
