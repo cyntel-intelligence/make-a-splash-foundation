@@ -669,6 +669,55 @@ async function processDonation({ donorEmail, donorName, amount, transactionId, p
 }
 
 // ========================================
+// PAYPAL DONATION RECORDING (Smart Buttons)
+// ========================================
+
+exports.recordPayPalDonation = functions.https.onCall(async (data, context) => {
+    const { transactionId, orderId, amount, donorEmail, donorName } = data;
+
+    // Validate inputs
+    if (!transactionId || !amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+        throw new functions.https.HttpsError('invalid-argument', 'Valid transaction ID and amount are required.');
+    }
+
+    // Check for duplicate
+    const existingDonation = await admin.firestore()
+        .collection('donations')
+        .where('transactionId', '==', transactionId)
+        .limit(1)
+        .get();
+
+    if (!existingDonation.empty) {
+        console.log('PayPal: Duplicate transaction ignored:', transactionId);
+        return { success: true, message: 'Already recorded' };
+    }
+
+    // Rate limit: prevent abuse (10 donations per email per hour)
+    if (donorEmail && !checkRateLimit(`paypal_${donorEmail}`, 10, 3600000)) {
+        throw new functions.https.HttpsError('resource-exhausted', 'Too many requests.');
+    }
+
+    try {
+        // Use existing processDonation helper
+        const donationId = await processDonation({
+            donorEmail: sanitize(donorEmail) || '',
+            donorName: sanitize(donorName) || '',
+            amount: parseFloat(amount),
+            transactionId: sanitize(transactionId),
+            paymentMethod: 'paypal',
+            recurring: false
+        });
+
+        console.log('PayPal donation recorded via Smart Button:', transactionId, amount);
+        return { success: true, donationId };
+
+    } catch (error) {
+        console.error('Error recording PayPal donation:', error);
+        throw new functions.https.HttpsError('internal', 'Failed to record donation.');
+    }
+});
+
+// ========================================
 // PAYPAL IPN WEBHOOK
 // ========================================
 

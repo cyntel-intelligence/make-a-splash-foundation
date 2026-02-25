@@ -481,11 +481,8 @@
                                 <div style="flex: 1; height: 1px; background: var(--light-gray);"></div>
                             </div>
 
-                            <!-- PayPal Button -->
-                            <a href="https://www.paypal.com/ncp/payment/DUQ4EWNTN5LN6" target="_blank" rel="noopener" class="btn" style="width: 100%; padding: 0.75rem; font-size: 1rem; background: #0070ba; color: white; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; border-radius: var(--radius-md);">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.645h7.32c2.66 0 4.552.57 5.62 1.693.476.502.793 1.064.943 1.67.158.635.158 1.39 0 2.244l-.01.06v.52l.404.23c.34.18.612.378.82.594.37.39.62.873.748 1.441.131.585.132 1.28.003 2.066-.147.91-.428 1.7-.837 2.347a4.78 4.78 0 0 1-1.556 1.513 6.51 6.51 0 0 1-2.04.808 10.54 10.54 0 0 1-2.482.262H13.35a.95.95 0 0 0-.938.803l-.03.164-.523 3.32-.023.13a.95.95 0 0 1-.938.803H7.076z"/></svg>
-                                Donate with PayPal
-                            </a>
+                            <!-- PayPal Smart Payment Button -->
+                            <div id="paypal-button-container" style="width: 100%;"></div>
                         </div>
 
                         <p style="font-size: 0.8rem; color: var(--gray); margin-top: var(--spacing-md); text-align: center;">
@@ -661,6 +658,10 @@
         const functions = getFunctions(app);
         const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
         const createStripeCheckout = httpsCallable(functions, 'stripeCheckout');
+        const recordPayPalDonation = httpsCallable(functions, 'recordPayPalDonation');
+
+        // Make recordPayPalDonation available globally for PayPal SDK
+        window.recordPayPalDonation = recordPayPalDonation;
 
         // Newsletter form handler
         const newsletterForm = document.getElementById('newsletterForm');
@@ -798,5 +799,120 @@
     <style>
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
+
+    <!-- PayPal SDK - Using sandbox client-id for testing. Replace with live client ID for production -->
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&intent=capture"></script>
+    <script>
+        // PayPal Smart Payment Button initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof paypal !== 'undefined') {
+                paypal.Buttons({
+                    style: {
+                        layout: 'vertical',
+                        color: 'blue',
+                        shape: 'rect',
+                        label: 'donate'
+                    },
+
+                    createOrder: function(data, actions) {
+                        const amount = document.getElementById('customAmount').value;
+                        const donorName = document.getElementById('donorName').value || '';
+                        const donorEmail = document.getElementById('donorEmail').value || '';
+                        const donateStatus = document.getElementById('donateStatus');
+
+                        if (!amount || parseFloat(amount) < 1) {
+                            donateStatus.textContent = 'Please enter a donation amount of at least $1.';
+                            donateStatus.style.background = '#FFEBEE';
+                            donateStatus.style.color = '#C62828';
+                            donateStatus.style.display = 'block';
+                            return Promise.reject(new Error('Invalid amount'));
+                        }
+
+                        // Hide any previous status messages
+                        donateStatus.style.display = 'none';
+
+                        return actions.order.create({
+                            purchase_units: [{
+                                description: 'Donation to Make A Splash Foundation',
+                                amount: {
+                                    value: parseFloat(amount).toFixed(2),
+                                    currency_code: 'USD'
+                                },
+                                custom_id: JSON.stringify({
+                                    donorName: donorName,
+                                    donorEmail: donorEmail
+                                })
+                            }]
+                        });
+                    },
+
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(orderData) {
+                            // Extract donation details
+                            const captureId = orderData.purchase_units[0].payments.captures[0].id;
+                            const amount = orderData.purchase_units[0].payments.captures[0].amount.value;
+                            const payerEmail = orderData.payer.email_address || '';
+                            const payerName = orderData.payer.name
+                                ? (orderData.payer.name.given_name || '') + ' ' + (orderData.payer.name.surname || '')
+                                : '';
+
+                            // Try to get custom donor info
+                            var customData = {};
+                            try {
+                                customData = JSON.parse(orderData.purchase_units[0].custom_id || '{}');
+                            } catch (e) {}
+
+                            var donorEmail = customData.donorEmail || payerEmail;
+                            var donorName = customData.donorName || payerName.trim();
+
+                            // Call Firebase function to record donation
+                            if (window.recordPayPalDonation) {
+                                window.recordPayPalDonation({
+                                    transactionId: captureId,
+                                    orderId: data.orderID,
+                                    amount: parseFloat(amount),
+                                    donorEmail: donorEmail,
+                                    donorName: donorName
+                                }).then(function(result) {
+                                    // Redirect to success page
+                                    window.location.href = 'donation-success.html';
+                                }).catch(function(error) {
+                                    console.error('Error recording donation:', error);
+                                    // Still redirect - webhook will catch it as backup
+                                    window.location.href = 'donation-success.html';
+                                });
+                            } else {
+                                // Firebase not loaded - still redirect, webhook will handle
+                                window.location.href = 'donation-success.html';
+                            }
+                        });
+                    },
+
+                    onError: function(err) {
+                        console.error('PayPal error:', err);
+                        var donateStatus = document.getElementById('donateStatus');
+                        donateStatus.textContent = 'PayPal encountered an error. Please try again or use card payment.';
+                        donateStatus.style.background = '#FFEBEE';
+                        donateStatus.style.color = '#C62828';
+                        donateStatus.style.display = 'block';
+                    },
+
+                    onCancel: function(data) {
+                        var donateStatus = document.getElementById('donateStatus');
+                        donateStatus.textContent = 'PayPal payment was canceled. You can try again when ready.';
+                        donateStatus.style.background = '#FFF3E0';
+                        donateStatus.style.color = '#E65100';
+                        donateStatus.style.display = 'block';
+                    }
+                }).render('#paypal-button-container');
+            } else {
+                // PayPal SDK failed to load - show fallback message
+                var container = document.getElementById('paypal-button-container');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">PayPal is temporarily unavailable. Please use the card option above.</p>';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
