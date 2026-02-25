@@ -1,0 +1,29 @@
+{
+  "project": {
+    "name": "masf-website",
+    "version": "2.5.0",
+    "created": "2026-02-25 08:43:14 EST",
+    "last_updated": "2026-02-25 08:43:14 EST"
+  },
+  "timeline": {
+    "gantt_data": [
+      {"task": "Phase 0: Initialization", "start": "2026-02-25", "end": "2026-02-25", "status": "completed"},
+      {"task": "Phase 1: Fix", "start": "2026-02-25", "end": null, "status": "active"},
+      {"task": "Phase 2: Enhance", "start": null, "end": null, "status": "planned"},
+      {"task": "Phase 3: Polish", "start": null, "end": null, "status": "planned"}
+    ],
+    "critical_path": ["bug-fixes", "scholarship-improvements", "admin-enhancements", "polish"],
+    "milestones": [
+      {"name": "Project initialized", "date": "2026-02-25", "completed": true},
+      {"name": "All critical bugs fixed", "date": null, "completed": false},
+      {"name": "Key enhancements deployed", "date": null, "completed": false},
+      {"name": "Site polished", "date": null, "completed": false}
+    ]
+  },
+  "metrics": {
+    "velocity": {"current": 0, "average": 0, "trend": "stable"},
+    "burndown": {"total_points": 0, "completed_points": 0, "remaining_points": 0},
+    "health": {"status": "green", "blockers": 0, "risks": 0}
+  },
+  "tickets": {"total": 17, "open": 17, "in_progress": 0, "completed": 0, "blocked": 0}
+}

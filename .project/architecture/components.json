@@ -1,0 +1,89 @@
+{
+  "$schema": "components-schema-v2.5",
+  "version": "2.5.0",
+  "last_updated": "2026-02-25 08:43:14 EST",
+
+  "components": {
+    "core": {
+      "name": "Main Website",
+      "type": "application",
+      "status": "current",
+      "description": "Static HTML/CSS/JS website hosted on Firebase",
+      "dependencies": ["firebase"],
+      "integrates_with": ["donation-system", "scholarship-system", "admin-dashboard"],
+      "risks_with": [],
+      "conflicts_with": [],
+      "tags": ["core", "frontend"]
+    },
+    "firebase": {
+      "name": "Firebase Backend",
+      "type": "infrastructure",
+      "status": "current",
+      "description": "Firebase hosting, Firestore database, Cloud Functions, and Storage",
+      "dependencies": [],
+      "integrates_with": ["core", "donation-system", "scholarship-system", "admin-dashboard"],
+      "risks_with": [],
+      "conflicts_with": [],
+      "tags": ["backend", "database", "hosting"]
+    },
+    "donation-system": {
+      "name": "Donation System",
+      "type": "feature",
+      "status": "current",
+      "description": "Stripe and PayPal integration for processing donations",
+      "dependencies": ["firebase"],
+      "integrates_with": ["core"],
+      "risks_with": [],
+      "conflicts_with": [],
+      "tags": ["payments", "donations"]
+    },
+    "scholarship-system": {
+      "name": "Scholarship Application System",
+      "type": "feature",
+      "status": "current",
+      "description": "Online scholarship application form and processing",
+      "dependencies": ["firebase"],
+      "integrates_with": ["core", "admin-dashboard"],
+      "risks_with": [],
+      "conflicts_with": [],
+      "tags": ["applications", "scholarships"]
+    },
+    "admin-dashboard": {
+      "name": "Admin Dashboard",
+      "type": "ui",
+      "status": "current",
+      "description": "Administrative interface for managing applications, donors, and content",
+      "dependencies": ["firebase"],
+      "integrates_with": ["scholarship-system", "donation-system"],
+      "risks_with": [],
+      "conflicts_with": [],
+      "tags": ["admin", "management"]
+    }
+  },
+
+  "relationship_types": {
+    "dependencies": "Hard requirement - must exist for this to work",
+    "integrates_with": "Soft connection - works together but not required",
+    "risks_with": "Potential conflict or complication - needs careful consideration",
+    "conflicts_with": "Definite conflict - cannot coexist without significant rework"
+  },
+
+  "status_definitions": {
+    "current": "Implemented and active",
+    "planned": "On roadmap, will be built (target_phase required)",
+    "potential": "Possible future direction, not committed",
+    "deprecated": "Being phased out"
+  },
+
+  "component_types": [
+    "application",
+    "service",
+    "library",
+    "database",
+    "api",
+    "ui",
+    "integration",
+    "infrastructure",
+    "feature"
+  ]
+}
