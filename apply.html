@@ -312,6 +312,56 @@
         .submit-section .btn {
             min-width: 250px;
         }
+
+        /* Validation error styles */
+        .validation-error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+        }
+
+        .validation-error-group {
+            border: 2px solid var(--danger);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-sm);
+            background: rgba(220, 53, 69, 0.05);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .error-message::before {
+            content: '⚠';
+        }
+
+        .form-errors-summary {
+            background: rgba(220, 53, 69, 0.1);
+            border: 2px solid var(--danger);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+
+        .form-errors-summary h4 {
+            color: var(--danger);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-errors-summary ul {
+            margin: 0;
+            padding-left: var(--spacing-md);
+        }
+
+        .form-errors-summary li {
+            color: var(--danger);
+            margin-bottom: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -396,6 +446,12 @@
 
             <!-- Application Form -->
             <div class="application-form-container">
+                <!-- Error Summary (shown when validation fails) -->
+                <div class="form-errors-summary" id="formErrorsSummary">
+                    <h4>Please correct the following errors:</h4>
+                    <ul id="errorsList"></ul>
+                </div>
+
                 <form id="scholarshipForm">
                     <!-- Parent/Guardian Information -->
                     <div class="form-section">
@@ -1007,6 +1063,130 @@
         const form = document.getElementById('scholarshipForm');
         const submitBtn = document.getElementById('submitBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorsSummary = document.getElementById('formErrorsSummary');
+        const errorsList = document.getElementById('errorsList');
+
+        // Validation helper functions
+        function clearValidationErrors() {
+            // Remove all error classes and messages
+            document.querySelectorAll('.validation-error').forEach(el => el.classList.remove('validation-error'));
+            document.querySelectorAll('.validation-error-group').forEach(el => el.classList.remove('validation-error-group'));
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            errorsSummary.style.display = 'none';
+            errorsList.innerHTML = '';
+        }
+
+        function showFieldError(field, message) {
+            field.classList.add('validation-error');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        function showGroupError(container, message) {
+            container.classList.add('validation-error-group');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            container.appendChild(errorDiv);
+        }
+
+        function calculateAge(dob) {
+            const today = new Date();
+            const birthDate = new Date(dob);
+
+            // Calculate age in months
+            let months = (today.getFullYear() - birthDate.getFullYear()) * 12;
+            months += today.getMonth() - birthDate.getMonth();
+
+            // Adjust for day of month
+            if (today.getDate() < birthDate.getDate()) {
+                months--;
+            }
+
+            return {
+                months: months,
+                years: months / 12
+            };
+        }
+
+        function validateForm() {
+            clearValidationErrors();
+            const errors = [];
+            let firstErrorElement = null;
+
+            // 1. Validate lesson preference - at least one must be selected
+            const lessonPreferences = document.querySelectorAll('input[name="lessonPreference"]:checked');
+            if (lessonPreferences.length === 0) {
+                const checkboxGroup = document.querySelector('.checkbox-group');
+                showGroupError(checkboxGroup, 'Please select at least one lesson time preference');
+                errors.push('Lesson time preference: Please select at least one option');
+                if (!firstErrorElement) firstErrorElement = checkboxGroup;
+            }
+
+            // 2. Validate child ages (6 months to 8 years)
+            // Child 1 is required
+            const child1Name = document.getElementById('child1Name').value;
+            const child1DOB = document.getElementById('child1DOB');
+
+            if (child1Name && child1DOB.value) {
+                const age = calculateAge(child1DOB.value);
+                if (age.months < 6 || age.years > 8) {
+                    showFieldError(child1DOB, 'Child must be between 6 months and 8 years old');
+                    errors.push('Child 1: Must be between 6 months and 8 years old');
+                    if (!firstErrorElement) firstErrorElement = child1DOB;
+                }
+            }
+
+            // Child 2 (optional, but validate age if name is provided)
+            const child2Name = document.getElementById('child2Name').value;
+            const child2DOB = document.getElementById('child2DOB');
+
+            if (child2Name && child2DOB.value) {
+                const age = calculateAge(child2DOB.value);
+                if (age.months < 6 || age.years > 8) {
+                    showFieldError(child2DOB, 'Child must be between 6 months and 8 years old');
+                    errors.push('Child 2: Must be between 6 months and 8 years old');
+                    if (!firstErrorElement) firstErrorElement = child2DOB;
+                }
+            }
+
+            // Child 3 (optional, but validate age if name is provided)
+            const child3Name = document.getElementById('child3Name').value;
+            const child3DOB = document.getElementById('child3DOB');
+
+            if (child3Name && child3DOB.value) {
+                const age = calculateAge(child3DOB.value);
+                if (age.months < 6 || age.years > 8) {
+                    showFieldError(child3DOB, 'Child must be between 6 months and 8 years old');
+                    errors.push('Child 3: Must be between 6 months and 8 years old');
+                    if (!firstErrorElement) firstErrorElement = child3DOB;
+                }
+            }
+
+            // Show error summary if there are errors
+            if (errors.length > 0) {
+                errorsList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+                errorsSummary.style.display = 'block';
+
+                // Scroll to first error with offset for fixed header
+                if (firstErrorElement) {
+                    const headerOffset = 120;
+                    const elementPosition = firstErrorElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+
+                return false;
+            }
+
+            return true;
+        }
 
         // Helper to detect content type from file extension when browser doesn't set it
         function getContentType(file) {
@@ -1053,6 +1233,11 @@
         // Form submission handler
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Run validation first
+            if (!validateForm()) {
+                return;
+            }
 
             // Disable submit button
             submitBtn.disabled = true;
