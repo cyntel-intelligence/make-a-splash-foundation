@@ -19,3 +19,10 @@
 - **Rationale**: Existing Firebase setup handles hosting, database, and functions. No need for Docker or local dev infrastructure.
 - **Alternatives**: Add Docker/local dev setup
 - **Impact**: Keeps project simple, leverages existing Firebase infrastructure
+
+### Decision: PayPal Dynamic Amount Integration
+- **Choice**: PayPal JavaScript SDK (Smart Payment Buttons)
+- **Rationale**: Best UX (popup vs redirect), modern/recommended approach, simpler than REST API server-side flow
+- **Alternatives**: PayPal REST API via Firebase Function (higher complexity, redirect flow), PayPal NCP URL params (not supported)
+- **Impact**: Fixes broken PayPal donation flow, maintains consistent UX with Stripe, requires PayPal Client ID config
+- **Spec**: `.project/architect/features/paypal-integration.md`
