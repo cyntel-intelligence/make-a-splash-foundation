@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
+const cors = require('cors')({ origin: true });
 
 admin.initializeApp();
 
@@ -672,49 +673,65 @@ async function processDonation({ donorEmail, donorName, amount, transactionId, p
 // PAYPAL DONATION RECORDING (Smart Buttons)
 // ========================================
 
-exports.recordPayPalDonation = functions.https.onCall(async (data, context) => {
-    const { transactionId, orderId, amount, donorEmail, donorName } = data;
+exports.recordPayPalDonation = functions.https.onRequest(async (req, res) => {
+    // Set CORS headers manually
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Validate inputs
-    if (!transactionId || !amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-        throw new functions.https.HttpsError('invalid-argument', 'Valid transaction ID and amount are required.');
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
     }
 
-    // Check for duplicate
-    const existingDonation = await admin.firestore()
-        .collection('donations')
-        .where('transactionId', '==', transactionId)
-        .limit(1)
-        .get();
-
-    if (!existingDonation.empty) {
-        console.log('PayPal: Duplicate transaction ignored:', transactionId);
-        return { success: true, message: 'Already recorded' };
-    }
-
-    // Rate limit: prevent abuse (10 donations per email per hour)
-    if (donorEmail && !checkRateLimit(`paypal_${donorEmail}`, 10, 3600000)) {
-        throw new functions.https.HttpsError('resource-exhausted', 'Too many requests.');
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // Use existing processDonation helper
-        const donationId = await processDonation({
-            donorEmail: sanitize(donorEmail) || '',
-            donorName: sanitize(donorName) || '',
-            amount: parseFloat(amount),
-            transactionId: sanitize(transactionId),
-            paymentMethod: 'paypal',
-            recurring: false
-        });
+            const { transactionId, orderId, amount, donorEmail, donorName } = req.body;
 
-        console.log('PayPal donation recorded via Smart Button:', transactionId, amount);
-        return { success: true, donationId };
+            console.log('PayPal recordPayPalDonation called with:', { transactionId, orderId, amount, donorEmail, donorName });
 
-    } catch (error) {
-        console.error('Error recording PayPal donation:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to record donation.');
-    }
+            // Validate inputs
+            if (!transactionId || !amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+                return res.status(400).json({ error: 'Valid transaction ID and amount are required.' });
+            }
+
+            // Check for duplicate
+            const existingDonation = await admin.firestore()
+                .collection('donations')
+                .where('transactionId', '==', transactionId)
+                .limit(1)
+                .get();
+
+            if (!existingDonation.empty) {
+                console.log('PayPal: Duplicate transaction ignored:', transactionId);
+                return res.status(200).json({ success: true, message: 'Already recorded' });
+            }
+
+            // Rate limit: prevent abuse (10 donations per email per hour)
+            if (donorEmail && !checkRateLimit(`paypal_${donorEmail}`, 10, 3600000)) {
+                return res.status(429).json({ error: 'Too many requests.' });
+            }
+
+            // Use existing processDonation helper
+            const donationId = await processDonation({
+                donorEmail: sanitize(donorEmail) || '',
+                donorName: sanitize(donorName) || '',
+                amount: parseFloat(amount),
+                transactionId: sanitize(transactionId),
+                paymentMethod: 'paypal',
+                recurring: false
+            });
+
+            console.log('PayPal donation recorded via Smart Button:', transactionId, amount);
+            return res.status(200).json({ success: true, donationId });
+
+        } catch (error) {
+            console.error('Error recording PayPal donation:', error.message, error.stack);
+            return res.status(500).json({ error: 'Failed to record donation: ' + error.message });
+        }
 });
 
 // ========================================

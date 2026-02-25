@@ -658,10 +658,20 @@
         const functions = getFunctions(app);
         const onNewsletterSubscribe = httpsCallable(functions, 'onNewsletterSubscribe');
         const createStripeCheckout = httpsCallable(functions, 'stripeCheckout');
-        const recordPayPalDonation = httpsCallable(functions, 'recordPayPalDonation');
 
-        // Make recordPayPalDonation available globally for PayPal SDK
-        window.recordPayPalDonation = recordPayPalDonation;
+        // Use direct HTTP call for PayPal to avoid CORS issues with custom domain
+        window.recordPayPalDonation = async function(data) {
+            const response = await fetch('https://us-central1-make-a-splash-foundation.cloudfunctions.net/recordPayPalDonation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to record donation');
+            }
+            return response.json();
+        };
 
         // Newsletter form handler
         const newsletterForm = document.getElementById('newsletterForm');
@@ -801,7 +811,7 @@
     </style>
 
     <!-- PayPal SDK - Using sandbox client-id for testing. Replace with live client ID for production -->
-    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&intent=capture"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AW98YwY8eRBjlfLSMvmaNhdkUhEuRjN_zEi7be487Cks9uXvIHkFc9glvY1J5laNnuF4az66LSmNIKeE&currency=USD&intent=capture"></script>
     <script>
         // PayPal Smart Payment Button initialization
         document.addEventListener('DOMContentLoaded', function() {
@@ -878,11 +888,11 @@
                                     window.location.href = 'donation-success.html';
                                 }).catch(function(error) {
                                     console.error('Error recording donation:', error);
-                                    // Still redirect - webhook will catch it as backup
+                                    // Still redirect - payment was successful, just logging failed
                                     window.location.href = 'donation-success.html';
                                 });
                             } else {
-                                // Firebase not loaded - still redirect, webhook will handle
+                                // Firebase not loaded - still redirect
                                 window.location.href = 'donation-success.html';
                             }
                         });
