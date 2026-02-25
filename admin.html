@@ -353,6 +353,19 @@
         }
 
         .data-table th:hover { background: var(--light-gray); }
+        .data-table th.sortable::after {
+            content: ' ↕';
+            opacity: 0.3;
+            font-size: 0.8em;
+        }
+        .data-table th.sortable.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+        .data-table th.sortable.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
 
         .data-table td {
             padding: 0.75rem 1rem;
@@ -1430,6 +1443,13 @@ Your scholarship application has been {{status}}.
         let allWaitlist = [];
         let adminSettings = {};
         let currentUser = null;
+
+        // Table sorting state
+        let sortState = {
+            applications: { column: 'date', direction: 'desc' },
+            subscribers: { column: 'date', direction: 'desc' },
+            donations: { column: 'date', direction: 'desc' }
+        };
         let charts = {};
 
         // ===== AUTH =====
@@ -1710,6 +1730,38 @@ Your scholarship application has been {{status}}.
                 });
             }
 
+            // Sort the filtered results
+            const sort = sortState.applications;
+            filtered = [...filtered].sort((a, b) => {
+                let valA, valB;
+                switch (sort.column) {
+                    case 'name':
+                        valA = `${a.parentInfo?.firstName || ''} ${a.parentInfo?.lastName || ''}`.toLowerCase();
+                        valB = `${b.parentInfo?.firstName || ''} ${b.parentInfo?.lastName || ''}`.toLowerCase();
+                        break;
+                    case 'email':
+                        valA = (a.parentInfo?.email || '').toLowerCase();
+                        valB = (b.parentInfo?.email || '').toLowerCase();
+                        break;
+                    case 'children':
+                        valA = (a.children || []).length;
+                        valB = (b.children || []).length;
+                        break;
+                    case 'status':
+                        valA = a.status || 'pending';
+                        valB = b.status || 'pending';
+                        break;
+                    case 'date':
+                    default:
+                        valA = a.submittedAt?.toDate?.() || new Date(0);
+                        valB = b.submittedAt?.toDate?.() || new Date(0);
+                        break;
+                }
+                if (valA < valB) return sort.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return sort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
             renderTable('appsTable', filtered, false);
         }
 
@@ -1737,20 +1789,37 @@ Your scholarship application has been {{status}}.
                 </tr>`;
             }).join('');
 
+            const sort = sortState.applications;
+            const getSortClass = (col) => sort.column === col ? `sortable sort-${sort.direction}` : 'sortable';
+
             container.innerHTML = `
-                <table>
+                <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Applicant Name</th>
-                            <th>Email</th>
-                            <th>Children</th>
-                            <th>Status</th>
-                            <th>Submitted</th>
+                            <th class="${getSortClass('name')}" data-sort="name">Applicant Name</th>
+                            <th class="${getSortClass('email')}" data-sort="email">Email</th>
+                            <th class="${getSortClass('children')}" data-sort="children">Children</th>
+                            <th class="${getSortClass('status')}" data-sort="status">Status</th>
+                            <th class="${getSortClass('date')}" data-sort="date">Submitted</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
                 </table>
             `;
+
+            // Add sort click handlers
+            container.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const col = th.dataset.sort;
+                    if (sort.column === col) {
+                        sort.direction = sort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        sort.column = col;
+                        sort.direction = 'asc';
+                    }
+                    renderApplicationsTable();
+                });
+            });
 
             // Click handlers for rows
             container.querySelectorAll('.clickable-row').forEach(row => {
