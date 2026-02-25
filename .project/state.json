@@ -2,30 +2,31 @@
   "project_name": "masf-website",
   "project_tla": "MAS",
   "created": "2026-02-25 08:43:14 EST",
-  "last_updated": "2026-02-25 09:45:00 EST",
+  "last_updated": "2026-02-25 09:56:46 EST",
   "current_phase": "1 - Bug Fixes",
   "phase_started": "2026-02-25",
   "completed_tasks": [
     "BUG-1: Site audits completed (scholarship, admin, donations, general)",
     "BUG-2: Scholarship form validation (lesson pref + child age)",
     "BUG-5: Removed broken classroom.jpg placeholder",
-    "BUG-6: Fixed Stripe webhook security (removed unverified fallback)"
+    "BUG-6: Fixed Stripe webhook security (removed unverified fallback)",
+    "BUG-4: PayPal integration - Architecture complete, builder prompt ready"
   ],
-  "active_tasks": ["BUG-4: PayPal integration fix"],
+  "active_tasks": [],
   "pending_tasks": ["See .project/BACKLOG.md for full backlog"],
   "blockers": [],
   "next_actions": {
     "ai_tasks": [
-      "Implement PayPal JS SDK integration (spec ready)",
+      "Run /builder with PAYPAL-1.md prompt to implement fix",
       "Fix admin dashboard HIGH issues (sorting, modal escape)",
       "Make donors.html dynamic (pull from Firebase)"
     ],
     "human_tasks": [
-      "Verify Stripe webhook in Dashboard (see stripe-webhook-checklist.md)",
       "Get PayPal Client ID from developer.paypal.com",
+      "Verify Stripe webhook in Dashboard (see stripe-webhook-checklist.md)",
       "Test scholarship form validation"
     ],
     "blocked_on": []
   },
-  "notes": "Session 1: Completed 4 audits, fixed 4 critical issues. PayPal fix designed, ready for builder. Stripe webhook security issue fixed but needs Dashboard verification."
+  "notes": "Session 2: Architected PayPal JS SDK solution. Full spec at .project/architect/features/paypal-integration.md. Builder prompt ready at .project/builder-prompts/PAYPAL-1.md. Human needs to get PayPal Client ID before implementation."
 }
