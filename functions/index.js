@@ -1699,16 +1699,21 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
     const sig = req.headers['stripe-signature'];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+    if (!webhookSecret) {
+        console.error('Stripe webhook: STRIPE_WEBHOOK_SECRET not configured');
+        return res.status(500).send('Webhook secret not configured');
+    }
+
+    if (!sig) {
+        console.error('Stripe webhook: Missing stripe-signature header');
+        return res.status(400).send('Missing signature');
+    }
+
     let event;
 
     try {
-        if (webhookSecret && sig) {
-            // Verify webhook signature
-            event = stripeClient.webhooks.constructEvent(req.rawBody, sig, webhookSecret);
-        } else {
-            // No signature verification (not recommended for production)
-            event = req.body;
-        }
+        // Verify webhook signature (required for security)
+        event = stripeClient.webhooks.constructEvent(req.rawBody, sig, webhookSecret);
     } catch (err) {
         console.error('Stripe webhook signature verification failed:', err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
