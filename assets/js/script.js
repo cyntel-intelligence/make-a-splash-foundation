@@ -361,4 +361,4 @@ if ('IntersectionObserver' in window) {
 // Console log for debugging (remove in production)
 console.log('Make A Splash Foundation - Website Loaded Successfully');
 console.log('Version: 1.0.0');
-console.log('For questions: info@makeasplashfoundation.co');
+console.log('For questions: contact@makeasplashfoundation.co');

@@ -149,6 +149,28 @@
             font-style: italic;
         }
 
+        .donor-dedication {
+            color: var(--primary-blue);
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: var(--spacing-xs);
+        }
+
+        .loading-donors {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--dark-gray);
+        }
+
+        .tier-supporter {
+            border-bottom: 3px solid var(--success);
+        }
+
+        .tier-supporter .tier-icon {
+            background: linear-gradient(135deg, var(--success), #28a745);
+            color: var(--white);
+        }
+
         .thank-you-section {
             background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
             color: var(--white);
@@ -277,7 +299,7 @@
                             <span class="tier-range">$10,000+</span>
                         </div>
                     </div>
-                    <div class="donors-grid">
+                    <div class="donors-grid" id="tier-champion">
                         <div class="coming-soon">
                             Be the first to join at this level
                         </div>
@@ -293,7 +315,7 @@
                             <span class="tier-range">$5,000 - $9,999</span>
                         </div>
                     </div>
-                    <div class="donors-grid">
+                    <div class="donors-grid" id="tier-presenting">
                         <div class="coming-soon">
                             Be the first to join at this level
                         </div>
@@ -309,7 +331,7 @@
                             <span class="tier-range">$2,500 - $4,999</span>
                         </div>
                     </div>
-                    <div class="donors-grid">
+                    <div class="donors-grid" id="tier-aquatic">
                         <div class="coming-soon">
                             Be the first to join at this level
                         </div>
@@ -325,10 +347,23 @@
                             <span class="tier-range">$1,000 - $2,499</span>
                         </div>
                     </div>
-                    <div class="donors-grid">
+                    <div class="donors-grid" id="tier-wave">
                         <div class="coming-soon">
                             Be the first to join at this level
                         </div>
+                    </div>
+                </div>
+
+                <!-- Supporter Tier -->
+                <div class="donor-tier tier-supporter" id="supporter-section" style="display: none;">
+                    <div class="tier-header">
+                        <div class="tier-icon">&#10084;</div>
+                        <div>
+                            <h2>Supporters</h2>
+                            <span class="tier-range">$100 - $999</span>
+                        </div>
+                    </div>
+                    <div class="donors-grid" id="tier-supporter">
                     </div>
                 </div>
             </div>
@@ -425,5 +460,72 @@
     </footer>
 
     <script src="assets/js/script.js"></script>
+    <script>
+        // Fetch and display public donors
+        async function loadDonors() {
+            try {
+                const response = await fetch('https://us-central1-make-a-splash-foundation.cloudfunctions.net/getPublicDonors');
+                if (!response.ok) throw new Error('Failed to fetch donors');
+                const data = await response.json();
+
+                if (data.donors && data.donors.length > 0) {
+                    // Group donors by tier
+                    const tiers = {
+                        champion: [],
+                        presenting: [],
+                        aquatic: [],
+                        wave: [],
+                        supporter: []
+                    };
+
+                    data.donors.forEach(donor => {
+                        if (tiers[donor.tier]) {
+                            tiers[donor.tier].push(donor);
+                        }
+                    });
+
+                    // Render each tier
+                    Object.keys(tiers).forEach(tier => {
+                        const container = document.getElementById('tier-' + tier);
+                        if (!container) return;
+
+                        if (tiers[tier].length > 0) {
+                            container.innerHTML = tiers[tier].map(donor => createDonorCard(donor)).join('');
+
+                            // Show supporter section if it has donors
+                            if (tier === 'supporter') {
+                                document.getElementById('supporter-section').style.display = 'block';
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading donors:', error);
+            }
+        }
+
+        function createDonorCard(donor) {
+            let dedicationHtml = '';
+            if (donor.dedication && donor.dedication.name) {
+                const prefix = donor.dedication.type === 'memory' ? 'In memory of' : 'In honor of';
+                dedicationHtml = '<div class="donor-dedication">' + prefix + ' ' + escapeHtml(donor.dedication.name) + '</div>';
+            }
+
+            return '<div class="donor-card">' +
+                '<div class="donor-name">' + escapeHtml(donor.name) + '</div>' +
+                dedicationHtml +
+                '</div>';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load donors when page loads
+        document.addEventListener('DOMContentLoaded', loadDonors);
+    </script>
 </body>
 </html>

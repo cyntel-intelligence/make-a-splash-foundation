@@ -462,6 +462,29 @@
                                 <input type="text" id="donorName" placeholder="Full Name" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
                                 <input type="email" id="donorEmail" placeholder="Email Address" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
                             </div>
+
+                            <!-- Display Name Option -->
+                            <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: var(--spacing-sm); cursor: pointer; font-size: 0.9rem;">
+                                <input type="checkbox" id="displayPublicly" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                Display my name on our donors page
+                            </label>
+                        </div>
+
+                        <!-- Dedication Option -->
+                        <div style="margin-top: var(--spacing-md); padding: var(--spacing-md); background: var(--off-white); border-radius: var(--radius-md);">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                                <input type="checkbox" id="hasDedication" style="width: 18px; height: 18px; cursor: pointer;">
+                                Dedicate this gift
+                            </label>
+                            <div id="dedicationFields" style="display: none; margin-top: var(--spacing-sm);">
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-sm); align-items: center;">
+                                    <select id="dedicationType" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
+                                        <option value="honor">In honor of</option>
+                                        <option value="memory">In memory of</option>
+                                    </select>
+                                    <input type="text" id="dedicationName" placeholder="Name of honoree" style="padding: 0.6rem 0.75rem; border: 2px solid var(--light-gray); border-radius: var(--radius-md); font-family: var(--font-secondary);">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Payment Buttons -->
@@ -704,6 +727,25 @@
             });
         }
 
+        // Toggle dedication fields
+        const hasDedication = document.getElementById('hasDedication');
+        const dedicationFields = document.getElementById('dedicationFields');
+        if (hasDedication && dedicationFields) {
+            hasDedication.addEventListener('change', function() {
+                dedicationFields.style.display = this.checked ? 'block' : 'none';
+            });
+        }
+
+        // Helper to get donation options
+        function getDonationOptions() {
+            return {
+                displayPublicly: document.getElementById('displayPublicly')?.checked ?? true,
+                hasDedication: document.getElementById('hasDedication')?.checked ?? false,
+                dedicationType: document.getElementById('dedicationType')?.value || 'honor',
+                dedicationName: document.getElementById('dedicationName')?.value || ''
+            };
+        }
+
         // Stripe checkout handler
         const stripeBtn = document.getElementById('stripeBtn');
         if (stripeBtn) {
@@ -730,11 +772,17 @@
                 donateStatus.style.display = 'none';
 
                 try {
+                    const options = getDonationOptions();
                     const result = await createStripeCheckout({
                         amount: parseFloat(amount),
                         donorName: donorName || '',
                         donorEmail: donorEmail || '',
-                        recurring: recurring === 'one-time' ? null : recurring
+                        recurring: recurring === 'one-time' ? null : recurring,
+                        displayPublicly: options.displayPublicly,
+                        dedication: options.hasDedication ? {
+                            type: options.dedicationType,
+                            name: options.dedicationName
+                        } : null
                     });
 
                     if (result.data && result.data.url) {
@@ -830,6 +878,12 @@
                         const donorEmail = document.getElementById('donorEmail').value || '';
                         const donateStatus = document.getElementById('donateStatus');
 
+                        // Get display and dedication options
+                        const displayPublicly = document.getElementById('displayPublicly')?.checked ?? true;
+                        const hasDedication = document.getElementById('hasDedication')?.checked ?? false;
+                        const dedicationType = document.getElementById('dedicationType')?.value || 'honor';
+                        const dedicationName = document.getElementById('dedicationName')?.value || '';
+
                         if (!amount || parseFloat(amount) < 1) {
                             donateStatus.textContent = 'Please enter a donation amount of at least $1.';
                             donateStatus.style.background = '#FFEBEE';
@@ -850,7 +904,9 @@
                                 },
                                 custom_id: JSON.stringify({
                                     donorName: donorName,
-                                    donorEmail: donorEmail
+                                    donorEmail: donorEmail,
+                                    displayPublicly: displayPublicly,
+                                    dedication: hasDedication ? { type: dedicationType, name: dedicationName } : null
                                 })
                             }]
                         });
@@ -874,6 +930,8 @@
 
                             var donorEmail = customData.donorEmail || payerEmail;
                             var donorName = customData.donorName || payerName.trim();
+                            var displayPublicly = customData.displayPublicly !== false; // default true
+                            var dedication = customData.dedication || null;
 
                             // Call Firebase function to record donation
                             if (window.recordPayPalDonation) {
@@ -882,7 +940,9 @@
                                     orderId: data.orderID,
                                     amount: parseFloat(amount),
                                     donorEmail: donorEmail,
-                                    donorName: donorName
+                                    donorName: donorName,
+                                    displayPublicly: displayPublicly,
+                                    dedication: dedication
                                 }).then(function(result) {
                                     // Redirect to success page
                                     window.location.href = 'donation-success.html';

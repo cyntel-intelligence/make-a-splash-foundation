@@ -1778,14 +1778,40 @@ Your scholarship application has been {{status}}.
                 const email = app.parentInfo?.email || '';
                 const status = app.status || 'new';
                 const date = app.submittedAt?.toDate?.() ? app.submittedAt.toDate().toLocaleDateString() : 'N/A';
-                const childCount = (app.children || []).length;
 
-                return `<tr class="clickable-row" data-id="${app.id}">
-                    <td>${escapeHtml(name)}</td>
+                // Format children with names and ages
+                const childrenInfo = (app.children || []).map(child => {
+                    const childName = child.name?.split(' ')[0] || 'Child'; // First name only
+                    let age = '';
+                    if (child.dob) {
+                        const dob = new Date(child.dob);
+                        const today = new Date();
+                        let calcAge = today.getFullYear() - dob.getFullYear();
+                        const monthDiff = today.getMonth() - dob.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                            calcAge--;
+                        }
+                        age = calcAge >= 0 ? ` (${calcAge})` : '';
+                    }
+                    return childName + age;
+                }).join(', ') || 'None';
+
+                return `<tr data-id="${app.id}">
+                    <td class="clickable-cell" style="cursor:pointer;">${escapeHtml(name)}</td>
                     <td>${escapeHtml(email)}</td>
-                    <td>${childCount}</td>
+                    <td style="font-size: 0.85rem;">${escapeHtml(childrenInfo)}</td>
                     <td><span class="status-badge status-${status}">${status.replace('_', ' ')}</span></td>
                     <td>${date}</td>
+                    <td style="white-space: nowrap;">
+                        <select class="quick-status-select" data-appid="${app.id}" data-email="${escapeHtml(email)}" style="padding: 0.25rem; font-size: 0.75rem; border-radius: var(--radius); border: 1px solid var(--light-gray);">
+                            <option value="">Quick Action</option>
+                            <option value="under_review" ${status === 'under_review' ? 'disabled' : ''}>→ Under Review</option>
+                            <option value="approved" ${status === 'approved' ? 'disabled' : ''}>→ Approved</option>
+                            <option value="denied" ${status === 'denied' ? 'disabled' : ''}>→ Denied</option>
+                            <option value="active" ${status === 'active' ? 'disabled' : ''}>→ Active</option>
+                            <option value="completed" ${status === 'completed' ? 'disabled' : ''}>→ Completed</option>
+                        </select>
+                    </td>
                 </tr>`;
             }).join('');
 
@@ -1798,9 +1824,10 @@ Your scholarship application has been {{status}}.
                         <tr>
                             <th class="${getSortClass('name')}" data-sort="name">Applicant Name</th>
                             <th class="${getSortClass('email')}" data-sort="email">Email</th>
-                            <th class="${getSortClass('children')}" data-sort="children">Children</th>
+                            <th class="${getSortClass('children')}" data-sort="children">Children (Age)</th>
                             <th class="${getSortClass('status')}" data-sort="status">Status</th>
                             <th class="${getSortClass('date')}" data-sort="date">Submitted</th>
+                            <th style="width: 120px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
@@ -1821,9 +1848,70 @@ Your scholarship application has been {{status}}.
                 });
             });
 
-            // Click handlers for rows
-            container.querySelectorAll('.clickable-row').forEach(row => {
-                row.addEventListener('click', () => openAppDetail(row.dataset.id));
+            // Click handlers for name cells (open detail)
+            container.querySelectorAll('.clickable-cell').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const row = cell.closest('tr');
+                    openAppDetail(row.dataset.id);
+                });
+            });
+
+            // Quick status change handlers
+            container.querySelectorAll('.quick-status-select').forEach(select => {
+                select.addEventListener('change', async function() {
+                    const newStatus = this.value;
+                    if (!newStatus) return;
+
+                    const appId = this.dataset.appid;
+                    const app = allApplications.find(a => a.id === appId);
+                    if (!app) return;
+
+                    // For approved/active, require swim school - open modal instead
+                    if ((newStatus === 'approved' || newStatus === 'active') && !app.awardInfo?.swimSchoolId) {
+                        this.value = '';
+                        openAppDetail(appId);
+                        alert('Please select a swim school and award details before approving.');
+                        return;
+                    }
+
+                    // Get swim school email for CC
+                    let ccEmails = [];
+                    if (app.awardInfo?.swimSchoolId) {
+                        const school = allSwimSchools.find(s => s.id === app.awardInfo.swimSchoolId);
+                        if (school?.email) ccEmails.push(school.email);
+                    }
+
+                    const confirmMsg = `Change status to "${newStatus.replace('_', ' ')}"?\n\n` +
+                        (ccEmails.length > 0 ? `Will CC swim school: ${ccEmails.join(', ')}\n` : '') +
+                        `Send notification email to applicant?`;
+
+                    const sendEmail = confirm(confirmMsg);
+
+                    this.disabled = true;
+                    try {
+                        await updateApplicationStatus({
+                            applicationId: appId,
+                            status: newStatus,
+                            note: `Quick status change to ${newStatus}`,
+                            awardInfo: app.awardInfo || {},
+                            sendEmail: sendEmail,
+                            ccEmails: ccEmails
+                        });
+
+                        // Update local state
+                        const appIndex = allApplications.findIndex(a => a.id === appId);
+                        if (appIndex !== -1) {
+                            allApplications[appIndex].status = newStatus;
+                        }
+                        renderApplicationsTable();
+                    } catch (err) {
+                        console.error('Quick status change failed:', err);
+                        alert('Failed to update status: ' + err.message);
+                        this.value = '';
+                    } finally {
+                        this.disabled = false;
+                    }
+                });
             });
         }
 
@@ -2261,13 +2349,52 @@ Your scholarship application has been {{status}}.
                     ${notesHtml}
                 </div>
 
+                <div class="detail-section">
+                    <h3>Send Email</h3>
+                    <div style="display: grid; gap: 0.75rem;">
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; color: var(--dark-gray);">Template</label>
+                            <select id="individualEmailTemplate" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                                <option value="">-- Select a template --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; color: var(--dark-gray);">Subject (optional override)</label>
+                            <input type="text" id="individualEmailSubject" placeholder="Leave blank to use template subject" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; color: var(--dark-gray);">Send copy to (CC)</label>
+                            <input type="text" id="individualEmailCC" placeholder="e.g., swimschool@example.com (comma-separate multiple)" style="width: 100%; padding: 0.5rem; border: 2px solid var(--light-gray); border-radius: var(--radius);">
+                        </div>
+                        <div id="individualEmailPreview" style="display: none; background: var(--off-white); padding: 0.75rem; border-radius: var(--radius); font-size: 0.85rem;"></div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <button class="btn btn-sm btn-outline" onclick="previewIndividualEmail('${escapeHtml(app.parentInfo?.email || '')}', '${escapeHtml(name)}')">Preview</button>
+                            <button class="btn btn-sm btn-primary" id="sendIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}" data-appid="${app.id}">Send Email</button>
+                            <span id="individualEmailStatus" style="font-size: 0.85rem; color: var(--gray);"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Communication History</h3>
+                    <div id="applicantEmailHistory" style="max-height: 200px; overflow-y: auto;">
+                        <div class="loading" style="padding: 1rem; text-align: center;"><div class="spinner"></div><p style="font-size: 0.85rem;">Loading email history...</p></div>
+                    </div>
+                </div>
+
                 <div class="detail-section" id="awardInfoSection" style="display: ${status === 'active' || status === 'approved' || status === 'completed' ? 'block' : 'none'};">
                     <h3>Award Information</h3>
                     <div class="status-form">
                         <div class="detail-grid" style="margin-bottom: 1rem;">
                             <div class="detail-item">
                                 <div class="label">Swim School</div>
-                                <input type="text" id="awardSwimSchool" value="${escapeHtml(app.awardInfo?.swimSchool || '')}" placeholder="Enter swim school name" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                                <select id="awardSwimSchool" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                                    <option value="">-- Select a swim school --</option>
+                                    ${allSwimSchools.filter(s => s.status === 'active').map(s => `
+                                        <option value="${escapeHtml(s.id)}" data-email="${escapeHtml(s.email || '')}" data-name="${escapeHtml(s.name || '')}" ${app.awardInfo?.swimSchoolId === s.id ? 'selected' : ''}>${escapeHtml(s.name || 'Unnamed School')}</option>
+                                    `).join('')}
+                                </select>
+                                <input type="hidden" id="awardSwimSchoolName" value="${escapeHtml(app.awardInfo?.swimSchool || '')}">
                             </div>
                             <div class="detail-item">
                                 <div class="label">Award Amount ($)</div>
@@ -2376,6 +2503,20 @@ Your scholarship application has been {{status}}.
                 }
             });
 
+            // Auto-fill CC with swim school email when school is selected
+            document.getElementById('awardSwimSchool')?.addEventListener('change', function() {
+                const selectedOption = this.selectedOptions[0];
+                const schoolEmail = selectedOption?.dataset.email || '';
+                const ccInput = document.getElementById('individualEmailCC');
+                if (ccInput && schoolEmail) {
+                    // Add school email to CC if not already there
+                    const currentCC = ccInput.value.split(',').map(e => e.trim()).filter(e => e);
+                    if (!currentCC.includes(schoolEmail)) {
+                        ccInput.value = currentCC.length > 0 ? currentCC.join(', ') + ', ' + schoolEmail : schoolEmail;
+                    }
+                }
+            });
+
             // Save button handler
             document.getElementById('modalSaveBtn').addEventListener('click', async function() {
                 const btn = this;
@@ -2415,8 +2556,11 @@ Your scholarship application has been {{status}}.
                 const finalAmount = totalChildAmount > 0 ? totalChildAmount : manualAmount;
 
                 // Gather award info
+                const swimSchoolSelect = document.getElementById('awardSwimSchool');
+                const selectedSchoolOption = swimSchoolSelect?.selectedOptions[0];
                 const awardInfo = {
-                    swimSchool: document.getElementById('awardSwimSchool')?.value || '',
+                    swimSchoolId: swimSchoolSelect?.value || '',
+                    swimSchool: selectedSchoolOption?.dataset.name || '',
                     amount: finalAmount,
                     awardDate: document.getElementById('awardDate')?.value || '',
                     expectedCompletion: document.getElementById('awardExpectedCompletion')?.value || '',
@@ -2452,13 +2596,21 @@ Your scholarship application has been {{status}}.
                 btn.textContent = 'Saving...';
                 statusEl.textContent = '';
 
+                // Get CC emails - include swim school if sending email
+                let ccEmails = [];
+                if (sendEmail && awardInfo.swimSchoolId) {
+                    const school = allSwimSchools.find(s => s.id === awardInfo.swimSchoolId);
+                    if (school?.email) ccEmails.push(school.email);
+                }
+
                 try {
                     await updateApplicationStatus({
                         applicationId: appDocId,
                         status: newStatus,
                         note: note,
                         awardInfo: awardInfo,
-                        sendEmail: sendEmail
+                        sendEmail: sendEmail,
+                        ccEmails: ccEmails
                     });
 
                     // Update local state
@@ -2497,7 +2649,198 @@ Your scholarship application has been {{status}}.
                 }
             });
 
+            // Initialize email template dropdown
+            populateIndividualEmailTemplates();
+
+            // Load communication history for this applicant
+            loadApplicantEmailHistory(app.parentInfo?.email || '');
+
+            // Setup send email button
+            document.getElementById('sendIndividualEmailBtn')?.addEventListener('click', sendIndividualEmail);
+
             appModal.classList.add('active');
+        }
+
+        // Populate email templates for individual email
+        async function populateIndividualEmailTemplates() {
+            const select = document.getElementById('individualEmailTemplate');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Select a template --</option>';
+
+            try {
+                const templatesSnap = await getDocs(collection(db, 'email-templates'));
+                templatesSnap.forEach(doc => {
+                    const t = doc.data();
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = t.name || doc.id;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error loading templates:', err);
+            }
+        }
+
+        // Load email history for a specific applicant
+        async function loadApplicantEmailHistory(email) {
+            const container = document.getElementById('applicantEmailHistory');
+            if (!container || !email) {
+                if (container) container.innerHTML = '<p style="color: var(--gray); font-size: 0.85rem;">No email address found.</p>';
+                return;
+            }
+
+            try {
+                // Simple query without orderBy to avoid needing composite index
+                const logsQuery = query(
+                    collection(db, 'email-logs'),
+                    where('recipient', '==', email)
+                );
+                const logsSnap = await getDocs(logsQuery);
+
+                // Sort client-side by sentAt descending
+                const logs = [];
+                logsSnap.forEach(doc => logs.push({ id: doc.id, ...doc.data() }));
+                logs.sort((a, b) => {
+                    const dateA = a.sentAt?.toDate?.() || new Date(0);
+                    const dateB = b.sentAt?.toDate?.() || new Date(0);
+                    return dateB - dateA; // descending
+                });
+                const limitedLogs = logs.slice(0, 20);
+
+                if (limitedLogs.length === 0) {
+                    container.innerHTML = '<p style="color: var(--gray); font-size: 0.85rem; font-style: italic;">No emails sent to this applicant yet.</p>';
+                    return;
+                }
+
+                let html = '<div style="display: flex; flex-direction: column; gap: 0.5rem;">';
+                limitedLogs.forEach(log => {
+                    const date = log.sentAt?.toDate?.() ? log.sentAt.toDate().toLocaleString() : 'N/A';
+                    const status = log.status === 'sent' ? '<span style="color: var(--success);">Sent</span>' : '<span style="color: var(--danger);">Failed</span>';
+                    html += `
+                        <div style="padding: 0.5rem; background: var(--off-white); border-radius: var(--radius); font-size: 0.85rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <strong>${escapeHtml(log.subject || 'No subject')}</strong>
+                                ${status}
+                            </div>
+                            <div style="color: var(--gray); font-size: 0.75rem;">${date} &middot; ${escapeHtml(log.type || 'custom')}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Error loading email history:', err);
+                container.innerHTML = '<p style="color: var(--danger); font-size: 0.85rem;">Error loading email history.</p>';
+            }
+        }
+
+        // Preview individual email
+        function previewIndividualEmail(recipientEmail, recipientName) {
+            const templateId = document.getElementById('individualEmailTemplate')?.value;
+            const previewDiv = document.getElementById('individualEmailPreview');
+
+            if (!templateId) {
+                previewDiv.style.display = 'none';
+                return;
+            }
+
+            getDoc(doc(db, 'email-templates', templateId)).then(templateDoc => {
+                if (!templateDoc.exists()) {
+                    previewDiv.innerHTML = '<p style="color: var(--danger);">Template not found.</p>';
+                    previewDiv.style.display = 'block';
+                    return;
+                }
+
+                const template = templateDoc.data();
+                const customSubject = document.getElementById('individualEmailSubject')?.value;
+                const subject = customSubject || template.subject || 'No subject';
+
+                // Simple placeholder replacement for preview
+                let body = template.body || '';
+                body = body.replace(/{{firstName}}/gi, recipientName.split(' ')[0] || 'Applicant');
+                body = body.replace(/{{name}}/gi, recipientName || 'Applicant');
+
+                previewDiv.innerHTML = `
+                    <p style="margin: 0 0 0.5rem;"><strong>To:</strong> ${escapeHtml(recipientEmail)}</p>
+                    <p style="margin: 0 0 0.5rem;"><strong>Subject:</strong> ${escapeHtml(subject)}</p>
+                    <hr style="border: none; border-top: 1px solid var(--light-gray); margin: 0.5rem 0;">
+                    <div style="white-space: pre-wrap;">${escapeHtml(body.substring(0, 300))}${body.length > 300 ? '...' : ''}</div>
+                `;
+                previewDiv.style.display = 'block';
+            }).catch(err => {
+                console.error('Error previewing email:', err);
+                previewDiv.innerHTML = '<p style="color: var(--danger);">Error loading template.</p>';
+                previewDiv.style.display = 'block';
+            });
+        }
+
+        // Send individual email
+        async function sendIndividualEmail() {
+            const btn = document.getElementById('sendIndividualEmailBtn');
+            const statusEl = document.getElementById('individualEmailStatus');
+            const templateId = document.getElementById('individualEmailTemplate')?.value;
+            const recipientEmail = btn?.dataset.email;
+            const recipientName = btn?.dataset.name;
+            const appId = btn?.dataset.appid;
+
+            if (!templateId) {
+                statusEl.textContent = 'Please select a template.';
+                statusEl.style.color = 'var(--danger)';
+                return;
+            }
+
+            if (!recipientEmail) {
+                statusEl.textContent = 'No recipient email found.';
+                statusEl.style.color = 'var(--danger)';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            statusEl.textContent = '';
+
+            try {
+                const customSubject = document.getElementById('individualEmailSubject')?.value || '';
+                const ccInput = document.getElementById('individualEmailCC')?.value || '';
+                const ccEmails = ccInput.split(',').map(e => e.trim()).filter(e => e && e.includes('@'));
+
+                await sendTemplatedEmail({
+                    templateId: templateId,
+                    recipient: {
+                        email: recipientEmail,
+                        name: recipientName || '',
+                        firstName: recipientName?.split(' ')[0] || ''
+                    },
+                    placeholders: {
+                        name: recipientName || 'Applicant',
+                        firstName: recipientName?.split(' ')[0] || 'Applicant',
+                        email: recipientEmail
+                    },
+                    customSubject: customSubject || undefined,
+                    cc: ccEmails.length > 0 ? ccEmails : undefined
+                });
+
+                statusEl.textContent = 'Email sent!' + (ccEmails.length > 0 ? ` (CC: ${ccEmails.length})` : '');
+                statusEl.style.color = 'var(--success)';
+
+                // Refresh email history
+                loadApplicantEmailHistory(recipientEmail);
+
+                // Clear form
+                document.getElementById('individualEmailTemplate').value = '';
+                document.getElementById('individualEmailSubject').value = '';
+                document.getElementById('individualEmailCC').value = '';
+                document.getElementById('individualEmailPreview').style.display = 'none';
+
+            } catch (err) {
+                console.error('Error sending email:', err);
+                statusEl.textContent = 'Error: ' + (err.message || 'Failed to send');
+                statusEl.style.color = 'var(--danger)';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Email';
+            }
         }
 
         // Close modal

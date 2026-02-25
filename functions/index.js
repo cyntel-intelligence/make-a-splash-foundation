@@ -447,7 +447,7 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
         throw new functions.https.HttpsError('permission-denied', 'Admin access required.');
     }
 
-    const { applicationId, status, note, awardInfo, sendEmail } = data;
+    const { applicationId, status, note, awardInfo, sendEmail, ccEmails } = data;
     const validStatuses = ['pending', 'new', 'under_review', 'approved', 'denied', 'active', 'completed', 'archived'];
 
     if (!applicationId || typeof applicationId !== 'string') {
@@ -462,12 +462,15 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
         lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
         updatedBy: context.auth.token.email,
         // Flag to control whether the Firestore trigger should send an email
-        sendStatusEmail: sendEmail === true
+        sendStatusEmail: sendEmail === true,
+        // CC emails for status notification (e.g., swim school)
+        ccEmails: Array.isArray(ccEmails) ? ccEmails.filter(e => e && typeof e === 'string') : []
     };
 
     // Add award info if provided (for active/approved/completed scholarships)
     if (awardInfo && typeof awardInfo === 'object') {
         updateData.awardInfo = {
+            swimSchoolId: sanitize(awardInfo.swimSchoolId || ''),
             swimSchool: sanitize(awardInfo.swimSchool || ''),
             amount: parseFloat(awardInfo.amount) || 0,
             awardDate: sanitize(awardInfo.awardDate || ''),
@@ -597,7 +600,7 @@ exports.onNewsletterSubscribe = functions.https.onCall(async (data, context) => 
 // ========================================
 
 // Save donation to Firestore and send receipt email
-async function processDonation({ donorEmail, donorName, amount, transactionId, paymentMethod, recurring = false }) {
+async function processDonation({ donorEmail, donorName, amount, transactionId, paymentMethod, recurring = false, displayPublicly = true, dedication = null }) {
     const donation = {
         donorEmail: sanitize(donorEmail),
         donorName: sanitize(donorName),
@@ -605,6 +608,11 @@ async function processDonation({ donorEmail, donorName, amount, transactionId, p
         transactionId: sanitize(transactionId),
         paymentMethod, // 'paypal' or 'stripe'
         recurring,
+        displayPublicly: displayPublicly !== false, // default to true
+        dedication: dedication ? {
+            type: sanitize(dedication.type || 'honor'),
+            name: sanitize(dedication.name || '')
+        } : null,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         receiptSent: false
     };
@@ -689,9 +697,9 @@ exports.recordPayPalDonation = functions.https.onRequest(async (req, res) => {
     }
 
     try {
-            const { transactionId, orderId, amount, donorEmail, donorName } = req.body;
+            const { transactionId, orderId, amount, donorEmail, donorName, displayPublicly, dedication } = req.body;
 
-            console.log('PayPal recordPayPalDonation called with:', { transactionId, orderId, amount, donorEmail, donorName });
+            console.log('PayPal recordPayPalDonation called with:', { transactionId, orderId, amount, donorEmail, donorName, displayPublicly, dedication });
 
             // Validate inputs
             if (!transactionId || !amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
@@ -722,7 +730,9 @@ exports.recordPayPalDonation = functions.https.onRequest(async (req, res) => {
                 amount: parseFloat(amount),
                 transactionId: sanitize(transactionId),
                 paymentMethod: 'paypal',
-                recurring: false
+                recurring: false,
+                displayPublicly: displayPublicly,
+                dedication: dedication
             });
 
             console.log('PayPal donation recorded via Smart Button:', transactionId, amount);
@@ -812,7 +822,7 @@ exports.stripeCheckout = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('failed-precondition', 'Stripe key not configured.');
     }
 
-    const { amount, donorEmail, donorName, recurring } = data;
+    const { amount, donorEmail, donorName, recurring, displayPublicly, dedication } = data;
 
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) < 1) {
         throw new functions.https.HttpsError('invalid-argument', 'Amount must be at least $1.');
@@ -843,12 +853,13 @@ exports.stripeCheckout = functions.https.onCall(async (data, context) => {
         sessionConfig.customer_email = donorEmail;
     }
 
-    if (donorName || donorEmail) {
-        sessionConfig.metadata = {
-            donorName: donorName || '',
-            donorEmail: donorEmail || ''
-        };
-    }
+    // Always set metadata for donation tracking
+    sessionConfig.metadata = {
+        donorName: donorName || '',
+        donorEmail: donorEmail || '',
+        displayPublicly: displayPublicly !== false ? 'true' : 'false',
+        dedication: dedication ? JSON.stringify(dedication) : ''
+    };
 
     // Handle recurring donations
     if (recurring === 'monthly' || recurring === 'annual') {
@@ -998,7 +1009,7 @@ exports.sendTemplatedEmail = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('permission-denied', 'Admin access required.');
     }
 
-    const { templateId, recipient, placeholders } = data;
+    const { templateId, recipient, placeholders, customSubject, cc } = data;
 
     // Get template
     const templateDoc = await admin.firestore().collection('email-templates').doc(templateId).get();
@@ -1007,32 +1018,43 @@ exports.sendTemplatedEmail = functions.https.onCall(async (data, context) => {
     }
 
     const template = templateDoc.data();
-    const subject = replacePlaceholders(template.subject, placeholders);
+    const subject = customSubject || replacePlaceholders(template.subject, placeholders);
     const body = replacePlaceholders(template.body, placeholders);
 
-    try {
-        await transporter.sendMail({
-            from: '"Make A Splash Foundation" <contact@makeasplashfoundation.co>',
-            to: recipient,
-            subject: subject,
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <div style="background: linear-gradient(135deg, #4A90E2, #5AAFE5); padding: 30px; text-align: center;">
-                        <h1 style="color: white; margin: 0;">Make A Splash Foundation</h1>
-                    </div>
-                    <div style="padding: 30px; background: #f8f9fa;">
-                        ${body.replace(/\n/g, '<br>')}
-                    </div>
-                    <div style="background: #1E3A5F; padding: 20px; text-align: center; color: white;">
-                        <p style="margin: 0; font-size: 14px;">&copy; 2026 Make A Splash Foundation Inc.</p>
-                    </div>
+    // Build mail options
+    const mailOptions = {
+        from: '"Make A Splash Foundation" <contact@makeasplashfoundation.co>',
+        to: recipient.email || recipient,
+        subject: subject,
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #4A90E2, #5AAFE5); padding: 30px; text-align: center;">
+                    <h1 style="color: white; margin: 0;">Make A Splash Foundation</h1>
                 </div>
-            `
-        });
+                <div style="padding: 30px; background: #f8f9fa;">
+                    ${body.replace(/\n/g, '<br>')}
+                </div>
+                <div style="background: #1E3A5F; padding: 20px; text-align: center; color: white;">
+                    <p style="margin: 0; font-size: 14px;">&copy; 2026 Make A Splash Foundation Inc.</p>
+                </div>
+            </div>
+        `
+    };
+
+    // Add CC if provided
+    if (cc && Array.isArray(cc) && cc.length > 0) {
+        mailOptions.cc = cc.join(', ');
+    }
+
+    const recipientEmail = recipient.email || recipient;
+
+    try {
+        await transporter.sendMail(mailOptions);
 
         // Log the email
         await admin.firestore().collection('email-logs').add({
-            recipient,
+            recipient: recipientEmail,
+            cc: cc || [],
             subject,
             templateId,
             type: template.type || 'custom',
@@ -1047,7 +1069,8 @@ exports.sendTemplatedEmail = functions.https.onCall(async (data, context) => {
 
         // Log the failure
         await admin.firestore().collection('email-logs').add({
-            recipient,
+            recipient: recipientEmail,
+            cc: cc || [],
             subject,
             templateId,
             type: template.type || 'custom',
@@ -1281,28 +1304,38 @@ exports.onApplicationStatusChange = functions.firestore
         const subject = replacePlaceholders(template.subject, placeholders);
         const body = replacePlaceholders(template.body, placeholders);
 
-        try {
-            await transporter.sendMail({
-                from: '"Make A Splash Foundation" <contact@makeasplashfoundation.co>',
-                to: recipient,
-                subject: subject,
-                html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <div style="background: linear-gradient(135deg, #4A90E2, #5AAFE5); padding: 30px; text-align: center;">
-                            <h1 style="color: white; margin: 0;">Application Update</h1>
-                        </div>
-                        <div style="padding: 30px; background: #f8f9fa;">
-                            ${body.replace(/\n/g, '<br>')}
-                        </div>
-                        <div style="background: #1E3A5F; padding: 20px; text-align: center; color: white;">
-                            <p style="margin: 0; font-size: 14px;">&copy; 2026 Make A Splash Foundation Inc.</p>
-                        </div>
+        // Build mail options with optional CC (e.g., swim school)
+        const mailOptions = {
+            from: '"Make A Splash Foundation" <contact@makeasplashfoundation.co>',
+            to: recipient,
+            subject: subject,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #4A90E2, #5AAFE5); padding: 30px; text-align: center;">
+                        <h1 style="color: white; margin: 0;">Application Update</h1>
                     </div>
-                `
-            });
+                    <div style="padding: 30px; background: #f8f9fa;">
+                        ${body.replace(/\n/g, '<br>')}
+                    </div>
+                    <div style="background: #1E3A5F; padding: 20px; text-align: center; color: white;">
+                        <p style="margin: 0; font-size: 14px;">&copy; 2026 Make A Splash Foundation Inc.</p>
+                    </div>
+                </div>
+            `
+        };
+
+        // Add CC if provided
+        const ccEmails = after.ccEmails || [];
+        if (ccEmails.length > 0) {
+            mailOptions.cc = ccEmails.join(', ');
+        }
+
+        try {
+            await transporter.sendMail(mailOptions);
 
             await admin.firestore().collection('email-logs').add({
                 recipient,
+                cc: ccEmails,
                 subject,
                 templateId: template.id,
                 type: 'status_change',
@@ -1807,6 +1840,15 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
                 const donorName = session.metadata?.donorName || '';
                 const amount = (session.amount_total || 0) / 100;
                 const recurring = session.mode === 'subscription';
+                const displayPublicly = session.metadata?.displayPublicly !== 'false';
+                let dedication = null;
+                try {
+                    if (session.metadata?.dedication) {
+                        dedication = JSON.parse(session.metadata.dedication);
+                    }
+                } catch (e) {
+                    console.warn('Could not parse dedication metadata:', e.message);
+                }
 
                 if (amount > 0) {
                     await processDonation({
@@ -1815,7 +1857,9 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
                         amount,
                         transactionId: session.id,
                         paymentMethod: 'stripe',
-                        recurring
+                        recurring,
+                        displayPublicly,
+                        dedication
                     });
                     console.log('Stripe donation processed:', session.id, amount);
                 }
@@ -2109,3 +2153,101 @@ Tax ID: 92-3713877`
         throw new functions.https.HttpsError('internal', 'Failed to create templates: ' + error.message);
     }
 });
+
+// ========================================
+// PUBLIC DONORS LIST
+// ========================================
+
+// Get public donors for display on donors page
+exports.getPublicDonors = functions.https.onRequest(async (req, res) => {
+    // Set CORS headers
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        // Get donations where displayPublicly is true
+        const snapshot = await admin.firestore()
+            .collection('donations')
+            .where('displayPublicly', '==', true)
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        const donors = [];
+        const donorTotals = {}; // Aggregate by email for cumulative totals
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const email = data.donorEmail || 'anonymous';
+
+            if (!donorTotals[email]) {
+                donorTotals[email] = {
+                    name: data.donorName || 'Anonymous',
+                    totalAmount: 0,
+                    dedication: null,
+                    latestDate: null
+                };
+            }
+
+            donorTotals[email].totalAmount += data.amount || 0;
+
+            // Keep the most recent dedication if any
+            if (data.dedication && data.dedication.name) {
+                donorTotals[email].dedication = data.dedication;
+            }
+
+            // Track latest donation date
+            const createdAt = data.createdAt?.toDate?.() || new Date();
+            if (!donorTotals[email].latestDate || createdAt > donorTotals[email].latestDate) {
+                donorTotals[email].latestDate = createdAt;
+                // Use the most recent name
+                if (data.donorName) {
+                    donorTotals[email].name = data.donorName;
+                }
+            }
+        });
+
+        // Convert to array and add tier classification
+        for (const [email, donor] of Object.entries(donorTotals)) {
+            const tier = getTier(donor.totalAmount);
+            if (tier) { // Only include if they qualify for a tier
+                donors.push({
+                    name: donor.name,
+                    tier: tier,
+                    dedication: donor.dedication
+                });
+            }
+        }
+
+        // Sort by tier importance, then by name
+        const tierOrder = { champion: 0, presenting: 1, aquatic: 2, wave: 3, supporter: 4 };
+        donors.sort((a, b) => {
+            if (tierOrder[a.tier] !== tierOrder[b.tier]) {
+                return tierOrder[a.tier] - tierOrder[b.tier];
+            }
+            return a.name.localeCompare(b.name);
+        });
+
+        return res.status(200).json({ donors });
+    } catch (error) {
+        console.error('Error fetching public donors:', error);
+        return res.status(500).json({ error: 'Failed to fetch donors' });
+    }
+});
+
+function getTier(amount) {
+    if (amount >= 10000) return 'champion';
+    if (amount >= 5000) return 'presenting';
+    if (amount >= 2500) return 'aquatic';
+    if (amount >= 1000) return 'wave';
+    if (amount >= 100) return 'supporter'; // Show supporters who gave $100+
+    return null; // Don't display under $100
+}

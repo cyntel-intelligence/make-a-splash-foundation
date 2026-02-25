@@ -81,7 +81,7 @@ Edit the numbers in `index.html` around line 70-95:
 Change `data-target="100"` to your actual numbers.
 
 #### Update Contact Email
-Search for `info@makeasplashfoundation.co` and replace with your actual email in:
+Search for `contact@makeasplashfoundation.co` and replace with your actual email in:
 - index.html
 - apply.html
 - donate.html
@@ -252,7 +252,7 @@ The application form collects data but needs a backend to process it.
 - **Solution:** This requires payment integration. See "Donation Processing" section above.
 
 ### Getting Support
-- Email: info@makeasplashfoundation.co
+- Email: contact@makeasplashfoundation.co
 - For technical issues with the website code, reach out to a web developer
 - For hosting questions, contact your hosting provider's support
 
