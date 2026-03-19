@@ -12,12 +12,12 @@ service firebase.storage {
                        || request.resource.contentType.matches('image/avif')
                        || request.resource.contentType.matches('image/heic')
                        || request.resource.contentType.matches('image/heif')
-                       || request.resource.contentType.matches('application/pdf')
-                       || request.resource.contentType.matches('application/octet-stream'))
+                       || request.resource.contentType.matches('application/pdf'))
                    && filename.size() < 256;
 
-      // Read access for download URLs (needed by the application form)
-      allow read: if true;
+      // Read access restricted to authenticated admins only
+      allow read: if request.auth != null
+                  && request.auth.token.admin == true;
     }
 
     // Block everything else
