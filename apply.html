@@ -1165,6 +1165,43 @@
                 }
             }
 
+            // 3. Validate required documents are selected
+            const requiredDocs = [
+                { id: 'driversLicense', label: "Driver's License" },
+                { id: 'payStub1', label: 'Pay Stub 1' },
+                { id: 'payStub2', label: 'Pay Stub 2' },
+                { id: 'taxReturn', label: 'Tax Return' }
+            ];
+
+            for (const doc of requiredDocs) {
+                const input = document.getElementById(doc.id);
+                if (!input.files || input.files.length === 0) {
+                    const wrapper = input.closest('.file-upload-section');
+                    showGroupError(wrapper, `${doc.label} is required`);
+                    errors.push(`${doc.label}: Please upload this required document`);
+                    if (!firstErrorElement) firstErrorElement = input;
+                }
+            }
+
+            // 4. Validate file sizes (max 10MB per file)
+            const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+            const allFileInputs = ['driversLicense', 'payStub1', 'payStub2', 'spousePayStubs', 'taxReturn',
+                                   'didNotFile', 'ssiBenefits', 'disabilityBenefits', 'unemploymentBenefits', 'childSupport'];
+
+            for (const inputId of allFileInputs) {
+                const input = document.getElementById(inputId);
+                if (input && input.files) {
+                    for (const file of input.files) {
+                        if (file.size > MAX_FILE_SIZE) {
+                            const wrapper = input.closest('.file-upload-section');
+                            showGroupError(wrapper, `File "${file.name}" exceeds 10MB limit`);
+                            errors.push(`${file.name}: File size exceeds 10MB limit`);
+                            if (!firstErrorElement) firstErrorElement = input;
+                        }
+                    }
+                }
+            }
+
             // Show error summary if there are errors
             if (errors.length > 0) {
                 errorsList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
