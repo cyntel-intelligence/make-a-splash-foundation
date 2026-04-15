@@ -2281,28 +2281,28 @@ Your scholarship application has been {{status}}.
                 </div>
             `).join('') || '<p style="color: var(--gray);">No children data</p>';
 
-            // Build documents section - handles both old (url) and new (storagePath) formats
-            const docs = app.documents || {};
-            let docsHtml = '';
-            if (Object.entries(docs).length > 0) {
-                docsHtml = '<ul class="doc-list">';
-                for (const [key, value] of Object.entries(docs)) {
-                    // Handle array format (new) vs string format (old)
-                    if (Array.isArray(value)) {
-                        for (const doc of value) {
-                            if (doc.storagePath) {
-                                docsHtml += `<li><button class="doc-link-btn" data-path="${escapeHtml(doc.storagePath)}" data-name="${escapeHtml(doc.fileName || key)}">${escapeHtml(doc.fileName || key)}</button></li>`;
-                            } else if (doc.url) {
-                                docsHtml += `<li><a href="${escapeHtml(doc.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(doc.fileName || key)}</a></li>`;
-                            }
+            // Build documents section - documents stored at top level, not under app.documents
+            const docFields = ['driversLicense', 'payStub1', 'payStub2', 'spousePayStubs', 'taxReturn', 'didNotFile', 'ssiBenefits', 'disabilityBenefits', 'unemploymentBenefits', 'childSupport'];
+            let docsHtml = '<ul class="doc-list">';
+            let hasDocuments = false;
+
+            for (const field of docFields) {
+                const docArray = app[field] || (app.documents && app.documents[field]);
+                if (docArray && Array.isArray(docArray) && docArray.length > 0) {
+                    hasDocuments = true;
+                    for (const doc of docArray) {
+                        const path = doc.path || doc.storagePath;
+                        if (path) {
+                            docsHtml += `<li><button class="doc-link-btn" data-path="${escapeHtml(path)}" data-name="${escapeHtml(doc.fileName || field)}">${escapeHtml(doc.fileName || field)}</button></li>`;
+                        } else if (doc.url) {
+                            docsHtml += `<li><a href="${escapeHtml(doc.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(doc.fileName || field)}</a></li>`;
                         }
-                    } else if (typeof value === 'string') {
-                        // Old format - direct URL
-                        docsHtml += `<li><a href="${escapeHtml(value)}" target="_blank" rel="noopener noreferrer">${escapeHtml(key)}</a></li>`;
                     }
                 }
-                docsHtml += '</ul>';
-            } else {
+            }
+
+            docsHtml += '</ul>';
+            if (!hasDocuments) {
                 docsHtml = '<p style="color: var(--gray);">No documents uploaded</p>';
             }
 
