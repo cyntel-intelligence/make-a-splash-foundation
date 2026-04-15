@@ -1406,6 +1406,7 @@ Your scholarship application has been {{status}}.
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, query, orderBy, limit, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+        import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         // Firebase init
         const app = initializeApp({
@@ -1420,6 +1421,7 @@ Your scholarship application has been {{status}}.
         const auth = getAuth(app);
         const db = getFirestore(app);
         const functions = getFunctions(app);
+        const storage = getStorage(app);
         const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
         const updateApplicationStatus = httpsCallable(functions, 'updateApplicationStatus');
         const createSwimSchool = httpsCallable(functions, 'createSwimSchool');
