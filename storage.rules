@@ -7,7 +7,11 @@ service firebase.storage {
       // Only allow image and PDF uploads, max 10MB, filename must be reasonable length
       allow write: if request.resource.size < 10 * 1024 * 1024
                    && (request.resource.contentType.matches('image/jpeg')
+                       || request.resource.contentType.matches('image/jpg')
                        || request.resource.contentType.matches('image/png')
+                       || request.resource.contentType.matches('image/gif')
+                       || request.resource.contentType.matches('image/bmp')
+                       || request.resource.contentType.matches('image/tiff')
                        || request.resource.contentType.matches('image/webp')
                        || request.resource.contentType.matches('image/avif')
                        || request.resource.contentType.matches('image/heic')

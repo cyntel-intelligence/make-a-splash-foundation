@@ -1225,9 +1225,10 @@
             return true;
         }
 
-        // Helper to detect content type from file extension when browser doesn't set it
+        // Helper to detect content type from file extension
+        // Always uses extension-based detection because browser file.type is unreliable
+        // (can be wrong, empty, or non-standard like "image/jpg")
         function getContentType(file) {
-            if (file.type) return file.type;
             const ext = file.name.split('.').pop().toLowerCase();
             const mimeTypes = {
                 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
@@ -1236,7 +1237,9 @@
                 'tiff': 'image/tiff', 'tif': 'image/tiff', 'svg': 'image/svg+xml',
                 'pdf': 'application/pdf'
             };
-            return mimeTypes[ext] || 'application/octet-stream';
+            const detectedType = mimeTypes[ext] || 'application/octet-stream';
+            console.log(`File: ${file.name}, Extension: ${ext}, Browser type: ${file.type}, Using: ${detectedType}`);
+            return detectedType;
         }
 
         // File upload handlers
@@ -1381,10 +1384,17 @@
                                 status.textContent = '✓ Uploaded successfully';
                                 status.className = 'file-status success';
                             } catch (error) {
-                                console.error(`Error uploading ${fileName}:`, error);
-                                status.textContent = '✗ Upload failed';
+                                const contentType = metadata.contentType;
+                                console.error(`Error uploading ${fileName} (type: ${contentType}):`, error);
+                                status.textContent = `✗ Upload failed: ${file.name}`;
                                 status.className = 'file-status error';
-                                throw error;
+                                // Create a more descriptive error for the user
+                                const uploadError = new Error(
+                                    `Failed to upload "${file.name}" (detected type: ${contentType}). ` +
+                                    `Please ensure the file is a valid image (JPG, PNG, GIF, BMP, TIFF) or PDF.`
+                                );
+                                uploadError.originalError = error;
+                                throw uploadError;
                             }
                         }
                     }
