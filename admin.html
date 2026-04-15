@@ -562,6 +562,24 @@
 
         .doc-list a:hover { text-decoration: underline; }
 
+        .doc-link-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: inherit;
+            padding: 0;
+        }
+        .doc-link-btn:hover {
+            text-decoration: underline;
+        }
+        .doc-link-btn:disabled {
+            color: var(--gray);
+            cursor: wait;
+        }
+
         /* Loading spinner */
         .loading {
             text-align: center;
@@ -2263,14 +2281,30 @@ Your scholarship application has been {{status}}.
                 </div>
             `).join('') || '<p style="color: var(--gray);">No children data</p>';
 
-            // Build documents section
+            // Build documents section - handles both old (url) and new (storagePath) formats
             const docs = app.documents || {};
-            const docsHtml = Object.entries(docs).length > 0
-                ? `<ul class="doc-list">${Object.entries(docs).map(([key, url]) => {
-                    const safeUrl = sanitizeUrl(url);
-                    return `<li><a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(key)}</a></li>`;
-                }).join('')}</ul>`
-                : '<p style="color: var(--gray);">No documents uploaded</p>';
+            let docsHtml = '';
+            if (Object.entries(docs).length > 0) {
+                docsHtml = '<ul class="doc-list">';
+                for (const [key, value] of Object.entries(docs)) {
+                    // Handle array format (new) vs string format (old)
+                    if (Array.isArray(value)) {
+                        for (const doc of value) {
+                            if (doc.storagePath) {
+                                docsHtml += `<li><button class="doc-link-btn" data-path="${escapeHtml(doc.storagePath)}" data-name="${escapeHtml(doc.fileName || key)}">${escapeHtml(doc.fileName || key)}</button></li>`;
+                            } else if (doc.url) {
+                                docsHtml += `<li><a href="${escapeHtml(doc.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(doc.fileName || key)}</a></li>`;
+                            }
+                        }
+                    } else if (typeof value === 'string') {
+                        // Old format - direct URL
+                        docsHtml += `<li><a href="${escapeHtml(value)}" target="_blank" rel="noopener noreferrer">${escapeHtml(key)}</a></li>`;
+                    }
+                }
+                docsHtml += '</ul>';
+            } else {
+                docsHtml = '<p style="color: var(--gray);">No documents uploaded</p>';
+            }
 
             // Build notes section
             const notes = app.notes || [];
@@ -2493,6 +2527,26 @@ Your scholarship application has been {{status}}.
                     Submitted: ${date}
                 </div>
             `;
+
+            // Handle document link clicks for storagePath format
+            modalBody.querySelectorAll('.doc-link-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const path = btn.dataset.path;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Loading...';
+                    btn.disabled = true;
+                    try {
+                        const url = await getDownloadURL(ref(storage, path));
+                        window.open(url, '_blank');
+                    } catch (error) {
+                        console.error('Error getting document URL:', error);
+                        alert('Error loading document: ' + error.message);
+                    } finally {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            });
 
             // Show/hide award info section based on status selection
             document.getElementById('modalStatusSelect').addEventListener('change', function() {
