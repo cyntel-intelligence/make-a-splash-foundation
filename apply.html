@@ -1370,14 +1370,16 @@
 
                             try {
                                 await uploadBytes(storageRef, file, metadata);
-                                const downloadURL = await getDownloadURL(storageRef);
+                                // Store path instead of URL - admins will get download URL when viewing
+                                // (read requires admin auth, so getDownloadURL would fail here)
+                                const storagePath = `scholarship-applications/${applicationId}/${fileName}`;
 
                                 if (!formData.documents[inputId]) {
                                     formData.documents[inputId] = [];
                                 }
                                 formData.documents[inputId].push({
                                     fileName: file.name,
-                                    url: downloadURL
+                                    path: storagePath
                                 });
 
                                 progressBar.style.width = '100%';
