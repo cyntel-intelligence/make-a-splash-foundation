@@ -984,6 +984,7 @@ exports.recordSchoolPayment = functions.https.onCall(async (data, context) => {
 // Helper to replace placeholders in template
 function replacePlaceholders(template, data) {
     let result = template;
+    const awardAmountFormatted = data.awardAmount ? `$${data.awardAmount}` : '';
     const placeholders = {
         '{{firstName}}': data.firstName || '',
         '{{lastName}}': data.lastName || '',
@@ -992,7 +993,8 @@ function replacePlaceholders(template, data) {
         '{{childrenDetails}}': data.childrenDetails || data.childName || '',
         '{{status}}': data.status || '',
         '{{applicationId}}': data.applicationId || '',
-        '{{awardAmount}}': data.awardAmount ? `$${data.awardAmount}` : '',
+        '{{awardAmount}}': awardAmountFormatted,
+        '{{awardDisplay}}': data.awardDisplay || awardAmountFormatted,
         '{{swimSchool}}': data.swimSchool || '',
         '{{currentDate}}': new Date().toLocaleDateString()
     };

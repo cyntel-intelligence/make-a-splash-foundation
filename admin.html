@@ -1307,7 +1307,7 @@ Your scholarship application has been {{status}}.
                     <div style="background: var(--off-white); padding: 1rem; border-radius: var(--radius); margin: 1rem 0;">
                         <p style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem;">Available Placeholders:</p>
                         <code style="font-size: 0.8rem; color: var(--dark-gray);">
-                            {{firstName}}, {{lastName}}, {{email}}, {{childName}}, {{status}}, {{applicationId}}, {{awardAmount}}, {{swimSchool}}, {{currentDate}}
+                            {{firstName}}, {{lastName}}, {{email}}, {{childName}}, {{childrenDetails}}, {{status}}, {{applicationId}}, {{awardAmount}}, {{awardDisplay}}, {{swimSchool}}, {{currentDate}}
                         </code>
                     </div>
                     <div style="display: flex; gap: 0.75rem;">
@@ -2569,6 +2569,11 @@ Your scholarship application has been {{status}}.
                                 <input type="number" id="awardAmount" value="${app.awardInfo?.amount || ''}" placeholder="e.g., 500" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
                             </div>
                             <div class="detail-item">
+                                <div class="label">Award Display Text</div>
+                                <input type="text" id="awardDisplayText" value="${escapeHtml(app.awardInfo?.displayText || '')}" placeholder="e.g., Full Program, SFS Program" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
+                                <div style="font-size: 0.7rem; color: var(--gray); margin-top: 0.25rem;">If set, this shows in emails instead of the dollar amount</div>
+                            </div>
+                            <div class="detail-item">
                                 <div class="label">Award Date</div>
                                 <input type="date" id="awardDate" value="${app.awardInfo?.awardDate || ''}" style="width:100%;padding:0.5rem;border:2px solid var(--light-gray);border-radius:var(--radius);">
                             </div>
@@ -2750,6 +2755,7 @@ Your scholarship application has been {{status}}.
                     swimSchoolId: swimSchoolSelect?.value || '',
                     swimSchool: selectedSchoolOption?.dataset.name || '',
                     amount: finalAmount,
+                    displayText: document.getElementById('awardDisplayText')?.value?.trim() || '',
                     awardDate: document.getElementById('awardDate')?.value || '',
                     expectedCompletion: document.getElementById('awardExpectedCompletion')?.value || '',
                     notes: document.getElementById('awardNotes')?.value || '',
@@ -2952,6 +2958,7 @@ Your scholarship application has been {{status}}.
             const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
             const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
             const awardAmount = app?.awardInfo?.amount ? `$${app.awardInfo.amount}` : '';
+            const awardDisplay = app?.awardInfo?.displayText || awardAmount;
 
             getDoc(doc(db, 'email-templates', templateId)).then(templateDoc => {
                 if (!templateDoc.exists()) {
@@ -2976,6 +2983,7 @@ Your scholarship application has been {{status}}.
                     '{{status}}': app?.status || '',
                     '{{applicationId}}': appId,
                     '{{awardAmount}}': awardAmount,
+                    '{{awardDisplay}}': awardDisplay,
                     '{{swimSchool}}': swimSchool,
                     '{{currentDate}}': new Date().toLocaleDateString()
                 };
@@ -3036,6 +3044,7 @@ Your scholarship application has been {{status}}.
                 const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
                 const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
                 const awardAmount = app?.awardInfo?.amount || '';
+                const awardDisplay = app?.awardInfo?.displayText || (awardAmount ? `$${awardAmount}` : '');
 
                 await sendTemplatedEmail({
                     templateId: templateId,
@@ -3054,6 +3063,7 @@ Your scholarship application has been {{status}}.
                         status: app?.status || '',
                         applicationId: appId || '',
                         awardAmount: awardAmount,
+                        awardDisplay: awardDisplay,
                         swimSchool: swimSchool
                     },
                     customSubject: customSubject || undefined,
