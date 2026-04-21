@@ -2277,9 +2277,28 @@ Your scholarship application has been {{status}}.
 
             // Build children section
             const childrenHtml = (app.children || []).map((child, i) => `
-                <div class="detail-item">
-                    <div class="label">Child ${i + 1}</div>
-                    <div class="value">${escapeHtml(child.name || 'N/A')} | DOB: ${escapeHtml(child.dob || 'N/A')} | Gender: ${escapeHtml(child.gender || 'N/A')}</div>
+                <div style="background: var(--off-white); padding: 0.75rem; border-radius: var(--radius); margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Child ${i + 1}: ${escapeHtml(child.name || 'N/A')}</div>
+                    <div class="detail-grid" style="font-size: 0.9rem;">
+                        <div class="detail-item">
+                            <div class="label">Date of Birth</div>
+                            <div class="value">${escapeHtml(child.dob || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Gender</div>
+                            <div class="value">${escapeHtml(child.gender || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Relationship</div>
+                            <div class="value">${escapeHtml(child.type || 'N/A')}</div>
+                        </div>
+                        ${child.history ? `
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <div class="label">Swim History</div>
+                            <div class="value">${escapeHtml(child.history)}</div>
+                        </div>
+                        ` : ''}
+                    </div>
                 </div>
             `).join('') || '<p style="color: var(--gray);">No children data</p>';
 
@@ -2319,6 +2338,15 @@ Your scholarship application has been {{status}}.
                 `).join('')}</ul>`
                 : '<p style="color: var(--gray);">No notes yet</p>';
 
+            // Build spouse info section
+            const hasSpouse = app.spouseInfo?.name || app.spouse?.name;
+            const spouseData = app.spouseInfo || app.spouse || {};
+
+            // Get employment and financial data (handle different field names)
+            const employment = app.employment || app.employmentInfo || {};
+            const financial = app.financial || app.financialInfo || {};
+            const additional = app.additional || app.additionalInfo || {};
+
             modalBody.innerHTML = `
                 <div class="detail-section">
                     <h3>Parent / Guardian Information</h3>
@@ -2350,28 +2378,132 @@ Your scholarship application has been {{status}}.
                     </div>
                 </div>
 
+                ${hasSpouse ? `
+                <div class="detail-section">
+                    <h3>Spouse Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Name</div>
+                            <div class="value">${escapeHtml(spouseData.name || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Date of Birth</div>
+                            <div class="value">${escapeHtml(spouseData.dob || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Phone</div>
+                            <div class="value">${escapeHtml(spouseData.phone || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Email</div>
+                            <div class="value">${spouseData.email ? `<a href="mailto:${escapeHtml(spouseData.email)}">${escapeHtml(spouseData.email)}</a>` : 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+
                 <div class="detail-section">
                     <h3>Children</h3>
                     ${childrenHtml}
                 </div>
 
                 <div class="detail-section">
-                    <h3>Additional Information</h3>
+                    <h3>Employment Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Employer</div>
+                            <div class="value">${escapeHtml(employment.employer || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Employer Phone</div>
+                            <div class="value">${escapeHtml(employment.employerPhone || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Occupation</div>
+                            <div class="value">${escapeHtml(employment.occupation || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Length of Employment</div>
+                            <div class="value">${escapeHtml(employment.employmentLength || 'N/A')}</div>
+                        </div>
+                        ${employment.spouseEmployer ? `
+                        <div class="detail-item">
+                            <div class="label">Spouse Employer</div>
+                            <div class="value">${escapeHtml(employment.spouseEmployer)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Spouse Employer Phone</div>
+                            <div class="value">${escapeHtml(employment.spouseEmployerPhone || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Spouse Occupation</div>
+                            <div class="value">${escapeHtml(employment.spouseOccupation || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Spouse Length of Employment</div>
+                            <div class="value">${escapeHtml(employment.spouseEmploymentLength || 'N/A')}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Financial Information</h3>
                     <div class="detail-grid">
                         <div class="detail-item">
                             <div class="label">Monthly Income</div>
-                            <div class="value">${escapeHtml(app.financialInfo?.monthlyIncome || 'N/A')}</div>
+                            <div class="value">${escapeHtml(financial.monthlyIncome || 'N/A')}</div>
                         </div>
                         <div class="detail-item">
-                            <div class="label">Employer</div>
-                            <div class="value">${escapeHtml(app.employmentInfo?.employer || 'N/A')}</div>
+                            <div class="label">Other Income</div>
+                            <div class="value">${escapeHtml(financial.otherIncome || 'None')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Filed Taxes</div>
+                            <div class="value">${escapeHtml(financial.filedTaxes || 'N/A')}</div>
+                        </div>
+                        ${financial.taxExplanation ? `
+                        <div class="detail-item">
+                            <div class="label">Tax Explanation</div>
+                            <div class="value">${escapeHtml(financial.taxExplanation)}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Additional Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Lesson Preference</div>
+                            <div class="value">${escapeHtml(Array.isArray(additional.lessonPreference) ? additional.lessonPreference.join(', ') : (additional.lessonPreference || 'N/A'))}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Weekly Afford Amount</div>
+                            <div class="value">${escapeHtml(additional.weeklyAfford || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Vacation Plans</div>
+                            <div class="value">${escapeHtml(additional.vacation || 'N/A')}${additional.vacationDetails ? ` - ${escapeHtml(additional.vacationDetails)}` : ''}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Pool/Beach Passes</div>
+                            <div class="value">${escapeHtml(additional.passes || 'N/A')}${additional.passesDetails ? ` - ${escapeHtml(additional.passesDetails)}` : ''}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Other Scholarship</div>
+                            <div class="value">${escapeHtml(additional.otherScholarship || 'N/A')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">How They Heard About Us</div>
+                            <div class="value">${escapeHtml(additional.hearAboutUs || 'N/A')}</div>
                         </div>
                     </div>
-                    ${app.additionalInfo?.needDescription ? `
-                        <div class="detail-item" style="margin-top: 0.75rem;">
-                            <div class="label">Why Scholarship Is Needed</div>
-                            <div class="value">${escapeHtml(app.additionalInfo.needDescription)}</div>
-                        </div>
+                    ${additional.needDescription ? `
+                    <div class="detail-item" style="margin-top: 0.75rem;">
+                        <div class="label">Why Scholarship Is Needed</div>
+                        <div class="value" style="white-space: pre-wrap;">${escapeHtml(additional.needDescription)}</div>
+                    </div>
                     ` : ''}
                 </div>
 
