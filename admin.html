@@ -2404,7 +2404,7 @@ Your scholarship application has been {{status}}.
                         </div>
                         <div id="individualEmailPreview" style="display: none; background: var(--off-white); padding: 0.75rem; border-radius: var(--radius); font-size: 0.85rem;"></div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
-                            <button class="btn btn-sm btn-outline" onclick="previewIndividualEmail('${escapeHtml(app.parentInfo?.email || '')}', '${escapeHtml(name)}')">Preview</button>
+                            <button class="btn btn-sm btn-outline" id="previewIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}">Preview</button>
                             <button class="btn btn-sm btn-primary" id="sendIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}" data-appid="${app.id}">Send Email</button>
                             <span id="individualEmailStatus" style="font-size: 0.85rem; color: var(--gray);"></span>
                         </div>
@@ -2714,6 +2714,9 @@ Your scholarship application has been {{status}}.
             // Setup send email button
             document.getElementById('sendIndividualEmailBtn')?.addEventListener('click', sendIndividualEmail);
 
+            // Setup preview email button
+            document.getElementById('previewIndividualEmailBtn')?.addEventListener('click', previewIndividualEmail);
+
             appModal.classList.add('active');
         }
 
@@ -2792,7 +2795,10 @@ Your scholarship application has been {{status}}.
         }
 
         // Preview individual email
-        function previewIndividualEmail(recipientEmail, recipientName) {
+        function previewIndividualEmail() {
+            const btn = document.getElementById('previewIndividualEmailBtn');
+            const recipientEmail = btn?.dataset.email || '';
+            const recipientName = btn?.dataset.name || '';
             const templateId = document.getElementById('individualEmailTemplate')?.value;
             const previewDiv = document.getElementById('individualEmailPreview');
 
