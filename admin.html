@@ -2404,7 +2404,7 @@ Your scholarship application has been {{status}}.
                         </div>
                         <div id="individualEmailPreview" style="display: none; background: var(--off-white); padding: 0.75rem; border-radius: var(--radius); font-size: 0.85rem;"></div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
-                            <button class="btn btn-sm btn-outline" id="previewIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}">Preview</button>
+                            <button class="btn btn-sm btn-outline" id="previewIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}" data-appid="${app.id}">Preview</button>
                             <button class="btn btn-sm btn-primary" id="sendIndividualEmailBtn" data-email="${escapeHtml(app.parentInfo?.email || '')}" data-name="${escapeHtml(name)}" data-appid="${app.id}">Send Email</button>
                             <span id="individualEmailStatus" style="font-size: 0.85rem; color: var(--gray);"></span>
                         </div>
@@ -2805,6 +2805,7 @@ Your scholarship application has been {{status}}.
             const btn = document.getElementById('previewIndividualEmailBtn');
             const recipientEmail = btn?.dataset.email || '';
             const recipientName = btn?.dataset.name || '';
+            const appId = btn?.dataset.appid || '';
             const templateId = document.getElementById('individualEmailTemplate')?.value;
             const previewDiv = document.getElementById('individualEmailPreview');
 
@@ -2812,6 +2813,13 @@ Your scholarship application has been {{status}}.
                 previewDiv.style.display = 'none';
                 return;
             }
+
+            // Get full application data for placeholders
+            const app = allApplications.find(a => a.id === appId);
+            const childrenNames = (app?.children || []).map(c => c.name).filter(Boolean);
+            const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
+            const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
+            const awardAmount = app?.awardInfo?.amount ? `$${app.awardInfo.amount}` : '';
 
             getDoc(doc(db, 'email-templates', templateId)).then(templateDoc => {
                 if (!templateDoc.exists()) {
@@ -2822,12 +2830,29 @@ Your scholarship application has been {{status}}.
 
                 const template = templateDoc.data();
                 const customSubject = document.getElementById('individualEmailSubject')?.value;
-                const subject = customSubject || template.subject || 'No subject';
+                let subject = customSubject || template.subject || 'No subject';
 
-                // Simple placeholder replacement for preview
+                // Replace all placeholders for preview
                 let body = template.body || '';
-                body = body.replace(/{{firstName}}/gi, recipientName.split(' ')[0] || 'Applicant');
-                body = body.replace(/{{name}}/gi, recipientName || 'Applicant');
+                const placeholders = {
+                    '{{firstName}}': recipientName.split(' ')[0] || 'Applicant',
+                    '{{lastName}}': app?.parentInfo?.lastName || '',
+                    '{{name}}': recipientName || 'Applicant',
+                    '{{email}}': recipientEmail,
+                    '{{childName}}': childrenNames[0] || '',
+                    '{{childrenDetails}}': childrenDetails,
+                    '{{status}}': app?.status || '',
+                    '{{applicationId}}': appId,
+                    '{{awardAmount}}': awardAmount,
+                    '{{swimSchool}}': swimSchool,
+                    '{{currentDate}}': new Date().toLocaleDateString()
+                };
+
+                for (const [placeholder, value] of Object.entries(placeholders)) {
+                    const regex = new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'gi');
+                    body = body.replace(regex, value);
+                    subject = subject.replace(regex, value);
+                }
 
                 previewDiv.innerHTML = `
                     <p style="margin: 0 0 0.5rem;"><strong>To:</strong> ${escapeHtml(recipientEmail)}</p>
@@ -2873,6 +2898,13 @@ Your scholarship application has been {{status}}.
                 const ccInput = document.getElementById('individualEmailCC')?.value || '';
                 const ccEmails = ccInput.split(',').map(e => e.trim()).filter(e => e && e.includes('@'));
 
+                // Get full application data for placeholders
+                const app = allApplications.find(a => a.id === appId);
+                const childrenNames = (app?.children || []).map(c => c.name).filter(Boolean);
+                const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
+                const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
+                const awardAmount = app?.awardInfo?.amount || '';
+
                 await sendTemplatedEmail({
                     templateId: templateId,
                     recipient: {
@@ -2883,7 +2915,14 @@ Your scholarship application has been {{status}}.
                     placeholders: {
                         name: recipientName || 'Applicant',
                         firstName: recipientName?.split(' ')[0] || 'Applicant',
-                        email: recipientEmail
+                        lastName: app?.parentInfo?.lastName || '',
+                        email: recipientEmail,
+                        childName: childrenNames[0] || '',
+                        childrenDetails: childrenDetails,
+                        status: app?.status || '',
+                        applicationId: appId || '',
+                        awardAmount: awardAmount,
+                        swimSchool: swimSchool
                     },
                     customSubject: customSubject || undefined,
                     cc: ccEmails.length > 0 ? ccEmails : undefined
