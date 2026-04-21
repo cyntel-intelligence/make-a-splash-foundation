@@ -2516,7 +2516,7 @@ Your scholarship application has been {{status}}.
                             <p style="font-size: 0.75rem; color: var(--gray); margin: 0 0 0.75rem 26px;">Emails can be sent for: Approved, Denied, Active, Completed</p>
                             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
                                 <button class="btn btn-primary btn-sm" id="modalSaveBtn" data-appid="${app.id}">Save Changes</button>
-                                <button class="btn btn-warning btn-sm" onclick="openWaitlistModal('${app.id}', '${escapeHtml(name)}')" ${allWaitlist.some(w => w.applicationId === app.id) ? 'disabled title="Already on waitlist"' : ''}>
+                                <button class="btn btn-warning btn-sm" id="addToWaitlistBtn" data-appid="${app.id}" data-appname="${escapeHtml(name)}" ${allWaitlist.some(w => w.applicationId === app.id) ? 'disabled title="Already on waitlist"' : ''}>
                                     ${allWaitlist.some(w => w.applicationId === app.id) ? 'On Waitlist' : 'Add to Waitlist'}
                                 </button>
                                 <span id="modalSaveStatus" style="font-size: 0.85rem; color: var(--gray); align-self: center;"></span>
@@ -2716,6 +2716,12 @@ Your scholarship application has been {{status}}.
 
             // Setup preview email button
             document.getElementById('previewIndividualEmailBtn')?.addEventListener('click', previewIndividualEmail);
+
+            // Setup add to waitlist button
+            document.getElementById('addToWaitlistBtn')?.addEventListener('click', function() {
+                const btn = this;
+                openWaitlistModal(btn.dataset.appid, btn.dataset.appname);
+            });
 
             appModal.classList.add('active');
         }
