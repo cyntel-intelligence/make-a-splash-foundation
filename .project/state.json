@@ -2,7 +2,7 @@
   "project_name": "masf-website",
   "project_tla": "MAS",
   "created": "2026-02-25 08:43:14 EST",
-  "last_updated": "2026-04-21 15:21:37 EDT",
+  "last_updated": "2026-04-23 10:15:00 EDT",
   "current_phase": "2 - Admin Enhancements",
   "phase_started": "2026-02-25",
   "completed_tasks": [
@@ -34,7 +34,8 @@
     "SECURITY: Removed .env from git history",
     "Fixed email templates - all placeholders now populate (childName, swimSchool, awardAmount, etc.)",
     "Expanded application modal - shows all fields (spouse, employment, financial, additional info)",
-    "Award Display Text feature - {{awardDisplay}} placeholder for program names instead of amounts"
+    "Award Display Text feature - {{awardDisplay}} placeholder for program names instead of amounts",
+    "BUG-11: Fixed Award Display Text not saving/sending in status emails (displayText field + awardDisplay placeholder)"
   ],
   "active_tasks": [],
   "pending_tasks": ["See .project/BACKLOG.md for full backlog"],
@@ -52,5 +53,5 @@
     ],
     "blocked_on": []
   },
-  "notes": "Session 9: Fixed apostrophe bugs, rotated credentials, cleaned git history, fixed email placeholders, expanded application modal, added Award Display Text feature."
+  "notes": "Session 10: Fixed BUG-11 - Award Display Text wasn't being saved to Firestore or used in status change emails."
 }
