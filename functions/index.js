@@ -473,6 +473,7 @@ exports.updateApplicationStatus = functions.https.onCall(async (data, context) =
             swimSchoolId: sanitize(awardInfo.swimSchoolId || ''),
             swimSchool: sanitize(awardInfo.swimSchool || ''),
             amount: parseFloat(awardInfo.amount) || 0,
+            displayText: sanitize(awardInfo.displayText || ''),
             awardDate: sanitize(awardInfo.awardDate || ''),
             expectedCompletion: sanitize(awardInfo.expectedCompletion || ''),
             notes: sanitize(awardInfo.notes || '')
@@ -1300,7 +1301,8 @@ exports.onApplicationStatusChange = functions.firestore
             status: after.status,
             applicationId: after.applicationId || context.params.applicationId,
             awardAmount: after.awardInfo?.amount,
-            swimSchool: after.awardInfo?.swimSchool
+            swimSchool: after.awardInfo?.swimSchool,
+            awardDisplay: after.awardInfo?.displayText || (after.awardInfo?.amount ? `$${after.awardInfo.amount}` : '')
         };
 
         const subject = replacePlaceholders(template.subject, placeholders);
