@@ -2093,9 +2093,9 @@ Make A Splash Foundation Team`
 
 CONGRATULATIONS! We are thrilled to celebrate this wonderful milestone!
 
-{{childName}} has successfully completed their swim lessons through the Make A Splash Foundation scholarship program!
+{{childrenNames}} successfully completed swim lessons through the Make A Splash Foundation scholarship program!
 
-This is a tremendous achievement. Your child has gained life-saving water safety skills that will stay with them forever.
+This is a tremendous achievement. They have gained life-saving water safety skills that will stay with them forever.
 
 We would love to hear about your experience:
 - How did the lessons go?
