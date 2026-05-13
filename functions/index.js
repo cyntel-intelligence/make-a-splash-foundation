@@ -988,6 +988,7 @@ function replacePlaceholders(template, data) {
     const awardAmountFormatted = data.awardAmount ? `$${data.awardAmount}` : '';
     const placeholders = {
         '{{firstName}}': data.firstName || '',
+        '{{parentFirstName}}': data.firstName || '',
         '{{lastName}}': data.lastName || '',
         '{{email}}': data.email || '',
         '{{childName}}': data.childName || '',
