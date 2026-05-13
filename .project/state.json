@@ -55,5 +55,5 @@
     ],
     "blocked_on": []
   },
-  "notes": "Session 12: parentFirstName placeholder implemented on build/20260513-130827. Pending: merge to main, deploy functions."
+  "notes": "Session 11: BUG-12 {{parentFirstName}} placeholder - merged, deployed, QA passed."
 }
