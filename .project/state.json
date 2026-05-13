@@ -56,5 +56,5 @@
     ],
     "blocked_on": []
   },
-  "notes": "Session 11: Added {{parentFirstName}} and {{childrenNames}} email placeholders."
+  "notes": "Session 11: Email placeholder fixes - parentFirstName, childrenNames (first names with 'and' formatting)."
 }
