@@ -2,7 +2,7 @@
   "project_name": "masf-website",
   "project_tla": "MAS",
   "created": "2026-02-25 08:43:14 EST",
-  "last_updated": "2026-04-23 10:39:58 EDT",
+  "last_updated": "2026-05-13 12:58:43 EDT",
   "current_phase": "2 - Admin Enhancements",
   "phase_started": "2026-02-25",
   "completed_tasks": [
@@ -35,7 +35,8 @@
     "Fixed email templates - all placeholders now populate (childName, swimSchool, awardAmount, etc.)",
     "Expanded application modal - shows all fields (spouse, employment, financial, additional info)",
     "Award Display Text feature - {{awardDisplay}} placeholder for program names instead of amounts",
-    "BUG-11: Fixed Award Display Text not saving/sending in status emails (displayText field + awardDisplay placeholder)"
+    "BUG-11: Fixed Award Display Text not saving/sending in status emails (displayText field + awardDisplay placeholder)",
+    "BUG-12: Added {{parentFirstName}} email template placeholder (alias for parent's first name)"
   ],
   "active_tasks": [],
   "pending_tasks": ["See .project/BACKLOG.md for full backlog"],
@@ -54,5 +55,5 @@
     ],
     "blocked_on": []
   },
-  "notes": "Session 10: Fixed BUG-11 - Award Display Text wasn't being saved to Firestore or used in status change emails."
+  "notes": "Session 11: Added {{parentFirstName}} email template placeholder - clearer naming for parent's first name vs child's name."
 }
