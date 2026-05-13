@@ -993,6 +993,7 @@ function replacePlaceholders(template, data) {
         '{{email}}': data.email || '',
         '{{childName}}': data.childName || '',
         '{{childrenDetails}}': data.childrenDetails || data.childName || '',
+        '{{childrenNames}}': data.childrenDetails || data.childName || '',
         '{{status}}': data.status || '',
         '{{applicationId}}': data.applicationId || '',
         '{{awardAmount}}': awardAmountFormatted,
