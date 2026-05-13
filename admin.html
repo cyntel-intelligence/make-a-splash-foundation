@@ -2975,6 +2975,7 @@ Your scholarship application has been {{status}}.
                 let body = template.body || '';
                 const placeholders = {
                     '{{firstName}}': recipientName.split(' ')[0] || 'Applicant',
+                    '{{parentFirstName}}': recipientName.split(' ')[0] || 'Applicant',
                     '{{lastName}}': app?.parentInfo?.lastName || '',
                     '{{name}}': recipientName || 'Applicant',
                     '{{email}}': recipientEmail,
