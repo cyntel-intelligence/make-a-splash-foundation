@@ -2,7 +2,7 @@
   "project_name": "masf-website",
   "project_tla": "MAS",
   "created": "2026-02-25 08:43:14 EST",
-  "last_updated": "2026-05-13 13:28:30 EDT",
+  "last_updated": "2026-05-13 13:15:00 EDT",
   "current_phase": "2 - Admin Enhancements",
   "phase_started": "2026-02-25",
   "completed_tasks": [
@@ -36,7 +36,8 @@
     "Expanded application modal - shows all fields (spouse, employment, financial, additional info)",
     "Award Display Text feature - {{awardDisplay}} placeholder for program names instead of amounts",
     "BUG-11: Fixed Award Display Text not saving/sending in status emails (displayText field + awardDisplay placeholder)",
-    "BUG-12: Added {{parentFirstName}} email template placeholder (alias for parent's first name)"
+    "BUG-12: Added {{parentFirstName}} email template placeholder (alias for parent's first name)",
+    "Added {{childrenNames}} placeholder - shows all children (comma-separated)"
   ],
   "active_tasks": [],
   "pending_tasks": ["See .project/BACKLOG.md for full backlog"],
@@ -55,5 +56,5 @@
     ],
     "blocked_on": []
   },
-  "notes": "Session 11: BUG-12 {{parentFirstName}} placeholder - merged, deployed, QA passed."
+  "notes": "Session 11: Added {{parentFirstName}} and {{childrenNames}} email placeholders."
 }
