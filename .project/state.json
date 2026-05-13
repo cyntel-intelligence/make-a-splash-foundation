@@ -37,7 +37,7 @@
     "Award Display Text feature - {{awardDisplay}} placeholder for program names instead of amounts",
     "BUG-11: Fixed Award Display Text not saving/sending in status emails (displayText field + awardDisplay placeholder)",
     "BUG-12: Added {{parentFirstName}} email template placeholder (alias for parent's first name)",
-    "Added {{childrenNames}} placeholder - shows all children (comma-separated)"
+    "Added {{childrenNames}} placeholder - shows all children first names with 'and' (e.g., John and Sarah)"
   ],
   "active_tasks": [],
   "pending_tasks": ["See .project/BACKLOG.md for full backlog"],
