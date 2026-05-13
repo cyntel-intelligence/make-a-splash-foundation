@@ -2954,7 +2954,7 @@ Your scholarship application has been {{status}}.
 
             // Get full application data for placeholders
             const app = allApplications.find(a => a.id === appId);
-            const childrenNames = (app?.children || []).map(c => c.name).filter(Boolean);
+            const childrenNames = (app?.children || []).map(c => c.name?.split(' ')[0]).filter(Boolean);
             const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
             const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
             const awardAmount = app?.awardInfo?.amount ? `$${app.awardInfo.amount}` : '';
@@ -3042,7 +3042,7 @@ Your scholarship application has been {{status}}.
 
                 // Get full application data for placeholders
                 const app = allApplications.find(a => a.id === appId);
-                const childrenNames = (app?.children || []).map(c => c.name).filter(Boolean);
+                const childrenNames = (app?.children || []).map(c => c.name?.split(' ')[0]).filter(Boolean);
                 const childrenDetails = childrenNames.length > 0 ? childrenNames.join(', ') : '';
                 const swimSchool = app?.awardInfo?.swimSchool || allSwimSchools.find(s => s.id === app?.awardInfo?.swimSchoolId)?.name || '';
                 const awardAmount = app?.awardInfo?.amount || '';
